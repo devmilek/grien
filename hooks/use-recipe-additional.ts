@@ -8,7 +8,7 @@ import {
   removeRecipeCuisine,
   removeRecipeOccasion,
 } from "@/actions/recipe-creation/recipe-additional";
-import { AdditionalItem } from "@/app/(main)/(routes)/create-recipe/_components/additional/additional-select";
+import { AdditionalItem } from "@/app/(main)/(routes)/utworz-przepis/_components/additional/additional-select";
 import { useUtilityData } from "@/components/providers/utility-data-provider";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";

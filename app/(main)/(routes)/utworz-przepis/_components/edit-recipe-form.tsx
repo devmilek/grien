@@ -1,16 +1,16 @@
 "use client";
 
 import React from "react";
-import BasicsForm from "../_components/basics/basics-form";
-import AdditionalInfo from "../_components/additional/additional-info";
+import BasicsForm from "./basics/basics-form";
+import AdditionalInfo from "./additional/additional-info";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Steps from "../_components/steps/steps";
-import Ingredients from "../_components/ingredients/ingredients";
+import Steps from "./steps/steps";
+import Ingredients from "./ingredients/ingredients";
 import { Recipe } from "@prisma/client";
 import useSWR from "swr";
 import { getRecipe } from "@/data";

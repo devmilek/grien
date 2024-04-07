@@ -30,13 +30,13 @@ const ImageCard = ({ recipe, className }: ImageCardProps) => {
     >
       <div>
         <Link
-          href={"/categories/" + recipe.categoryId}
+          href={"/kategorie/" + recipe.categoryId}
           className="mt-4 cursor-pointer uppercase font-medium text-xs"
         >
           {recipe.category?.name}
         </Link>
         <Link
-          href={"/recipe/" + recipe.id}
+          href={"/przepis/" + recipe.id}
           className="text-3xl font-display mt-1 block"
         >
           <span className="underline-anim group-hover:bg-[length:100%_2px]">
