@@ -2,15 +2,17 @@
 
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { ingredient } from "@/lib/db/schema";
 import { IngredientSchema } from "@/schemas/recipe";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const addIngredient = async (
-  ingredient: z.infer<typeof IngredientSchema>,
-  recipeId: string,
+  data: z.infer<typeof IngredientSchema>,
+  recipeId: number,
 ) => {
-  console.log(ingredient.quantity);
-  const validatedFields = IngredientSchema.safeParse(ingredient);
+  const validatedFields = IngredientSchema.safeParse(data);
 
   if (!validatedFields.success) {
     throw new Error(validatedFields.error.message);
@@ -18,37 +20,24 @@ export const addIngredient = async (
 
   const { name, quantity, unit } = validatedFields.data;
 
-  const newIngredient = await db.ingredient.create({
-    data: {
-      name,
-      quantity: quantity || null,
-      unit,
-      recipeId,
-    },
+  await db.insert(ingredient).values({
+    name,
+    quantity,
+    unit,
+    recipeId,
   });
 
-  return newIngredient;
+  revalidatePath("/a-new-recipe/[slug]/skladniki", "page");
 };
 
-export const deleteIngredient = async (ingredientId: string) => {
+export const deleteIngredient = async (ingredientId: number) => {
   const session = await auth();
 
   if (!session) {
     throw new Error("Not authenticated");
   }
 
-  const ingredient = await db.ingredient.delete({
-    where: {
-      id: ingredientId,
-      recipe: {
-        userId: session.user.id,
-      },
-    },
-  });
+  await db.delete(ingredient).where(eq(ingredient.id, ingredientId));
 
-  if (!ingredient) {
-    throw new Error("Ingredient not found");
-  }
-
-  return ingredient;
+  revalidatePath("/a-new-recipe/[slug]/skladniki", "page");
 };

@@ -1,15 +1,10 @@
-import { FOOTER_LINKS_PER_COLUMN, SITE_NAME } from "@/constants";
+import { FOOTER_LINKS_PER_COLUMN, SITE_NAME } from "@/config";
 import { UtilityData } from "@/types";
 import { ChefHat } from "lucide-react";
 import Link from "next/link";
 import React, { Fragment } from "react";
 
-const Footer = async ({
-  categories,
-  occasions,
-  cuisines,
-  diets,
-}: UtilityData) => {
+const Footer = async ({ categories, attributes }: UtilityData) => {
   const items = [
     {
       title: "Kategorie",
@@ -17,15 +12,15 @@ const Footer = async ({
     },
     {
       title: "Okazje",
-      items: occasions,
+      items: attributes?.filter((attr) => attr.type === "occasion"),
     },
     {
       title: "Kuchnie świata",
-      items: cuisines,
+      items: attributes?.filter((attr) => attr.type === "cuisine"),
     },
     {
       title: "Diety",
-      items: diets,
+      items: attributes?.filter((attr) => attr.type === "diet"),
     },
   ];
 

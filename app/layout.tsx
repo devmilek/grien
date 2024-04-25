@@ -3,7 +3,7 @@ import { DM_Serif_Display, Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Providers } from "@/components/providers";
-import { SITE_NAME } from "@/constants";
+import { SITE_NAME } from "@/config";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "moment/locale/pl";

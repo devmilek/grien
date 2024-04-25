@@ -1,6 +1,6 @@
 "use server";
 
-import { DEFAULT_LOGIN_REDIRECT } from "@/constants";
+import { DEFAULT_LOGIN_REDIRECT } from "@/config";
 import { signIn } from "@/lib/auth";
 import { getUserByEmail } from "@/data/user";
 import { LoginSchema } from "@/schemas/auth";

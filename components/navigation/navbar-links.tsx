@@ -12,21 +12,17 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Category, Occasion, Cuisine, Diet } from "@prisma/client";
+import { category, recipeAttribute } from "@/lib/db/schema";
 
 interface NavbarLinksProps {
-  categories: Category[];
-  occasions: Occasion[];
-  cuisines: Cuisine[];
-  diets: Diet[];
+  categories: (typeof category.$inferSelect)[];
+  attributes: (typeof recipeAttribute.$inferSelect)[];
   className?: string;
 }
 
 const NavbarLinks = ({
   categories,
-  occasions,
-  cuisines,
-  diets,
+  attributes,
   className,
 }: NavbarLinksProps) => {
   const components = [
@@ -37,17 +33,17 @@ const NavbarLinks = ({
     },
     {
       name: "Okazje",
-      data: occasions,
+      data: attributes.filter((attr) => attr.type === "occasion"),
       href: "/search?occasions=",
     },
     {
       name: "Kuchnie świata",
-      data: cuisines,
+      data: attributes.filter((attr) => attr.type === "cuisine"),
       href: "/search?cuisines=",
     },
     {
       name: "Dieta",
-      data: diets,
+      data: attributes.filter((attr) => attr.type === "diet"),
       href: "/search?diets=",
     },
   ];

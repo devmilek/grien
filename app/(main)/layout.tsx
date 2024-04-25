@@ -5,12 +5,18 @@ import { getUtilityData } from "@/data";
 import { db } from "@/lib/db";
 import React, { ReactNode, cache } from "react";
 
-const fetchUtilityData = cache(async () => {
+// TODO: cache the data
+
+const fetchUtilityData = async () => {
   const baseurl = process.env.BASE_URL;
-  const response = await fetch(baseurl + "api/utility-data");
+  const response = await fetch(baseurl + "api/utility-data", {
+    next: {
+      revalidate: 0,
+    },
+  });
   const data = await response.json();
   return data;
-});
+};
 
 const MainLayout = async ({ children }: { children: ReactNode }) => {
   const data = await fetchUtilityData();

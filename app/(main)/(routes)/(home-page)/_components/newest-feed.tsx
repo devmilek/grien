@@ -8,12 +8,12 @@ import {
   HorizontalCard,
   HorizontalCardSkeleton,
 } from "@/components/cards/horizontal-card";
-import { ROUTES } from "@/constants";
 import { getNewestRecipes } from "@/data";
 import SectionWrapper from "@/components/section-wrapper";
+import { ROUTES } from "@/config/routes";
 
 const NewestFeed = async () => {
-  const recipes = await getNewestRecipes();
+  // const recipes = await getNewestRecipes();
   return (
     <SectionWrapper className="my-10">
       <header className="flex items-center justify-between">
@@ -27,9 +27,9 @@ const NewestFeed = async () => {
         </Link>
       </header>
       <div className="space-y-8 mt-8">
-        {recipes.map((recipe) => (
+        {/* {recipes.map((recipe) => (
           <HorizontalCard key={recipe.id} recipe={recipe} />
-        ))}
+        ))} */}
       </div>
     </SectionWrapper>
   );

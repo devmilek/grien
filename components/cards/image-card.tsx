@@ -36,7 +36,7 @@ const ImageCard = ({ recipe, className }: ImageCardProps) => {
           {recipe.category?.name}
         </Link>
         <Link
-          href={"/przepis/" + recipe.id}
+          href={"/przepis/" + recipe.slug}
           className="text-3xl font-display mt-1 block"
         >
           <span className="underline-anim group-hover:bg-[length:100%_2px]">

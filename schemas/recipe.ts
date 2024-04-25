@@ -29,7 +29,7 @@ export const BasicsInformationSchema = z.object({
     .min(1, {
       message: "Porcje są wymagane",
     }),
-  difficulty: z.nativeEnum(Difficulty, {
+  difficulty: z.enum(["easy", "medium", "hard"], {
     required_error: "Poziom trudności jest wymagany",
   }),
   preparationTime: z.coerce

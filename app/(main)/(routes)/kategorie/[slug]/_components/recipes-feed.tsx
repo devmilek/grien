@@ -1,6 +1,6 @@
 import React from "react";
 import { db } from "@/lib/db";
-import { PAGINATION_ITEMS_PER_PAGE } from "@/constants";
+import { PAGINATION_ITEMS_PER_PAGE } from "@/config";
 import { HorizontalCard } from "@/components/cards/horizontal-card";
 import { delay } from "@/lib/utils";
 

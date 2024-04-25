@@ -1,4 +1,5 @@
 import { Category, Occasion, Cuisine, Diet, Recipe } from "@prisma/client";
+import { category, recipeAttribute } from "./lib/db/schema";
 
 export type ClerkErrors =
   | "form_password_pwned"
@@ -13,14 +14,8 @@ export interface AcceptFilesType {
 }
 
 export type UtilityData = {
-  categories: (Category & {
-    _count: {
-      recipes: number;
-    };
-  })[];
-  occasions: Occasion[];
-  cuisines: Cuisine[];
-  diets: Diet[];
+  categories: (typeof category.$inferSelect)[];
+  attributes: (typeof recipeAttribute.$inferSelect)[];
 };
 
 export type RecipeWithCategoryAndUser = Recipe & {

@@ -1,6 +1,6 @@
 "use server";
 
-import { PAGINATION_ITEMS_PER_PAGE } from "@/constants";
+import { PAGINATION_ITEMS_PER_PAGE } from "@/config";
 import { db } from "@/lib/db";
 import { delay } from "@/lib/utils";
 

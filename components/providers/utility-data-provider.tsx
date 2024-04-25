@@ -8,22 +8,16 @@ interface UtilityDataProviderProps extends UtilityData {
 
 export const UtilityDataContext = createContext<UtilityData>({
   categories: [],
-  occasions: [],
-  cuisines: [],
-  diets: [],
+  attributes: [],
 });
 
 export const UtilityDataProvider = ({
   children,
   categories,
-  occasions,
-  cuisines,
-  diets,
+  attributes,
 }: UtilityDataProviderProps) => {
   return (
-    <UtilityDataContext.Provider
-      value={{ categories, occasions, cuisines, diets }}
-    >
+    <UtilityDataContext.Provider value={{ categories, attributes }}>
       {children}
     </UtilityDataContext.Provider>
   );

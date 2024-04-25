@@ -22,8 +22,8 @@ const YourRecipesPage = async ({ searchParams }: YourRecipesPageProps) => {
 
   const userId = session.user.id;
 
-  const unpublishedRecipesCount = await getUnpublishedRecipesCount(userId);
-  const recipesCount = await getRecipesCount(userId);
+  // const unpublishedRecipesCount = await getUnpublishedRecipesCount(userId);
+  // const recipesCount = await getRecipesCount(userId);
 
   //TODO: Sort by published and unpublished
   //TODO: Create card suspence
@@ -40,13 +40,13 @@ const YourRecipesPage = async ({ searchParams }: YourRecipesPageProps) => {
           <p className="text-sm font-medium text-neutral-600">
             Łączna ilość postów
           </p>
-          <h1 className="font-display text-3xl mt-1">{recipesCount}</h1>
+          {/* <h1 className="font-display text-3xl mt-1">{recipesCount}</h1> */}
         </div>
 
         <div className="p-6 rounded-xl bg-white border">
           <p className="text-sm font-medium text-neutral-600">Wersje robocze</p>
           <h1 className="font-display text-3xl mt-1">
-            {unpublishedRecipesCount}
+            {/* {unpublishedRecipesCount} */}
           </h1>
         </div>
 

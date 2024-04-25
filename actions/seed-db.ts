@@ -1,87 +1,45 @@
 "use server";
 
 import {
-  aiProfile,
   categories,
   cuisines,
   diets,
   occasions,
-  recipes,
 } from "@/data/placeholder-data";
 import { db } from "@/lib/db";
+import { category, recipeAttribute } from "@/lib/db/schema";
+import slugify from "@sindresorhus/slugify";
 
 export const seedUtilityData = async () => {
-  await db.category.createMany({
-    data: categories,
-  });
-
-  await db.occasion.createMany({
-    data: occasions,
-  });
-
-  await db.cuisine.createMany({
-    data: cuisines,
-  });
-
-  await db.diet.createMany({
-    data: diets,
-  });
-};
-
-export const seedAiUser = async () => {
-  await db.user.create({
-    data: aiProfile,
-  });
-};
-
-export const seedRecipes = async () => {
-  for (const recipe of recipes) {
-    if (recipe.cuisines) {
-      await db.cuisinesOnRecipes.createMany({
-        data: recipe.cuisines,
-      });
-    }
-    if (recipe.ingredients) {
-      await db.ingredient.createMany({
-        data: recipe.ingredients,
-      });
-    }
-    if (recipe.steps) {
-      await db.preparationStep.createMany({
-        data: recipe.steps,
-      });
-    }
-    if (recipe.diets) {
-      await db.dietsOnRecipes.createMany({
-        data: recipe.diets,
-      });
-    }
-    if (recipe.occasions) {
-      await db.occasionsOnRecipes.createMany({
-        data: recipe.occasions,
-      });
-    }
-    await db.recipe.create({
-      data: {
-        id: recipe.id,
-        name: recipe.name,
-        description: recipe.description,
-        image: recipe.image,
-        difficulty: recipe.difficulty,
-        preparationTime: recipe.preparationTime,
-        servings: recipe.servings,
-        categoryId: recipe.categoryId,
-        userId: recipe.userId,
-        published: recipe.published,
-        createdAt: recipe.createdAt,
-        updatedAt: recipe.updatedAt,
-      },
+  for (const item of categories) {
+    await db.insert(category).values({
+      name: item.name,
+      image: item.image,
+      slug: slugify(item.name),
     });
   }
-};
 
-export const seedDb = async () => {
-  await seedUtilityData();
-  await seedAiUser();
-  await seedRecipes();
+  for (const occasion of occasions) {
+    await db.insert(recipeAttribute).values({
+      name: occasion,
+      type: "occasion",
+      slug: slugify(occasion),
+    });
+  }
+
+  for (const cuisine of cuisines) {
+    await db.insert(recipeAttribute).values({
+      name: cuisine,
+      type: "cuisine",
+      slug: slugify(cuisine),
+    });
+  }
+
+  for (const diet of diets) {
+    await db.insert(recipeAttribute).values({
+      name: diet,
+      type: "diet",
+      slug: slugify(diet),
+    });
+  }
 };

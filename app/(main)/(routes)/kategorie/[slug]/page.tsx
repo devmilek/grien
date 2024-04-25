@@ -5,7 +5,7 @@ import Sidebar from "../../../../../components/navigation/sidebar/sidebar";
 import { DrumstickIcon } from "lucide-react";
 import RecipesFeed from "./_components/recipes-feed";
 import Pagination from "@/components/pagination";
-import { PAGINATION_ITEMS_PER_PAGE } from "@/constants";
+import { PAGINATION_ITEMS_PER_PAGE } from "@/config";
 import SortButton from "@/components/sort-button";
 import RecipesHero from "@/components/recipes-hero";
 import SectionWrapper from "@/components/section-wrapper";

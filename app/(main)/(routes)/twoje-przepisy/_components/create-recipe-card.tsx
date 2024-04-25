@@ -1,7 +1,8 @@
 "use client";
 
+import { seedUtilityData } from "@/actions/seed-db";
 import { seedDb } from "@/actions/seed-from-json";
-import { ROUTES } from "@/constants";
+import { ROUTES } from "@/config";
 import { cn } from "@/lib/utils";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
@@ -10,8 +11,8 @@ import { toast } from "sonner";
 
 const CreateRecipeCard = ({ className }: { className?: string }) => {
   return (
-    <Link
-      href={ROUTES.createRecipe}
+    <div
+      // href={ROUTES.createRecipe}
       className={cn(
         "p-6 rounded-xl bg-white border flex items-center cursor-pointer",
         className,
@@ -28,13 +29,15 @@ const CreateRecipeCard = ({ className }: { className?: string }) => {
       </div>
       <button
         onClick={async () => {
-          await seedDb();
+          await seedUtilityData();
+          // await seedAiUser();
+          // await seedRecipes();
           toast.success("Seeded db");
         }}
       >
         import
       </button>
-    </Link>
+    </div>
   );
 };
 

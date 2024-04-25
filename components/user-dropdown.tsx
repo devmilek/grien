@@ -59,19 +59,19 @@ const UserDropdown = ({ profile }: UserButtonProps) => {
             <span>Profil</span>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/create-recipe">
+            <Link href="/utworz-przepis">
               <Plus className="mr-2 w-4 h-4" />
               <span>Utwórz przepis</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/your-recipes">
+            <Link href="/twoje-przepisy">
               <Book className="mr-2 w-4 h-4" />
               <span>Zarządzaj przepisami</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/saved-recipes">
+            <Link href="/zapisane-przepisy">
               <BookmarkIcon className="mr-2 w-4 h-4" />
               <span>Zapisane przepisy</span>
             </Link>
@@ -80,7 +80,7 @@ const UserDropdown = ({ profile }: UserButtonProps) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/edit-profile">
+            <Link href="/edutuj-profil">
               <PencilRulerIcon className="w-4 h-4 mr-2" />
               <span>Edytuj profil</span>
             </Link>

@@ -8,16 +8,11 @@ import UserDropdown from "../user-dropdown";
 import { auth } from "@/lib/auth";
 import { SignedIn } from "../auth/signed";
 import { UtilityData } from "@/types";
-import { SITE_NAME } from "@/constants";
+import { SITE_NAME } from "@/config";
 import NavbarSearch from "./navbar-search";
 import MobileMenu from "./mobile-menu";
 
-const Navbar = async ({
-  categories,
-  cuisines,
-  diets,
-  occasions,
-}: UtilityData) => {
+const Navbar = async ({ categories, attributes }: UtilityData) => {
   const session = await auth();
 
   return (
@@ -31,9 +26,7 @@ const Navbar = async ({
           <NavbarLinks
             className="hidden lg:flex"
             categories={categories}
-            occasions={occasions}
-            cuisines={cuisines}
-            diets={diets}
+            attributes={attributes}
           />
         </div>
         <div className="flex space-x-2 flex-1 justify-end">

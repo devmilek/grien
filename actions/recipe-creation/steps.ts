@@ -1,15 +1,18 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { preparationStep } from "@/lib/db/schema";
 import { PreparationStepSchema } from "@/schemas/recipe";
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export const addStep = async (
-  step: z.infer<typeof PreparationStepSchema>,
+  data: z.infer<typeof PreparationStepSchema>,
+  recipeId: number,
   position: number,
-  recipeId: string,
 ) => {
-  const validatedFields = PreparationStepSchema.safeParse(step);
+  const validatedFields = PreparationStepSchema.safeParse(data);
 
   if (!validatedFields.success) {
     throw new Error(validatedFields.error.message);
@@ -17,26 +20,34 @@ export const addStep = async (
 
   const { description, image } = validatedFields.data;
 
-  const newStep = await db.preparationStep.create({
-    data: {
-      description,
-      image,
-      position,
-      recipeId,
-    },
+  await db.insert(preparationStep).values({
+    description,
+    imageUrl: image,
+    position,
+    recipeId,
   });
 
-  return newStep;
+  revalidatePath("/a-new-recipe/[slug]/kroki-przygotowania", "page");
+};
+
+export const deleteStep = async (stepId: number) => {
+  await db.delete(preparationStep).where(eq(preparationStep.id, stepId));
+
+  revalidatePath("/a-new-recipe/[slug]/kroki-przygotowania", "page");
 };
 
 export const reorderSteps = async (
-  list: { id: string; position: number }[],
+  list: { id: number; position: number }[],
 ) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
   for (let item of list) {
-    await db.preparationStep.update({
-      where: { id: item.id },
-      data: { position: item.position },
-    });
+    // await db.preparationStep.update({
+    //   where: { id: item.id },
+    //   data: { position: item.position },
+    // });
+    await db
+      .update(preparationStep)
+      .set({ position: item.position })
+      .where(eq(preparationStep.id, item.id));
   }
+  revalidatePath("/a-new-recipe/[slug]/kroki-przygotowania", "page");
 };

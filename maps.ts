@@ -4,9 +4,9 @@ export const servingMap = {
 };
 
 export const difficultyMap = {
-  EASY: "Łatwy",
-  MEDIUM: "Średni",
-  HARD: "Trudny",
+  easy: "Łatwy",
+  medium: "Średni",
+  hard: "Trudny",
 };
 
 export const unitMap = {

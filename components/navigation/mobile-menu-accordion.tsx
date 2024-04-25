@@ -9,7 +9,7 @@ import {
 } from "../ui/accordion";
 import { useUtilityData } from "../providers/utility-data-provider";
 import { ScrollArea } from "../ui/scroll-area";
-import { ROUTES } from "@/constants";
+import { ROUTES } from "@/config";
 import { useRouter } from "next/navigation";
 
 const MobileMenuAccordion = ({

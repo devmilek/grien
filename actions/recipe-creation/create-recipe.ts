@@ -1,14 +1,18 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { BasicsInformationSchema } from "@/schemas/recipe";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { slugifyWithCounter } from "@sindresorhus/slugify";
+import { eq } from "drizzle-orm";
+import { recipe } from "@/lib/db/schema";
+import { db } from "@/lib/db";
+import { BasicsInformationSchema } from "@/schemas/recipe";
 
 export const createRecipe = async (
   data: z.infer<typeof BasicsInformationSchema>,
 ) => {
+  console.log("tworze przepis");
   const session = await auth();
 
   if (!session) {
@@ -18,6 +22,7 @@ export const createRecipe = async (
   }
 
   const validatedData = BasicsInformationSchema.safeParse(data);
+  const slugify = slugifyWithCounter();
 
   if (!validatedData.success) {
     return {
@@ -35,18 +40,36 @@ export const createRecipe = async (
     preparationTime,
   } = validatedData.data;
 
-  const recipe = await db.recipe.create({
-    data: {
-      name,
-      description,
-      image,
-      categoryId,
-      servings,
-      difficulty,
-      preparationTime,
-      userId: session.user.id,
-    },
+  let slug = slugify(name);
+  let isSlugUnique = false;
+
+  while (!isSlugUnique) {
+    const checkSlug = await db.query.recipe.findFirst({
+      where: eq(recipe.slug, slug),
+    });
+
+    if (!checkSlug) {
+      isSlugUnique = true;
+    } else {
+      slug = slugify(name);
+    }
+  }
+
+  slugify.reset();
+
+  console.log("przed dodaniem do bazy");
+
+  await db.insert(recipe).values({
+    name,
+    slug,
+    description,
+    imageUrl: image,
+    categoryId: Number(categoryId),
+    userId: session.user.id,
+    servings,
+    difficulty,
+    preparationTime,
   });
 
-  return { id: recipe.id };
+  return { slug };
 };

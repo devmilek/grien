@@ -8,7 +8,7 @@ import { Link } from "@react-email/link";
 import { Heading } from "@react-email/heading";
 import { Text } from "@react-email/text";
 import { Img } from "@react-email/components";
-import { EMAIL_CONFIRMATION_HREF } from "@/constants";
+import { EMAIL_CONFIRMATION_HREF } from "@/config";
 
 const baseUrl = process.env.BASE_URL;
 

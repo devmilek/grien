@@ -40,13 +40,13 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
       <div className="flex space-x-2 items-center">
         {recipe.published && (
           <Button variant="ghost" size="icon" asChild>
-            <Link href={"/recipe/" + recipe.id}>
+            <Link href={"/przepis/" + recipe.slug}>
               <EyeIcon className="w-4 h-4" />
             </Link>
           </Button>
         )}
         <Button size="icon" asChild>
-          <Link href={"/create-recipe/" + recipe.id}>
+          <Link href={"/utworz-przepis/" + recipe.slug}>
             <PenBox className="w-4 h-4" />
           </Link>
         </Button>

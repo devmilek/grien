@@ -6,46 +6,48 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
-const getMostPopularRecipes = async () => {
-  //TODO: get most popular not main dishes
-  const recipes = await db.recipe.findMany({
-    where: {
-      published: true,
-      category: {
-        slug: "dania-glowne",
-      },
-    },
-    include: {
-      category: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-      user: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
-    },
-    take: 3,
-  });
-  return recipes;
-};
+// const getMostPopularRecipes = async () => {
+//   //TODO: get most popular not main dishes
+//   const recipes = await db.recipe.findMany({
+//     where: {
+//       published: true,
+//       category: {
+//         slug: "dania-glowne",
+//       },
+//     },
+//     include: {
+//       category: {
+//         select: {
+//           id: true,
+//           name: true,
+//         },
+//       },
+//       user: {
+//         select: {
+//           id: true,
+//           name: true,
+//         },
+//       },
+//     },
+//     take: 3,
+//   });
+//   return recipes;
+// };
 
 const MostPopularFeed = async () => {
-  const recipes = await getMostPopularRecipes();
+  const recipes = await db.query.recipe.findMany();
+
+  console.log(recipes);
 
   return (
     <section className="grid md:grid-cols-2 gap-5">
-      {recipes.map((recipe, index) => (
+      {/* {recipes.map((recipe, index) => (
         <ImageCard
           recipe={recipe}
           key={recipe.id}
           className={index == 2 ? "md:col-span-2" : ""}
         />
-      ))}
+      ))} */}
     </section>
   );
 };

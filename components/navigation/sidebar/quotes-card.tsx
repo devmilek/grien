@@ -1,6 +1,6 @@
 "use client";
 
-import { QUOTES } from "@/constants";
+import { QUOTES } from "@/config/quotes";
 import { QuoteIcon } from "lucide-react";
 import React, { useEffect, useState } from "react";
 

@@ -15,7 +15,7 @@ interface CategoryCardProps {
 const CategoryCard = ({ category }: CategoryCardProps) => {
   return (
     <Link
-      href={`/categories/${category.slug}`}
+      href={`/kategorie/${category.slug}`}
       className={cn(
         "group relative w-full h-20 rounded-xl overflow-hidden block",
       )}

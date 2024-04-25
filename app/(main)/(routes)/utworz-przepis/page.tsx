@@ -1,12 +1,8 @@
 import React from "react";
-import CreateRecipeForm from "./_components/create-recipe-form";
+import EditBasicForm from "./edit-basic-form";
 
-const CreateNewRecipePage = () => {
-  return (
-    <div className="max-w-4xl mx-auto bg-white rounded-xl p-6 lg:p-12">
-      <CreateRecipeForm />
-    </div>
-  );
+const CreateRecipePage = () => {
+  return <EditBasicForm />;
 };
 
-export default CreateNewRecipePage;
+export default CreateRecipePage;
