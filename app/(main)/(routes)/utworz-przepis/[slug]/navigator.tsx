@@ -1,5 +1,6 @@
 "use client";
 
+import { ROUTES } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import {
   BadgeCheck,
@@ -14,7 +15,7 @@ import React from "react";
 
 const Navigator = () => {
   const params = useParams();
-  const editPath = "/a-new-recipe/" + params.slug;
+  const editPath = ROUTES.createRecipe + "/" + params.slug;
   const pathname = usePathname();
   const items = [
     {

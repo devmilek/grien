@@ -1,11 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { db } from "./db";
 import crypto from "crypto";
+import { eq } from "drizzle-orm";
+import { verificationTokens } from "./db/schema";
 
 export const getVerificationTokenByToken = async (token: string) => {
   try {
-    const verificationToken = await db.verificationToken.findUnique({
-      where: { token },
+    const verificationToken = await db.query.verificationTokens.findFirst({
+      where: eq(verificationTokens.token, token),
     });
 
     return verificationToken;
@@ -16,8 +18,8 @@ export const getVerificationTokenByToken = async (token: string) => {
 
 export const getVerificationTokenByEmail = async (email: string) => {
   try {
-    const verificationToken = await db.verificationToken.findFirst({
-      where: { email },
+    const verificationToken = await db.query.verificationTokens.findFirst({
+      where: eq(verificationTokens.identifier, email),
     });
 
     return verificationToken;
@@ -27,28 +29,24 @@ export const getVerificationTokenByEmail = async (email: string) => {
 };
 
 export const generateVerificationToken = async (email: string) => {
-  const token = uuidv4();
+  const token = crypto.randomBytes(28).toString("hex");
   const expires = new Date(new Date().getTime() + 3600 * 1000 * 24); // 24 hours
 
   const existingToken = await getVerificationTokenByEmail(email);
 
   if (existingToken) {
-    await db.verificationToken.delete({
-      where: {
-        id: existingToken.id,
-      },
-    });
+    await db
+      .delete(verificationTokens)
+      .where(eq(verificationTokens.identifier, email));
   }
 
-  const verficationToken = await db.verificationToken.create({
-    data: {
-      email,
-      token,
-      expires,
-    },
+  await db.insert(verificationTokens).values({
+    identifier: email,
+    token,
+    expires,
   });
 
-  return verficationToken;
+  return token;
 };
 
 // export const generateVerificationCode = async (email: string) => {

@@ -11,7 +11,7 @@ export const addAttribute = async (recipeId: number, attributeId: number) => {
     attributeId,
   });
 
-  revalidatePath("/a-new-recipe/[slug]/podsumowanie", "page");
+  revalidatePath("/utworz-przepis/[slug]/podsumowanie", "page");
 };
 
 export const removeAttribute = async (
@@ -27,5 +27,5 @@ export const removeAttribute = async (
       ),
     );
 
-  revalidatePath("/a-new-recipe/[slug]/podsumowanie", "page");
+  revalidatePath("/utworz-przepis/[slug]/podsumowanie", "page");
 };

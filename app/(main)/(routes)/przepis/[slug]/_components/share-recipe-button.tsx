@@ -21,9 +21,9 @@ import {
 import Link from "next/link";
 import { ShareRecipeInput } from "./share-recipe-input";
 
-const ShareRecipeButton = ({ recipeId }: { recipeId: string }) => {
+const ShareRecipeButton = ({ slug }: { slug: string }) => {
   const baseUrl = process.env.BASE_URL;
-  const url = `https://grief.devmilek.com/recipe/${recipeId}`;
+  const url = `https://grief.devmilek.com/przepis/${slug}`;
 
   const socialMediaShares = [
     {

@@ -2,90 +2,76 @@
 
 import { PAGINATION_ITEMS_PER_PAGE } from "@/config";
 import { db } from "@/lib/db";
+import {
+  category as categoryDb,
+  ingredient,
+  preparationStep,
+  recipe as recipeDB,
+} from "@/lib/db/schema";
 import { delay } from "@/lib/utils";
+import { and, count, eq } from "drizzle-orm";
 
-export const getUtilityData = async () => {
-  console.log("GET UTILITY DATA");
-  const [categories, occasions, cuisines, diets] = await db.$transaction([
-    db.category.findMany({
-      orderBy: {
-        recipes: {
-          _count: "desc",
-        },
-      },
-      include: {
-        _count: {
-          select: {
-            recipes: true,
-          },
-        },
-      },
-    }),
-    db.occasion.findMany(),
-    db.cuisine.findMany(),
-    db.diet.findMany(),
-  ]);
-  return { categories, occasions, cuisines, diets };
-};
-
-export const getRecipe = async (recipeId: string) => {
-  console.log("GET RECIPE");
-  const recipe = await db.recipe.findUnique({
-    where: {
-      id: recipeId,
+export const getRecipe = async (slug: string) => {
+  const recipe = await db.query.recipe.findFirst({
+    where: and(eq(recipeDB.slug, slug), eq(recipeDB.published, true)),
+    with: {
+      user: true,
+      category: true,
     },
   });
-
-  await delay(3000);
 
   return recipe;
 };
 
 export const getUnpublishedRecipesCount = async (userId: string) => {
-  const recipes = await db.recipe.count({
-    where: {
-      userId: userId,
-      published: false,
-    },
-  });
+  const recipes = await db
+    .select({ count: count() })
+    .from(recipeDB)
+    .where(and(eq(recipeDB.userId, userId), eq(recipeDB.published, false)));
 
-  return recipes;
+  return recipes[0].count;
 };
 
 export const getRecipesCount = async (userId: string) => {
-  const recipesCount = await db.recipe.count({
-    where: {
-      userId: userId,
-    },
-  });
+  const recipes = await db
+    .select({ count: count() })
+    .from(recipeDB)
+    .where(eq(recipeDB.userId, userId));
 
-  return recipesCount;
+  return recipes[0].count;
 };
 
-export const getIngredients = async (recipeId: string) => {
-  const ingredients = await db.ingredient.findMany({
-    where: {
-      recipeId: recipeId,
-    },
-    orderBy: {
-      name: "asc",
-    },
+export const getIngredients = async (recipeId: number) => {
+  const ingredients = await db.query.ingredient.findMany({
+    where: eq(ingredient.recipeId, recipeId),
   });
 
   return ingredients;
 };
 
-export const getSteps = async (recipeId: string) => {
-  const steps = await db.preparationStep.findMany({
-    where: {
-      recipeId: recipeId,
-    },
-    orderBy: {
-      position: "asc",
-    },
+export const getSteps = async (recipeId: number) => {
+  const ingredients = await db.query.preparationStep.findMany({
+    where: eq(preparationStep.recipeId, recipeId),
   });
 
-  return steps;
+  return ingredients;
+};
+
+export const getCategoryBySlug = async (slug: string) => {
+  const category = await db.query.category.findFirst({
+    where: eq(categoryDb.slug, slug),
+  });
+
+  return category;
+};
+
+export const countRecipesByCategory = async (categoryId: number) => {
+  const recipesCount = await db
+    .select({ count: count() })
+    .from(recipeDB)
+    .where(eq(recipeDB.categoryId, categoryId));
+
+  return recipesCount[0].count;
 };
 
 export const getNewestRecipes = async () => {

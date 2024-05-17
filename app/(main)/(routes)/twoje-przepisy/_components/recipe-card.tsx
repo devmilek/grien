@@ -7,20 +7,21 @@ import Link from "next/link";
 import React from "react";
 import RemoveRecipeButton from "./remove-recipe-button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { recipe } from "@/lib/db/schema";
 
 interface RecipeCardProps {
-  recipe: Recipe;
+  recipe: typeof recipe.$inferSelect;
 }
 
 const RecipeCard = ({ recipe }: RecipeCardProps) => {
   return (
     <div className="p-6 rounded-xl bg-white border flex items-center">
-      {recipe.image ? (
+      {recipe.imageUrl ? (
         <Image
           alt="Recipe image"
           width={200}
           height={200}
-          src={recipe.image}
+          src={recipe.imageUrl}
           className="aspect-square w-52 rounded-xl object-cover flex-shrink-0"
         />
       ) : (
@@ -46,7 +47,7 @@ const RecipeCard = ({ recipe }: RecipeCardProps) => {
           </Button>
         )}
         <Button size="icon" asChild>
-          <Link href={"/utworz-przepis/" + recipe.slug}>
+          <Link href={"/utworz-przepis/" + recipe.slug + "/podstawy"}>
             <PenBox className="w-4 h-4" />
           </Link>
         </Button>

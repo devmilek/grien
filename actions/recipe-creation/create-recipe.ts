@@ -12,7 +12,6 @@ import { BasicsInformationSchema } from "@/schemas/recipe";
 export const createRecipe = async (
   data: z.infer<typeof BasicsInformationSchema>,
 ) => {
-  console.log("tworze przepis");
   const session = await auth();
 
   if (!session) {
@@ -56,8 +55,6 @@ export const createRecipe = async (
   }
 
   slugify.reset();
-
-  console.log("przed dodaniem do bazy");
 
   await db.insert(recipe).values({
     name,

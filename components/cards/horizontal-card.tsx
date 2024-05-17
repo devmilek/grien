@@ -1,5 +1,5 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { ROUTES } from "@/config";
+import { ROUTES } from "@/config/routes";
 import { Recipe } from "@prisma/client";
 import moment from "moment";
 import Image from "next/image";

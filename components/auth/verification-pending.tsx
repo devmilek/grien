@@ -11,13 +11,12 @@ const VerificationPending = () => {
       </div>
       <h1 className="text-4xl font-display mb-3">Sprawdź swój adres email</h1>
       <p className="text-gray-500 text-sm">
-        Sprawdź swoją skrzynkę odbiorczą i kliknij w link weryfikacyjny, aby
-        zweryfikować swój adres email.
+        Kliknij w link weryfikacyjny, po kliknięciu twój adres email zostanie
+        zweryfikowany i zostaniesz automatycznie zalogowany.
       </p>
-      <Button className="w-full mt-8 mb-8">Wyślij email ponownie</Button>
       <Link
         href="/"
-        className="text-emerald-600 font-semibold text-xs flex justify-center"
+        className="text-emerald-600 font-semibold text-xs flex justify-center mt-8"
       >
         <ArrowLeft className="h-4 w-4 mr-2" />
         Wróć do strony głównej

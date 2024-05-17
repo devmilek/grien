@@ -27,27 +27,23 @@ export const addStep = async (
     recipeId,
   });
 
-  revalidatePath("/a-new-recipe/[slug]/kroki-przygotowania", "page");
+  revalidatePath("/utworz-przepis/[slug]/kroki-przygotowania", "page");
 };
 
 export const deleteStep = async (stepId: number) => {
   await db.delete(preparationStep).where(eq(preparationStep.id, stepId));
 
-  revalidatePath("/a-new-recipe/[slug]/kroki-przygotowania", "page");
+  revalidatePath("/utworz-przepis/[slug]/kroki-przygotowania", "page");
 };
 
 export const reorderSteps = async (
   list: { id: number; position: number }[],
 ) => {
   for (let item of list) {
-    // await db.preparationStep.update({
-    //   where: { id: item.id },
-    //   data: { position: item.position },
-    // });
     await db
       .update(preparationStep)
       .set({ position: item.position })
       .where(eq(preparationStep.id, item.id));
   }
-  revalidatePath("/a-new-recipe/[slug]/kroki-przygotowania", "page");
+  revalidatePath("/utworz-przepis/[slug]/kroki-przygotowania", "page");
 };

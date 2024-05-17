@@ -21,7 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { difficultyMap } from "@/maps";
+import { difficultyMap } from "@/config/maps";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Difficulty } from "@prisma/client";
 import { Loader2 } from "lucide-react";
@@ -33,6 +33,7 @@ import { recipe as OrmRecipe } from "@/lib/db/schema";
 import { editRecipeBasics } from "@/actions/recipe-creation/edit-recipe-basics";
 import { toast } from "sonner";
 import { BasicsInformationSchema } from "@/schemas/recipe";
+import { setPublish } from "@/actions/recipe-creation/set-publish";
 
 const EditBasicForm = ({
   recipe,
@@ -76,7 +77,7 @@ const EditBasicForm = ({
     } else {
       try {
         const { slug } = await createRecipe(values);
-        router.push(`/a-new-recipe/${slug}/skladniki`);
+        router.push(`/utworz-przepis/${slug}/skladniki`);
         toast.success("Pomyślnie utworzono przepis", {
           description:
             "Możesz teraz dodać składniki i kroki przygotowania do swojego przepisu.",
@@ -84,6 +85,13 @@ const EditBasicForm = ({
       } catch (e) {
         console.log(e);
       }
+    }
+  };
+
+  const onPublishChange = async () => {
+    if (recipe) {
+      await setPublish(recipe.id, !recipe.published);
+      router.refresh();
     }
   };
 
@@ -102,6 +110,11 @@ const EditBasicForm = ({
             </p>
           )}
         </div>
+        {editMode && (
+          <Button variant="secondary" size="lg" onClick={onPublishChange}>
+            {recipe.published ? "Cofnij publikacje" : "Opublikuj"}
+          </Button>
+        )}
         <Button
           className=""
           size="lg"

@@ -9,15 +9,15 @@ import {
 } from "../ui/accordion";
 import { useUtilityData } from "../providers/utility-data-provider";
 import { ScrollArea } from "../ui/scroll-area";
-import { ROUTES } from "@/config";
 import { useRouter } from "next/navigation";
+import { ROUTES } from "@/config/routes";
 
 const MobileMenuAccordion = ({
   setOpen,
 }: {
   setOpen: (open: boolean) => void;
 }) => {
-  const { categories, cuisines, diets, occasions } = useUtilityData();
+  const { categories, attributes } = useUtilityData();
 
   return (
     <ScrollArea className="h-full">
@@ -29,7 +29,7 @@ const MobileMenuAccordion = ({
           hrefPrefix={ROUTES.categories + "/"}
           setOpen={setOpen}
         />
-        <AccordionItemComponent
+        {/* <AccordionItemComponent
           value="occasions"
           title="Okazje"
           items={occasions}
@@ -49,7 +49,7 @@ const MobileMenuAccordion = ({
           items={diets}
           hrefPrefix={ROUTES.search + "?diets="}
           setOpen={setOpen}
-        />
+        /> */}
       </Accordion>
     </ScrollArea>
   );

@@ -1,10 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { users } from "@/lib/db/schema";
 import { User } from "@prisma/client";
 import Image from "next/image";
 import React from "react";
 
 interface AuthorCardProps {
-  user: User;
+  user: typeof users.$inferSelect;
 }
 
 const AuthorCard = ({ user }: AuthorCardProps) => {
@@ -19,7 +20,7 @@ const AuthorCard = ({ user }: AuthorCardProps) => {
       <div>
         <p className="text-xs text-neutral-500">Napisane przez</p>
         <h2 className="font-semibold">{user.name}</h2>
-        <p className="text-sm text-neutral-500 mt-2">{user.bio}</p>
+        {/* <p className="text-sm text-neutral-500 mt-2">{user.bio}</p> */}
       </div>
     </div>
   );

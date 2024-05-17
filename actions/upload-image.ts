@@ -13,7 +13,7 @@ const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUDNAME!;
 const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!;
 const apiSecret = process.env.CLOUDINARY_API_SECRET!;
 
-// @ts-ignore
+//@ts-ignore
 const cloudinaryConfig: CloudinaryConfig = cloudinary.config({
   cloud_name: cloudName,
   api_key: apiKey,

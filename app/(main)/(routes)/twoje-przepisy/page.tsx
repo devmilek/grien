@@ -5,10 +5,11 @@ import { RecipesFeed, RecipesFeedSkeleton } from "./_components/recipes-feed";
 import SortButton from "@/components/sort-button";
 import { getRecipesCount, getUnpublishedRecipesCount } from "@/data";
 import { auth } from "@/lib/auth";
+import { db } from "@/lib/db";
 
 interface YourRecipesPageProps {
   searchParams?: {
-    sortOrder?: "asc" | "desc";
+    orderBy?: "asc" | "desc";
     page?: string;
   };
 }
@@ -22,15 +23,12 @@ const YourRecipesPage = async ({ searchParams }: YourRecipesPageProps) => {
 
   const userId = session.user.id;
 
-  // const unpublishedRecipesCount = await getUnpublishedRecipesCount(userId);
-  // const recipesCount = await getRecipesCount(userId);
-
-  //TODO: Sort by published and unpublished
-  //TODO: Create card suspence
+  const unpublishedRecipesCount = await getUnpublishedRecipesCount(userId);
+  const recipesCount = await getRecipesCount(userId);
 
   const currentPage = Number(searchParams?.page) || 1;
 
-  const sortOrder = searchParams?.sortOrder || "asc";
+  const orderBy = searchParams?.orderBy || "desc";
 
   return (
     <section>
@@ -40,13 +38,13 @@ const YourRecipesPage = async ({ searchParams }: YourRecipesPageProps) => {
           <p className="text-sm font-medium text-neutral-600">
             Łączna ilość postów
           </p>
-          {/* <h1 className="font-display text-3xl mt-1">{recipesCount}</h1> */}
+          <h1 className="font-display text-3xl mt-1">{recipesCount}</h1>
         </div>
 
         <div className="p-6 rounded-xl bg-white border">
           <p className="text-sm font-medium text-neutral-600">Wersje robocze</p>
           <h1 className="font-display text-3xl mt-1">
-            {/* {unpublishedRecipesCount} */}
+            {unpublishedRecipesCount}
           </h1>
         </div>
 
@@ -57,7 +55,7 @@ const YourRecipesPage = async ({ searchParams }: YourRecipesPageProps) => {
         <SortButton />
       </header>
       <Suspense fallback={<RecipesFeedSkeleton />}>
-        <RecipesFeed currentPage={currentPage} sortOrder={sortOrder} />
+        <RecipesFeed currentPage={currentPage} sortOrder={orderBy} />
       </Suspense>
     </section>
   );

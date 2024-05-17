@@ -10,11 +10,11 @@ import {
 } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { MenuIcon, UserIcon } from "lucide-react";
-import { Session } from "next-auth/types";
 import UserDropdown from "../user-dropdown";
 import Link from "next/link";
 import NavbarSearch from "./navbar-search";
 import MobileMenuAccordion from "./mobile-menu-accordion";
+import { Session } from "next-auth";
 
 const MobileMenu = ({
   className,

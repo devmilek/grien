@@ -26,18 +26,13 @@ const EmailVerificationPage = async ({
       return <VerificationSuccess />;
     }
   }
-
-  if (!session && !searchParams?.token) {
-    return redirect("/");
-  }
-
   if (session) {
     const user = await getUserById(session.user.id);
     if (user?.emailVerified) {
-      return <VerificationSuccess />;
+      redirect("/");
     }
-    return <VerificationPending />;
   }
+  return <VerificationPending />;
 };
 
 export default EmailVerificationPage;

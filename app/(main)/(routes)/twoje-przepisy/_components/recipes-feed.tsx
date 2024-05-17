@@ -7,6 +7,8 @@ import Pagination from "@/components/pagination";
 import { auth } from "@/lib/auth";
 import { getRecipesCount } from "@/data";
 import EmptyState from "@/components/empty-state";
+import { recipe } from "@/lib/db/schema";
+import { asc, desc, eq } from "drizzle-orm";
 
 interface RecipesFeedProps {
   currentPage: number;
@@ -22,37 +24,36 @@ const RecipesFeed = async ({ currentPage, sortOrder }: RecipesFeedProps) => {
 
   const skip = (currentPage - 1) * PAGINATION_ITEMS_PER_PAGE;
 
-  // const totalRecipes = await getRecipesCount(session.user.id);
+  const totalRecipes = await getRecipesCount(session.user.id);
 
-  // const recipes = await db.recipe.findMany({
-  //   where: {
-  //     userId: session.user.id,
-  //   },
-  //   orderBy: {
-  //     createdAt: sortOrder,
-  //   },
-  //   take: PAGINATION_ITEMS_PER_PAGE,
-  //   skip: skip,
-  // });
+  const orderBy =
+    sortOrder === "asc" ? asc(recipe.createdAt) : desc(recipe.createdAt);
 
-  // const totalPages = Math.ceil(totalRecipes / PAGINATION_ITEMS_PER_PAGE);
+  const recipes = await db.query.recipe.findMany({
+    where: eq(recipe.userId, session.user.id),
+    orderBy,
+    limit: PAGINATION_ITEMS_PER_PAGE,
+    offset: skip,
+  });
 
-  // if (recipes.length === 0) {
-  //   return (
-  //     <div className="flex items-center p-8 bg-white rounded-xl justify-center text-center">
-  //       <EmptyState description="Nie utworzyłeś jeszcze żadnych przepisów" />
-  //     </div>
-  //   );
-  // }
+  const totalPages = Math.ceil(totalRecipes / PAGINATION_ITEMS_PER_PAGE);
+
+  if (recipes.length === 0) {
+    return (
+      <div className="flex items-center p-8 bg-white rounded-xl justify-center text-center">
+        <EmptyState description="Nie utworzyłeś jeszcze żadnych przepisów" />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="flex flex-col space-y-3 mb-6">
-        {/* {recipes.map((recipe) => (
+        {recipes.map((recipe) => (
           <RecipeCard key={recipe.id} recipe={recipe} />
-        ))} */}
+        ))}
       </div>
-      {/* <Pagination totalPages={totalPages} /> */}
+      <Pagination totalPages={totalPages} />
     </>
   );
 };

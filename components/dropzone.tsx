@@ -3,7 +3,7 @@
 import React, { ReactEventHandler, useCallback, useRef, useState } from "react";
 import { Accept, FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { CropperRef, Cropper } from "react-advanced-cropper";
+// import { CropperRef, Cropper } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
@@ -16,6 +16,8 @@ import {
 } from "@/actions/upload-image";
 import Image from "next/image";
 import { set } from "zod";
+import Cropper, { ReactCropperElement } from "react-cropper";
+import "cropperjs/dist/cropper.css";
 
 interface DropzoneProps {
   disabled?: boolean;
@@ -39,19 +41,32 @@ const Dropzone = ({
   },
   onUpload,
 }: DropzoneProps) => {
-  const cropperRef = useRef<CropperRef>(null);
+  const cropperRef = useRef<ReactCropperElement>(null);
   const [image, setImage] = useState<Image | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
   const uploadImage = async () => {
     try {
       setIsUploading(true);
-      const canvas = cropperRef.current?.getCanvas();
-      if (!canvas) return;
+      const cropper = cropperRef.current?.cropper;
+      async function getBlob(): Promise<Blob | null> {
+        return new Promise((resolve) => {
+          cropper?.getCroppedCanvas().toBlob(
+            (blob) => {
+              resolve(blob);
+            },
+            "image/webp",
+            0.9,
+          );
+        });
+      }
+      const blob = await getBlob();
+      console.log(blob);
+      // if (!canvas) return;
 
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, "image/webp"),
-      );
+      // const blob = await new Promise<Blob | null>((resolve) =>
+      //   canvas.toBlob(resolve, "image/webp"),
+      // );
 
       if (!blob) return;
       const { timestamp, signature } = await getSignature();
@@ -76,6 +91,7 @@ const Dropzone = ({
         signature: data?.signature,
         public_id: data?.public_id,
       });
+
       onUpload(buildCloudinaryUrl(data?.public_id));
     } catch (error) {
       console.error(error);
@@ -197,11 +213,13 @@ const Dropzone = ({
       <Dialog open={!!image}>
         <DialogContent>
           <Cropper
-            stencilProps={{
-              aspectRatio: 4 / 3,
-            }}
+            src={image?.src}
+            style={{ height: 400, width: "100%" }}
+            // Cropper.js options
+            aspectRatio={4 / 3}
+            guides={false}
             ref={cropperRef}
-            src={image && image.src}
+            viewMode={1}
           />
           <DialogFooter>
             <Button

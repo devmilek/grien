@@ -8,6 +8,7 @@ import { getUserByEmail } from "@/data/user";
 import { generateVerificationToken } from "@/lib/tokens";
 import { sendVerificationEmail } from "@/actions/auth/mail";
 import { login } from "./login";
+import { users } from "@/lib/db/schema";
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -22,21 +23,17 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const existingUser = await getUserByEmail(email);
 
   if (existingUser) {
-    return { error: "Adres jest już zajęty!" };
+    return { error: "Adres email jest już zajęty!" };
   }
 
-  await db.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
+  await db.insert(users).values({
+    email,
+    password: hashedPassword,
+    name,
   });
 
   const verificationToken = await generateVerificationToken(email);
-  await sendVerificationEmail(verificationToken.email, verificationToken.token);
-
-  await login({ email, password }, "/email-verification");
+  await sendVerificationEmail(email, verificationToken);
 
   return { success: "Email z kodem weryfikacyjnym został wysłany" };
 };

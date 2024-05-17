@@ -22,12 +22,13 @@ import { toast } from "sonner";
 import * as z from "zod";
 import Socials from "../socials";
 import { FormError } from "./form-error";
+import { credentialSignIn, magicLinkSignIn } from "@/actions/server-sign-in";
 
 const formSchema = z.object({
   email: z.string().email({
     message: "Niepoprawny adres email",
   }),
-  password: z.string(),
+  // password: z.string(),
 });
 
 const SignInForm = () => {
@@ -37,16 +38,14 @@ const SignInForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
+      // password: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setError("");
-    startTransition(() => {
-      login(values, "/").then((data) => {
-        setError(data?.error);
-      });
+    startTransition(async () => {
+      await credentialSignIn(values.email);
     });
   };
 
@@ -68,7 +67,7 @@ const SignInForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/* <FormField
               control={form.control}
               name="password"
               render={({ field }) => (
@@ -80,7 +79,7 @@ const SignInForm = () => {
                   <FormMessage />
                 </FormItem>
               )}
-            />
+            /> */}
             <div className="justify-end flex">
               <Link
                 className="text-xs font-semibold text-emerald-600"

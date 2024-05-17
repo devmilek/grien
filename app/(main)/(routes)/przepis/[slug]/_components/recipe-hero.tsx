@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { formatMins } from "@/lib/utils";
-import { difficultyMap } from "@/maps";
+import { difficultyMap } from "@/config/maps";
 import { Category, Recipe, User } from "@prisma/client";
 import { Clock, ChefHatIcon, Star, Share, Bookmark } from "lucide-react";
 import Image from "next/image";
@@ -9,22 +9,23 @@ import Link from "next/link";
 import React from "react";
 import ShareRecipeButton from "./share-recipe-button";
 import SaveRecipeButton from "./save-recipe-button";
+import { category, recipe, users } from "@/lib/db/schema";
 
 interface RecipeHeroProps {
-  recipe: Recipe & {
-    user: User;
-    category: Category | null;
+  recipe: typeof recipe.$inferInsert & {
+    user: typeof users.$inferInsert;
+    category: typeof category.$inferInsert;
   };
 }
 
 const RecipeHero = ({ recipe }: RecipeHeroProps) => {
-  if (!recipe || !recipe.image) {
+  if (!recipe || !recipe.imageUrl) {
     return null;
   }
   return (
     <div className="bg-white flex flex-col md:flex-row p-4 lg:p-7 rounded-xl gap-x-8 items-center">
       <Image
-        src={recipe.image}
+        src={recipe.imageUrl}
         alt={recipe?.name}
         width={660}
         height={440}
@@ -45,9 +46,9 @@ const RecipeHero = ({ recipe }: RecipeHeroProps) => {
             </Avatar>
             <p className="text-emerald-700">{recipe.user.name}</p>
           </Link>
-          <span className="text-neutral-500">•</span>
+          <span className="text-neutral-500 text-sm">•</span>
           <p className="text-xs text-gray-500">
-            {recipe.createdAt.toLocaleDateString()}
+            {recipe.createdAt?.toLocaleDateString()}
           </p>
         </div>
         <div className="flex flex-wrap gap-2 mt-4">
@@ -60,7 +61,7 @@ const RecipeHero = ({ recipe }: RecipeHeroProps) => {
           </Button>
           <Button size="xs" variant="outline">
             <ChefHatIcon className="h-4 w-4 mr-2" />
-            {difficultyMap[recipe.difficulty]}
+            {difficultyMap[recipe.difficulty!]}
           </Button>
           <Button size="xs" variant="outline">
             {recipe.servings} {recipe.servings > 1 ? "porcji" : "porcja"}
@@ -70,8 +71,8 @@ const RecipeHero = ({ recipe }: RecipeHeroProps) => {
           {recipe.description}
         </p>
         <div className="w-full flex items-center justify-between pt-3 border-t">
-          <SaveRecipeButton recipeId={recipe.id} />
-          <ShareRecipeButton recipeId={recipe.id} />
+          {/* <SaveRecipeButton recipeId={recipe.id} /> */}
+          <ShareRecipeButton slug={recipe.slug} />
         </div>
       </div>
     </div>

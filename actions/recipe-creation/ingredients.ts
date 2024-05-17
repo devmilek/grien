@@ -27,7 +27,7 @@ export const addIngredient = async (
     recipeId,
   });
 
-  revalidatePath("/a-new-recipe/[slug]/skladniki", "page");
+  revalidatePath("/utworz-przepis/[slug]/skladniki", "page");
 };
 
 export const deleteIngredient = async (ingredientId: number) => {
@@ -39,5 +39,5 @@ export const deleteIngredient = async (ingredientId: number) => {
 
   await db.delete(ingredient).where(eq(ingredient.id, ingredientId));
 
-  revalidatePath("/a-new-recipe/[slug]/skladniki", "page");
+  revalidatePath("/utworz-przepis/[slug]/skladniki", "page");
 };

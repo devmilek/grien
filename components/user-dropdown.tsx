@@ -67,7 +67,7 @@ const UserDropdown = ({ profile }: UserButtonProps) => {
           <DropdownMenuItem asChild>
             <Link href="/twoje-przepisy">
               <Book className="mr-2 w-4 h-4" />
-              <span>Zarządzaj przepisami</span>
+              <span>Twoje przepisy</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
@@ -80,7 +80,7 @@ const UserDropdown = ({ profile }: UserButtonProps) => {
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/edutuj-profil">
+            <Link href="/edytuj-profil">
               <PencilRulerIcon className="w-4 h-4 mr-2" />
               <span>Edytuj profil</span>
             </Link>

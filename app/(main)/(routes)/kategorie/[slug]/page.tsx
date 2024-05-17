@@ -10,6 +10,7 @@ import SortButton from "@/components/sort-button";
 import RecipesHero from "@/components/recipes-hero";
 import SectionWrapper from "@/components/section-wrapper";
 import { HorizontalCardSkeletonFeed } from "@/components/cards/horizontal-card";
+import { countRecipesByCategory, getCategoryBySlug } from "@/data";
 
 export const generateMetadata = async ({
   params,
@@ -48,24 +49,13 @@ const Page = async ({ params, searchParams }: CategoryPageProps) => {
   const orderBy = searchParams?.orderBy || "desc";
   const currentPage = Number(searchParams?.page) || 1;
 
-  const category = await db.category.findUnique({
-    where: {
-      slug: params.slug,
-    },
-    include: {
-      _count: {
-        select: { recipes: true },
-      },
-    },
-  });
-
+  const category = await getCategoryBySlug(params.slug);
   if (!category) {
     return notFound();
   }
+  const recipesCount = await countRecipesByCategory(category.id);
 
-  const totalPages = Math.ceil(
-    category._count.recipes / PAGINATION_ITEMS_PER_PAGE,
-  );
+  const totalPages = Math.ceil(recipesCount / PAGINATION_ITEMS_PER_PAGE);
 
   return (
     <div className="">
@@ -80,7 +70,7 @@ const Page = async ({ params, searchParams }: CategoryPageProps) => {
             <h1 className="font-display text-3xl lg:text-4xl">Wyniki</h1>
             <SortButton />
           </header>
-          {category._count.recipes > 0 ? (
+          {category.recipesCount.recipes > 0 ? (
             <>
               <Suspense fallback={<HorizontalCardSkeletonFeed count={5} />}>
                 <RecipesFeed

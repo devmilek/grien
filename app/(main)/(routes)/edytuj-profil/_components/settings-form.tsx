@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { users } from "@/lib/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { User } from "@prisma/client";
 import axios from "axios";
@@ -23,12 +24,12 @@ import { toast } from "sonner";
 import * as z from "zod";
 
 interface SettingsFormProps {
-  user: User;
+  user: typeof users.$inferSelect;
 }
 
 const formSchema = z.object({
   name: z.string().min(2),
-  email: z.string().email(),
+  // email: z.string().email(),
   bio: z.string(),
 });
 
@@ -38,7 +39,7 @@ const SettingsForm = ({ user }: SettingsFormProps) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: user.email || "",
+      // email: user.email || "",
       name: user.name || "",
       bio: user.bio || "",
     },
@@ -79,7 +80,7 @@ const SettingsForm = ({ user }: SettingsFormProps) => {
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             name="email"
             control={form.control}
             render={({ field }) => (
@@ -90,7 +91,7 @@ const SettingsForm = ({ user }: SettingsFormProps) => {
                 </FormControl>
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             name="bio"
             control={form.control}

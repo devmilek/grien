@@ -3,6 +3,9 @@
 import { db } from "@/lib/db";
 import { getVerificationTokenByToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
+import { users, verificationTokens } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { signIn } from "@/lib/auth";
 
 export const verificateWithToken = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
@@ -17,22 +20,25 @@ export const verificateWithToken = async (token: string) => {
     return { error: "Token wygasł!" };
   }
 
-  const existingUser = await getUserByEmail(existingToken.email);
+  const existingUser = await getUserByEmail(existingToken.identifier);
 
   if (!existingUser) {
     return { error: "Email nie istnieje!" };
   }
 
-  await db.user.update({
-    where: { id: existingUser.id },
-    data: {
+  await db
+    .update(users)
+    .set({
       emailVerified: new Date(),
-      email: existingToken.email,
-    },
-  });
+    })
+    .where(eq(users.email, existingToken.identifier));
 
-  await db.verificationToken.delete({
-    where: { id: existingToken.id },
+  await db
+    .delete(verificationTokens)
+    .where(eq(verificationTokens.token, token));
+
+  await signIn("tokenAuth", {
+    token,
   });
 
   return { success: "Email zweryfikowany!" };

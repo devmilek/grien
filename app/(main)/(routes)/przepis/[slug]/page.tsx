@@ -4,52 +4,12 @@ import IngredientsFeed from "./_components/ingredients-feed";
 import StepsFeed from "./_components/steps-feed";
 import AuthorCard from "./_components/author-card";
 import RecipeHero from "./_components/recipe-hero";
-
-export const generateMetadata = async ({
-  params,
-}: {
-  params: { slug: string };
-}) => {
-  const recipe = await db.recipe.findUnique({
-    where: {
-      slug: params.slug,
-    },
-    include: {
-      user: true,
-    },
-  });
-
-  if (!recipe) {
-    return null;
-  }
-
-  return {
-    title: recipe.name,
-    description: recipe.description,
-    image: recipe.image,
-    type: "article",
-    article: {
-      publishedTime: recipe.createdAt,
-      modifiedTime: recipe.updatedAt,
-      authors: [recipe.user?.name],
-    },
-  };
-};
+import { getRecipe } from "@/data";
 
 const page = async ({ params }: { params: { slug: string } }) => {
-  const recipe = await db.recipe.findUnique({
-    where: {
-      slug: params.slug,
-      published: true,
-    },
-    include: {
-      user: true,
-      category: true,
-      ingredients: true,
-    },
-  });
+  const recipe = await getRecipe(params.slug);
 
-  if (!recipe || !recipe.image) {
+  if (!recipe || !recipe.imageUrl) {
     return null;
   }
 

@@ -1,9 +1,10 @@
 "use client";
 
+import { oAuthSignIn } from "@/actions/server-sign-in";
 import { Icons } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { DEFAULT_LOGIN_REDIRECT } from "@/config";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/lib/auth";
 import { useSearchParams } from "next/navigation";
 import React from "react";
 
@@ -11,10 +12,8 @@ const Socials = () => {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
 
-  const onClick = (provider: "google" | "github") => {
-    signIn(provider, {
-      callbackUrl: callbackUrl || DEFAULT_LOGIN_REDIRECT,
-    });
+  const onClick = async (provider: "google" | "github") => {
+    await oAuthSignIn(provider);
   };
 
   return (

@@ -1,8 +1,8 @@
 import { DrumstickIcon } from "lucide-react";
 import React from "react";
 import { Button } from "./ui/button";
-import { ROUTES } from "@/config";
 import Link from "next/link";
+import { ROUTES } from "@/config/routes";
 
 interface EmptyStateProps {
   heading?: string;

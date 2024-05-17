@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteRecipe } from "@/actions/recipe-creation/delete-recipe";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,14 +18,14 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
-const RemoveRecipeButton = ({ id }: { id: string }) => {
+const RemoveRecipeButton = ({ id }: { id: number }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const handleDelete = async () => {
     try {
       setIsLoading(true);
-      await deleteRecipe(id);
+      // await deleteRecipe(id);
       router.refresh();
       toast.success("Pomyślnie usunięto przepis");
       setIsOpen(false);

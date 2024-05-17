@@ -32,6 +32,6 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     from: "grief@devmilek.pl",
     to: email,
     subject: "Potwierdź swój adres email | Grief",
-    react: MailConfirmationEmail({ token }),
+    html: `<p>Twój kod weryfikacyjny to: ${token}</p>`,
   });
 };
