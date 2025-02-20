@@ -2,8 +2,6 @@
 
 import React from "react";
 import { useForm } from "react-hook-form";
-import { SignUpSchema } from "./schema";
-import { signUpSchema } from "./schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -17,23 +15,22 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
+import { signInSchema, SignInSchema } from "./schema";
 
-const SignUpForm = () => {
+const SignInForm = () => {
   const [error, setError] = React.useState<string | null>(null);
-  const form = useForm<SignUpSchema>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
   });
 
-  const onSubmit = async (values: SignUpSchema) => {
-    const { error } = await authClient.signUp.email({
+  const onSubmit = async (values: SignInSchema) => {
+    const { error } = await authClient.signIn.email({
       email: values.email,
       password: values.password,
-      name: values.name,
       callbackURL: "/",
     });
 
@@ -49,19 +46,6 @@ const SignUpForm = () => {
   return (
     <Form {...form}>
       <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nazwa</FormLabel>
-              <FormControl>
-                <Input {...field} type="text" autoComplete="name" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           name="email"
           control={form.control}
@@ -103,4 +87,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpForm;
+export default SignInForm;
