@@ -5,12 +5,14 @@ import NavItems from "./nav-items";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import db from "@/db";
+import UserButton from "./user-button";
 
 const Navbar = async () => {
   const categories = await db.query.categories.findMany();
   const occasions = await db.query.occasions.findMany();
   const cuisines = await db.query.cuisines.findMany();
   const diets = await db.query.diets.findMany();
+
   return (
     <header className="h-16 border-b">
       <div className="container mx-auto h-full flex items-center gap-8">
@@ -36,6 +38,7 @@ const Navbar = async () => {
           <Button variant="ghost" size="icon" className="shrink-0">
             <HeartIcon />
           </Button>
+          <UserButton />
         </div>
       </div>
     </header>
