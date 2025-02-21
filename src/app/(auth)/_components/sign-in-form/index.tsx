@@ -16,8 +16,10 @@ import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { signInSchema, SignInSchema } from "./schema";
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
+  const router = useRouter();
   const [error, setError] = React.useState<string | null>(null);
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -40,7 +42,10 @@ const SignInForm = () => {
       } else {
         toast.error("Something went wrong. Please try again.");
       }
+      return;
     }
+
+    router.push("/");
   };
 
   return (
@@ -81,7 +86,7 @@ const SignInForm = () => {
             {error}
           </div>
         )}
-        <Button>Utwórz konto</Button>
+        <Button>Zaloguj się</Button>
       </form>
     </Form>
   );

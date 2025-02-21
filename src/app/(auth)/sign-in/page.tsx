@@ -12,6 +12,7 @@ const SignInPage = () => {
           przygodę.
         </p>
       </header>
+
       <SignInForm />
       <div>
         <p className="text-center text-sm text-muted-foreground">

@@ -17,8 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
+  const router = useRouter();
   const [error, setError] = React.useState<string | null>(null);
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
@@ -38,13 +40,19 @@ const SignUpForm = () => {
     });
 
     if (error) {
+      console.log(error);
       if (error.message) {
         setError(error.message);
       } else {
         toast.error("Something went wrong. Please try again.");
       }
+      return;
     }
+
+    router.push("/");
   };
+
+  const isLoading = form.formState.isSubmitting;
 
   return (
     <Form {...form}>
@@ -56,7 +64,12 @@ const SignUpForm = () => {
             <FormItem>
               <FormLabel>Nazwa</FormLabel>
               <FormControl>
-                <Input {...field} type="text" autoComplete="name" />
+                <Input
+                  {...field}
+                  type="text"
+                  autoComplete="name"
+                  disabled={isLoading}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -93,7 +106,7 @@ const SignUpForm = () => {
           )}
         />
         {error && (
-          <div className="bg-destructive/5 text-destructive border rounded-md border-destructive p-4">
+          <div className="bg-destructive/5 text-sm text-destructive border rounded-md border-destructive p-4">
             {error}
           </div>
         )}
