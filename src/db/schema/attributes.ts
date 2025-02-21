@@ -5,6 +5,11 @@ export const categories = pgTable("categories", {
   name: varchar("name", {
     length: 100,
   }).notNull(),
+  slug: varchar("slug", {
+    length: 100,
+  })
+    .notNull()
+    .unique(),
 });
 
 export type Category = typeof categories.$inferSelect;
@@ -15,6 +20,11 @@ export const occasions = pgTable("occasions", {
   name: varchar("name", {
     length: 100,
   }).notNull(),
+  slug: varchar("slug", {
+    length: 100,
+  })
+    .notNull()
+    .unique(),
 });
 
 export type Occasion = typeof occasions.$inferSelect;
@@ -25,6 +35,11 @@ export const cuisines = pgTable("cuisines", {
   name: varchar("name", {
     length: 100,
   }).notNull(),
+  slug: varchar("slug", {
+    length: 100,
+  })
+    .notNull()
+    .unique(),
 });
 
 export type Cuisine = typeof cuisines.$inferSelect;
@@ -35,6 +50,11 @@ export const diets = pgTable("diets", {
   name: varchar("name", {
     length: 100,
   }).notNull(),
+  slug: varchar("slug", {
+    length: 100,
+  })
+    .notNull()
+    .unique(),
 });
 
 export type Diet = typeof diets.$inferSelect;

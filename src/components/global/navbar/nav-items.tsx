@@ -26,7 +26,7 @@ const NavItems = ({
       <nav className={cn("h-full text-sm flex", className)}>
         <button
           className={cn(
-            "border-b-2 border-transparent  h-16 px-4 flex items-center gap-2 transition-colors",
+            "border-b-2 border-transparent  h-16 px-4 flex items-center gap-2 transition-colors cursor-pointer",
             {
               "border-emerald-600 text-emerald-700 font-medium": categoriesOpen,
             }
@@ -40,8 +40,8 @@ const NavItems = ({
             })}
           />
         </button>
-        <button className="h-16 px-4">Składniki</button>
-        <button className="h-16 px-4">Książki kucharskie</button>
+        <button className="h-16 px-4 cursor-pointer">Składniki</button>
+        <button className="h-16 px-4 cursor-pointer">Książki kucharskie</button>
       </nav>
       <Portal>
         {categoriesOpen && (
