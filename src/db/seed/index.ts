@@ -1,4 +1,5 @@
 "use server";
+import slugify from "@sindresorhus/slugify";
 import db from "..";
 import {
   categories,
@@ -71,18 +72,22 @@ const dietsData = [
 export async function seed() {
   const categoriesBatch: CategoryInsert[] = categoriesData.map((category) => ({
     name: category.name,
+    slug: slugify(category.name),
   }));
 
   const occasionsBatch: OccasionInsert[] = occasionsData.map((occasion) => ({
     name: occasion.name,
+    slug: slugify(occasion.name),
   }));
 
   const cuisinesBatch: CuisineInsert[] = cuisinesData.map((cuisine) => ({
     name: cuisine.name,
+    slug: slugify(cuisine.name),
   }));
 
   const dietsBatch: DietInsert[] = dietsData.map((diet) => ({
     name: diet.name,
+    slug: slugify(diet.name),
   }));
 
   await db.insert(categories).values(categoriesBatch);
