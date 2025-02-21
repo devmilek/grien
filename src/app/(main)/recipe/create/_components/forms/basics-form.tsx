@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { CreateRecipeSchema, createRecipeSchema } from "./schema";
+import { RecipeBasicsSchema, recipeBasicsSchema } from "./schema";
 import {
   Form,
   FormControl,
@@ -24,22 +24,33 @@ import {
 } from "@/components/ui/select";
 import { TimeCombobox } from "../comboboxes/time-combobox";
 import { Button } from "@/components/ui/button";
+import { useRecipeStore } from "../use-recipe-store";
 
 const BasicsForm = () => {
-  const form = useForm<CreateRecipeSchema>({
-    resolver: zodResolver(createRecipeSchema),
+  const { basics, setBasics, setCurrentStep } = useRecipeStore();
+  const form = useForm<RecipeBasicsSchema>({
+    resolver: zodResolver(recipeBasicsSchema),
     defaultValues: {
-      description: "",
-      difficulty: undefined,
-      preparationTime: 0,
+      description: basics.description,
+      difficulty: basics.difficulty,
+      preparationTime: basics.preparationTime,
+      portions: basics.portions,
+      categoryId: basics.categoryId,
+      name: basics.name,
     },
   });
+
+  const onSubmit = (data: RecipeBasicsSchema) => {
+    setBasics(data);
+    setCurrentStep("ingredients");
+  };
+
   return (
     <div className="max-w-5xl mx-auto">
       <h2 className="font-display text-3xl">Podstawy</h2>
       <div className="bg-white rounded-xl p-12 mt-6">
         <Form {...form}>
-          <form className="space-y-8">
+          <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               name="name"
               control={form.control}
@@ -150,7 +161,7 @@ const BasicsForm = () => {
           </form>
         </Form>
         <div className="justify-end w-full mt-10 flex">
-          <Button>Dalej</Button>
+          <Button onClick={form.handleSubmit(onSubmit)}>Dalej</Button>
         </div>
       </div>
     </div>
