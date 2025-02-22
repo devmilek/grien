@@ -14,7 +14,7 @@ const Navbar = async () => {
   const diets = await db.query.diets.findMany();
 
   return (
-    <header className="h-16 border-b fixed left-0 w-full top-0 bg-white">
+    <header className="h-16 border-b fixed left-0 w-full top-0 bg-white z-50">
       <div className="container mx-auto h-full flex items-center gap-8">
         <Link
           href="/"

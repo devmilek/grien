@@ -46,11 +46,17 @@ export const recipes = pgTable("recipes", {
     .$onUpdate(() => new Date()),
 });
 
-export const recipesRelations = relations(recipes, ({ one }) => ({
+export const recipesRelations = relations(recipes, ({ one, many }) => ({
   image: one(images, {
     fields: [recipes.imageId],
     references: [images.id],
   }),
+  user: one(users, {
+    fields: [recipes.userId],
+    references: [users.id],
+  }),
+  ingredients: many(recipeIngredients),
+  steps: many(recipeSteps),
 }));
 
 export type Recipe = typeof recipes.$inferSelect;
@@ -66,9 +72,7 @@ export const recipeIngredients = pgTable("recipe_ingredients", {
   ingredient: varchar("ingredient", {
     length: 255,
   }).notNull(),
-  amount: varchar("amount", {
-    length: 255,
-  }),
+  amount: smallint("amount"),
   unit: varchar("unit", {
     length: 255,
   }),
@@ -79,6 +83,16 @@ export const recipeIngredients = pgTable("recipe_ingredients", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
+
+export const recipeIngredientsRelations = relations(
+  recipeIngredients,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeIngredients.recipe_id],
+      references: [recipes.id],
+    }),
+  })
+);
 
 export type RecipeIngredient = typeof recipeIngredients.$inferSelect;
 export type RecipeIngredientInsert = typeof recipeIngredients.$inferInsert;
@@ -104,6 +118,17 @@ export const recipeSteps = pgTable("recipe_steps", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 });
+
+export const recipeStepsRelations = relations(recipeSteps, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [recipeSteps.recipe_id],
+    references: [recipes.id],
+  }),
+  image: one(images, {
+    fields: [recipeSteps.image],
+    references: [images.id],
+  }),
+}));
 
 export type RecipeStep = typeof recipeSteps.$inferSelect;
 export type RecipeStepInsert = typeof recipeSteps.$inferInsert;
