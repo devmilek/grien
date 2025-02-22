@@ -5,6 +5,7 @@ import PopularFeed from "./_sections/popular-feed";
 import MainDishesFeed from "./_sections/main-dishes-feed";
 import OtherRecipesFeed from "./_sections/other-recipes-feed";
 import QuoteCard from "./_sections/quote-card";
+import DrinksFeed from "./_sections/drinks-feed";
 
 export default async function Home() {
   const categories = await db.query.categories.findMany();
@@ -19,6 +20,7 @@ export default async function Home() {
         </div>
         <div className="w-[350px]">
           <QuoteCard />
+          <DrinksFeed />
         </div>
       </div>
       <OtherRecipesFeed />

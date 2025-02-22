@@ -43,7 +43,7 @@ const HorizontalCard = ({
         </Link>
         <Link
           href={"/" + slug}
-          className="text-2xl font-display link-underline link-underline-black"
+          className="text-xl font-display link-underline link-underline-black"
         >
           {name}
         </Link>
