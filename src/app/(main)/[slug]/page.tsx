@@ -26,6 +26,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import CookingModeModal from "./_components/cooking-mode-modal";
 
 const RecipePage = async ({
   params,
@@ -101,10 +102,7 @@ const RecipePage = async ({
             </p>
           </div>
           <div className="border-t pt-2 flex gap-2">
-            <Button>
-              <PlayIcon />
-              Tryb gotowania
-            </Button>
+            <CookingModeModal steps={recipe.steps} />
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
