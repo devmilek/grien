@@ -45,7 +45,7 @@ const NavItems = ({
       </nav>
       <Portal>
         {categoriesOpen && (
-          <div className="absolute top-16 bg-white w-full py-6 border-b z-50">
+          <div className="fixed top-16 left-0 bg-white w-full py-6 border-b z-50">
             <div className="container mx-auto flex justify-between">
               <div>
                 <h2 className="font-display text-2xl text-emerald-700">

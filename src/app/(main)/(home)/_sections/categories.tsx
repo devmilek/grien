@@ -2,26 +2,43 @@
 
 import {
   Carousel,
+  CarouselApi,
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
 import { Category } from "@/db/schema";
 import Image from "next/image";
 import React from "react";
-import Autoplay from "embla-carousel-autoplay";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const CategoriesSection = ({ categories }: { categories: Category[] }) => {
+  const [api, setApi] = React.useState<CarouselApi>();
+
   return (
     <section>
-      <h2 className="font-display text-4xl mb-6">Kategorie</h2>
+      <header className="flex items-center justify-between">
+        <h2 className="font-display text-4xl mb-6">Kategorie</h2>
+        <div className="space-x-2">
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={() => api?.scrollPrev()}
+          >
+            <ChevronLeft />
+          </Button>
+          <Button
+            size="icon"
+            variant="outline"
+            onClick={() => api?.scrollNext()}
+          >
+            <ChevronRight />
+          </Button>
+        </div>
+      </header>
       <Carousel
-        plugins={[
-          Autoplay({
-            delay: 2000,
-            stopOnMouseEnter: true,
-          }),
-        ]}
+        setApi={setApi}
         opts={{
           align: "start",
           loop: true,
