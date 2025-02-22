@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { images } from "./image";
 import { users } from "./users";
+import { relations } from "drizzle-orm";
 
 export const difficulties = ["easy", "medium", "hard"] as const;
 export type Difficulty = (typeof difficulties)[number];
@@ -15,7 +16,7 @@ export const difficultiesEnum = pgEnum("difficulty", difficulties);
 
 export const recipes = pgTable("recipes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  image: uuid("image").references(() => images.id, {
+  imageId: uuid("image").references(() => images.id, {
     onDelete: "set null",
   }),
   name: varchar("name", {
@@ -45,10 +46,17 @@ export const recipes = pgTable("recipes", {
     .$onUpdate(() => new Date()),
 });
 
+export const recipesRelations = relations(recipes, ({ one }) => ({
+  image: one(images, {
+    fields: [recipes.imageId],
+    references: [images.id],
+  }),
+}));
+
 export type Recipe = typeof recipes.$inferSelect;
 export type RecipeInsert = typeof recipes.$inferInsert;
 
-export const recipeIngredient = pgTable("recipe_ingredient", {
+export const recipeIngredients = pgTable("recipe_ingredients", {
   id: uuid("id").primaryKey().defaultRandom(),
   recipe_id: uuid("recipe_id")
     .notNull()
@@ -60,10 +68,10 @@ export const recipeIngredient = pgTable("recipe_ingredient", {
   }).notNull(),
   amount: varchar("amount", {
     length: 255,
-  }).notNull(),
+  }),
   unit: varchar("unit", {
     length: 255,
-  }).notNull(),
+  }),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
@@ -72,19 +80,20 @@ export const recipeIngredient = pgTable("recipe_ingredient", {
     .$onUpdate(() => new Date()),
 });
 
-export type RecipeIngredient = typeof recipeIngredient.$inferSelect;
-export type RecipeIngredientInsert = typeof recipeIngredient.$inferInsert;
+export type RecipeIngredient = typeof recipeIngredients.$inferSelect;
+export type RecipeIngredientInsert = typeof recipeIngredients.$inferInsert;
 
-export const recipeStep = pgTable("recipe_step", {
+export const recipeSteps = pgTable("recipe_steps", {
   id: uuid("id").primaryKey().defaultRandom(),
   recipe_id: uuid("recipe_id")
     .notNull()
     .references(() => recipes.id, {
       onDelete: "cascade",
     }),
-  step: varchar("step", {
-    length: 255,
+  content: varchar("content", {
+    length: 500,
   }).notNull(),
+  order: smallint("order").notNull(),
   image: uuid("image").references(() => images.id, {
     onDelete: "set null",
   }),
@@ -96,5 +105,5 @@ export const recipeStep = pgTable("recipe_step", {
     .$onUpdate(() => new Date()),
 });
 
-export type RecipeStep = typeof recipeStep.$inferSelect;
-export type RecipeStepInsert = typeof recipeStep.$inferInsert;
+export type RecipeStep = typeof recipeSteps.$inferSelect;
+export type RecipeStepInsert = typeof recipeSteps.$inferInsert;
