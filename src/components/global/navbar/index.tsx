@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import db from "@/db";
 import UserButton from "./user-button";
+import { getCurrentSession } from "@/lib/auth/utils";
 
 const Navbar = async () => {
+  const { user } = await getCurrentSession();
   const categories = await db.query.categories.findMany();
   const occasions = await db.query.occasions.findMany();
   const cuisines = await db.query.cuisines.findMany();
@@ -32,13 +34,26 @@ const Navbar = async () => {
         />
         <div className="flex gap-2">
           <Input placeholder="Wyszukaj przepisu..." />
-          <Button variant="ghost" size="icon" className="shrink-0">
-            <BellIcon />
-          </Button>
-          <Button variant="ghost" size="icon" className="shrink-0">
-            <HeartIcon />
-          </Button>
-          <UserButton />
+          {user ? (
+            <>
+              <Button variant="ghost" size="icon" className="shrink-0">
+                <BellIcon />
+              </Button>
+              <Button variant="ghost" size="icon" className="shrink-0">
+                <HeartIcon />
+              </Button>
+              <UserButton user={user} />
+            </>
+          ) : (
+            <>
+              <Button variant="outline" asChild>
+                <Link href="/sign-in">Zaloguj się</Link>
+              </Button>
+              <Button variant="default" asChild>
+                <Link href="/sign-up">Zarejestruj się</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>

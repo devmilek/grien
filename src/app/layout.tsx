@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <QueryProvider>
           {children}
-          <Toaster />
+          <Toaster theme="light" />
         </QueryProvider>
       </body>
     </html>

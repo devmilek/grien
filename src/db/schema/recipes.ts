@@ -1,6 +1,7 @@
 import {
   pgEnum,
   pgTable,
+  primaryKey,
   smallint,
   timestamp,
   uuid,
@@ -9,6 +10,7 @@ import {
 import { images } from "./image";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
+import { categories, cuisines, diets } from "./attributes";
 
 export const difficulties = ["easy", "medium", "hard"] as const;
 export type Difficulty = (typeof difficulties)[number];
@@ -19,6 +21,9 @@ export const recipes = pgTable("recipes", {
   imageId: uuid("image").references(() => images.id, {
     onDelete: "set null",
   }),
+  categoryId: uuid("category_id")
+    .notNull()
+    .references(() => categories.id),
   name: varchar("name", {
     length: 255,
   }).notNull(),
@@ -57,6 +62,10 @@ export const recipesRelations = relations(recipes, ({ one, many }) => ({
   }),
   ingredients: many(recipeIngredients),
   steps: many(recipeSteps),
+  category: one(categories, {
+    fields: [recipes.categoryId],
+    references: [categories.id],
+  }),
 }));
 
 export type Recipe = typeof recipes.$inferSelect;
@@ -72,7 +81,7 @@ export const recipeIngredients = pgTable("recipe_ingredients", {
   ingredient: varchar("ingredient", {
     length: 255,
   }).notNull(),
-  amount: smallint("amount"),
+  amount: varchar("amount"),
   unit: varchar("unit", {
     length: 255,
   }),
@@ -132,3 +141,111 @@ export const recipeStepsRelations = relations(recipeSteps, ({ one }) => ({
 
 export type RecipeStep = typeof recipeSteps.$inferSelect;
 export type RecipeStepInsert = typeof recipeSteps.$inferInsert;
+
+export const recipeDiets = pgTable(
+  "recipe_diets",
+  {
+    recipeId: uuid("recipe_id")
+      .notNull()
+      .references(() => recipes.id, {
+        onDelete: "cascade",
+      }),
+    dietId: uuid("diet_id")
+      .notNull()
+      .references(() => diets.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => [
+    primaryKey({
+      columns: [t.recipeId, t.dietId],
+    }),
+  ]
+);
+
+export const recipeDietsRelations = relations(recipeDiets, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [recipeDiets.recipeId],
+    references: [recipes.id],
+  }),
+  diet: one(diets, {
+    fields: [recipeDiets.dietId],
+    references: [diets.id],
+  }),
+}));
+
+export type RecipeDiet = typeof recipeDiets.$inferSelect;
+export type RecipeDietInsert = typeof recipeDiets.$inferInsert;
+
+export const recipeCuisines = pgTable(
+  "recipe_cuisines",
+  {
+    recipeId: uuid("recipe_id")
+      .notNull()
+      .references(() => recipes.id, {
+        onDelete: "cascade",
+      }),
+    cuisineId: uuid("cuisine_id")
+      .notNull()
+      .references(() => cuisines.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => [
+    primaryKey({
+      columns: [t.recipeId, t.cuisineId],
+    }),
+  ]
+);
+
+export const recipeCuisinesRelations = relations(recipeCuisines, ({ one }) => ({
+  recipe: one(recipes, {
+    fields: [recipeCuisines.recipeId],
+    references: [recipes.id],
+  }),
+  cuisine: one(cuisines, {
+    fields: [recipeCuisines.cuisineId],
+    references: [cuisines.id],
+  }),
+}));
+
+export type RecipeCuisine = typeof recipeCuisines.$inferSelect;
+export type RecipeCuisineInsert = typeof recipeCuisines.$inferInsert;
+
+export const recipeOccasions = pgTable(
+  "recipe_occasions",
+  {
+    recipeId: uuid("recipe_id")
+      .notNull()
+      .references(() => recipes.id, {
+        onDelete: "cascade",
+      }),
+    occasionId: uuid("occasion_id")
+      .notNull()
+      .references(() => cuisines.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => [
+    primaryKey({
+      columns: [t.recipeId, t.occasionId],
+    }),
+  ]
+);
+
+export const recipeOccasionsRelations = relations(
+  recipeOccasions,
+  ({ one }) => ({
+    recipe: one(recipes, {
+      fields: [recipeOccasions.recipeId],
+      references: [recipes.id],
+    }),
+    occasion: one(cuisines, {
+      fields: [recipeOccasions.occasionId],
+      references: [cuisines.id],
+    }),
+  })
+);
+
+export type RecipeOccasion = typeof recipeOccasions.$inferSelect;
+export type RecipeOccasionInsert = typeof recipeOccasions.$inferInsert;

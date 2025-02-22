@@ -67,7 +67,7 @@ const extractTimeFromText = (text: string) => {
   }
 
   // Dodaj pozostały tekst
-  if (lastIndex < text.length) {
+  if (lastIndex < text?.length) {
     elements.push(text.slice(lastIndex));
   }
 
@@ -104,7 +104,7 @@ const CookingModeModal = ({
 
   // Automatycznie ustaw timer przy zmianie kroku
   React.useEffect(() => {
-    const stepContent = steps[currentStep].content;
+    const stepContent = steps[currentStep]?.content;
     const { timeInSeconds } = extractTimeFromText(stepContent);
 
     if (timeInSeconds > 0) {
@@ -139,7 +139,7 @@ const CookingModeModal = ({
             Śledź kroki i przygotuj pyszne danie!
           </DialogDescription>
         </DialogHeader>
-        {steps[currentStep].image && (
+        {steps[currentStep]?.image && (
           <div className="relative aspect-video rounded-lg overflow-hidden">
             <Image
               src={steps[currentStep].image.url}
@@ -263,7 +263,7 @@ const CookingModeModal = ({
 };
 
 const StepView = ({ step }: { step: RecipeStep }) => {
-  const { processedText } = extractTimeFromText(step.content);
+  const { processedText } = extractTimeFromText(step?.content);
   return <p className="text-sm">{processedText}</p>;
 };
 

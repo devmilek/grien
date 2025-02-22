@@ -1,0 +1,42 @@
+import db from "@/db";
+import React from "react";
+import { categories, images, recipes, users } from "@/db/schema";
+import { desc, eq, getTableColumns } from "drizzle-orm";
+import ImageBackgroudCard from "@/components/cards/image-background-card";
+
+const PopularFeed = async () => {
+  const data = await db
+    .select({
+      ...getTableColumns(recipes),
+      image: images.url,
+      user: users.name,
+      category: categories.name,
+    })
+    .from(recipes)
+    .innerJoin(images, eq(recipes.imageId, images.id))
+    .innerJoin(users, eq(recipes.userId, users.id))
+    .innerJoin(categories, eq(recipes.categoryId, categories.id))
+    .limit(3)
+    .orderBy(desc(recipes.createdAt));
+  return (
+    <div className="p-6 rounded-xl bg-white">
+      <h2 className="font-display text-3xl mb-5">Najpopularniejsze</h2>
+      <div className="grid grid-cols-2 gap-4">
+        {data.map((recipe, index) => (
+          <ImageBackgroudCard
+            key={recipe.id}
+            author={recipe.user}
+            category={recipe.category}
+            id={recipe.id}
+            name={recipe.name}
+            slug={recipe.slug}
+            src={recipe.image}
+            className={index === 2 ? "col-span-2" : ""}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default PopularFeed;

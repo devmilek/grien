@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import CookingModeModal from "./_components/cooking-mode-modal";
+import CommentsCard from "./_components/comments-card";
 
 const RecipePage = async ({
   params,
@@ -105,7 +106,7 @@ const RecipePage = async ({
             <CookingModeModal steps={recipe.steps} />
             <TooltipProvider>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger asChild>
                   <Button variant="ghost">
                     <HeartIcon />
                     3.4k
@@ -134,8 +135,9 @@ const RecipePage = async ({
             portions={recipe.portions}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-1 space-y-8">
           <StepsList steps={recipe.steps} />
+          <CommentsCard recipeId={recipe.id} />
         </div>
       </div>
     </div>
