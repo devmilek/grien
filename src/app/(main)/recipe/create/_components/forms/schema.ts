@@ -35,3 +35,11 @@ export const recipeIngredientSchema = z.object({
 });
 
 export type RecipeIngredientSchema = z.infer<typeof recipeIngredientSchema>;
+
+export const recipeStepSchema = z.object({
+  description: z
+    .string()
+    .min(3, { message: "Krok musi zawierać co najmniej 3 znaki" }),
+});
+
+export type RecipeStepSchema = z.infer<typeof recipeStepSchema>;

@@ -4,6 +4,7 @@ import React from "react";
 import BasicsForm from "./forms/basics-form";
 import { useRecipeStore } from "./use-recipe-store";
 import IngredientsForm from "./forms/ingredients-form";
+import StepsForm from "./forms/steps-form";
 
 const steps = [
   {
@@ -39,6 +40,7 @@ const Stepper = () => {
       </div> */}
       <div>{currentStep === "basics" && <BasicsForm />}</div>
       <div>{currentStep === "ingredients" && <IngredientsForm />}</div>
+      <div>{currentStep === "steps" && <StepsForm />}</div>
     </div>
   );
 };

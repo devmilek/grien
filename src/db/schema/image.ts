@@ -5,6 +5,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { users } from "./users";
 
 export const images = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -25,6 +26,12 @@ export const images = pgTable("images", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+
+  uploadedBy: varchar("uploaded_by")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
 });
 
 export type Image = typeof images.$inferSelect;

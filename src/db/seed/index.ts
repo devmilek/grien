@@ -69,7 +69,7 @@ const dietsData = [
   { name: "Keto" },
 ];
 
-export async function seed() {
+export async function seedAttributes() {
   const categoriesBatch: CategoryInsert[] = categoriesData.map((category) => ({
     name: category.name,
     slug: slugify(category.name),

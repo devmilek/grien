@@ -7,6 +7,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { images } from "./image";
+import { users } from "./users";
 
 export const difficulties = ["easy", "medium", "hard"] as const;
 export type Difficulty = (typeof difficulties)[number];
@@ -29,10 +30,13 @@ export const recipes = pgTable("recipes", {
     length: 500,
   }).notNull(),
   difficulty: difficultiesEnum("difficulty").notNull(),
-  preparationTime: varchar("preparation_time", {
-    length: 255,
-  }).notNull(),
+  preparationTime: smallint("preparation_time").notNull(),
   portions: smallint("portions").notNull(),
+  userId: varchar("user_id")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
