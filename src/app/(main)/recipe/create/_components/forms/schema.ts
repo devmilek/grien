@@ -6,6 +6,7 @@ export const recipeBasicsSchema = z.object({
     .string()
     .min(3, { message: "Nazwa musi zawierać co najmniej 3 znaki" })
     .max(255, { message: "Nazwa nie może przekraczać 255 znaków" }),
+  imageSrc: z.string().url().optional(),
   description: z
     .string()
     .min(3, { message: "Opis musi zawierać co najmniej 3 znaki" })

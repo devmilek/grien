@@ -25,6 +25,7 @@ import {
 import { TimeCombobox } from "../comboboxes/time-combobox";
 import { Button } from "@/components/ui/button";
 import { useRecipeStore } from "../use-recipe-store";
+import Dropzone from "@/components/global/dropzone";
 
 const BasicsForm = () => {
   const { basics, setBasics, setCurrentStep } = useRecipeStore();
@@ -32,6 +33,7 @@ const BasicsForm = () => {
     resolver: zodResolver(recipeBasicsSchema),
     defaultValues: {
       description: basics.description,
+      imageSrc: basics.imageSrc,
       difficulty: basics.difficulty,
       preparationTime: basics.preparationTime,
       portions: basics.portions,
@@ -59,6 +61,19 @@ const BasicsForm = () => {
                   <FormLabel>Nazwa</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder="np. Gyros w picie" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="imageSrc"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Zdjęcie</FormLabel>
+                  <FormControl>
+                    <Dropzone value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

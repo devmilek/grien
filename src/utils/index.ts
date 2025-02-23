@@ -39,3 +39,9 @@ export const formatTime = (time: number) => {
 
   return (hoursText + minutesText).trim();
 };
+
+export const getR2ImageSrc = (id: string) => {
+  const r2PublicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
+
+  return `${r2PublicUrl}/${id}.webp`;
+};
