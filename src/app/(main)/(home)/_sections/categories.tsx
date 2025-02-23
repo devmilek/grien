@@ -48,9 +48,10 @@ const CategoriesSection = ({ categories }: { categories: Category[] }) => {
           {categories.map((category) => (
             <CarouselItem
               key={category.id}
-              style={{
-                flexBasis: "calc(1/8 * 100%)",
-              }}
+              // style={{
+              //   flexBasis: "calc(1/8 * 100%)",
+              // }}
+              className="basis-1/3 sm:basis-1/4 md:basis-1/6 lg:basis-1/8 xl:basis-1/10"
             >
               <Link className="group" href={`/categories/${category.slug}`}>
                 <div className="aspect-square w-full bg-white rounded-full border flex items-center justify-center">

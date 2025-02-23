@@ -1,4 +1,4 @@
-import { BellIcon, ChefHat, HeartIcon } from "lucide-react";
+import { BellIcon, ChefHat, HeartIcon, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import NavItems from "./nav-items";
@@ -26,13 +26,16 @@ const Navbar = async () => {
           <span className="text-2xl text-foreground">grien</span>
         </Link>
         <NavItems
-          className="mr-auto"
+          className="mr-auto hidden lg:flex"
           categories={categories}
           occasions={occasions}
           cuisines={cuisines}
           diets={diets}
         />
-        <div className="flex gap-2">
+        <Button variant="outline" size="icon" className="lg:hidden ml-auto">
+          <MenuIcon />
+        </Button>
+        <div className="gap-2 hidden lg:flex">
           <Input placeholder="Wyszukaj przepisu..." />
           {user ? (
             <>

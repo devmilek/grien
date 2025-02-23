@@ -62,11 +62,10 @@ const QuoteCard = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.3 }}
+            className="flex-1"
           >
             <p>{quotes[currentQuote].content}</p>
-            <p className="text-end font-medium">
-              - {quotes[currentQuote].author}
-            </p>
+            <p className="font-medium">- {quotes[currentQuote].author}</p>
           </motion.div>
         </AnimatePresence>
       </div>

@@ -21,7 +21,7 @@ const PopularFeed = async () => {
   return (
     <div className="p-6 rounded-xl bg-white">
       <h2 className="font-display text-3xl mb-5">Najpopularniejsze</h2>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-4">
         {data.map((recipe, index) => (
           <ImageBackgroudCard
             key={recipe.id}
@@ -31,7 +31,7 @@ const PopularFeed = async () => {
             name={recipe.name}
             slug={recipe.slug}
             src={recipe.image}
-            className={index === 2 ? "col-span-2" : ""}
+            className={index === 2 ? "md:col-span-2" : ""}
           />
         ))}
       </div>

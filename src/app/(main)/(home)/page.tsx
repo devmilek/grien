@@ -13,12 +13,12 @@ export default async function Home() {
     <div className="container mx-auto space-y-10">
       <HeroSection />
       <CategoriesSection categories={categories} />
-      <div className="flex gap-8">
+      <div className="flex gap-8 flex-col-reverse lg:flex-row">
         <div className="flex-1 space-y-8">
           <PopularFeed />
           <MainDishesFeed />
         </div>
-        <div className="w-[350px]">
+        <div className="lg:w-[350px] space-y-4">
           <QuoteCard />
           <DrinksFeed />
         </div>

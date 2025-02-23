@@ -24,8 +24,14 @@ const HorizontalCard = ({
   className?: string;
 }) => {
   return (
-    <div key={id} className={cn("group flex items-center gap-8", className)}>
-      <div className="aspect-[4/3] h-40 shrink-0 relative rounded-lg overflow-hidden">
+    <div
+      key={id}
+      className={cn(
+        "group flex items-center gap-8 flex-col sm:flex-row",
+        className
+      )}
+    >
+      <div className="aspect-[4/3] w-full sm:w-auto sm:h-40 shrink-0 relative rounded-lg overflow-hidden">
         <Image
           src={src}
           alt={"Zdjęcie przepisu " + name}

@@ -19,7 +19,7 @@ const HeroSection = async () => {
     .limit(3);
 
   return (
-    <div className="grid grid-cols-3 gap-6">
+    <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
       {data.map((recipe) => (
         <ImageBackgroudCard
           key={recipe.id}

@@ -32,14 +32,14 @@ const ImageBackgroudCard = ({
       )}
     >
       <div className="size-full bg-gradient-to-t from-black/80 to-black/0 absolute z-10 p-6 flex flex-col justify-end">
-        <h2 className="font-display text-3xl text-white line-clamp-2">
-          {name}
-        </h2>
-        <div className="mt-1">
+        <div className="mb-1">
           <Badge variant="outline" className="bg-white">
             {category}
           </Badge>
         </div>
+        <h2 className="font-display text-3xl text-white line-clamp-2">
+          {name}
+        </h2>
         <div className="flex items-center gap-2 mt-2">
           <Avatar className="size-7">
             <AvatarFallback>{author[0].toUpperCase()}</AvatarFallback>
