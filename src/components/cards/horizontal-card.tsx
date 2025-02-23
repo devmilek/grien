@@ -47,7 +47,7 @@ const HorizontalCard = ({
         >
           {name}
         </Link>
-        <p className="line-clamp-2 text-muted-foreground text-sm">
+        <p className="line-clamp-2 text-muted-foreground text-sm mt-1">
           {description}
         </p>
         <div className="flex items-center gap-2 mt-2">

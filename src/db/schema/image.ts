@@ -1,4 +1,5 @@
 import {
+  boolean,
   integer,
   pgTable,
   timestamp,
@@ -26,6 +27,19 @@ export const images = pgTable("images", {
     .notNull()
     .defaultNow()
     .$onUpdate(() => new Date()),
+
+  isExternal: boolean("is_external").default(false),
+  author: varchar("author", {
+    length: 255,
+  }),
+  sourceUrl: varchar("source_url", {
+    length: 255,
+  }),
+  originalTitle: varchar("original_title", {
+    length: 255,
+  }),
+  licenseType: varchar("license_type", { length: 50 }), // np. "CC BY-NC-SA 3.0", "All rights reserved"
+  licenseLink: varchar("license_link", { length: 255 }),
 
   uploadedBy: varchar("uploaded_by")
     .notNull()

@@ -1,4 +1,5 @@
 import {
+  boolean,
   pgEnum,
   pgTable,
   primaryKey,
@@ -18,7 +19,7 @@ export const difficultiesEnum = pgEnum("difficulty", difficulties);
 
 export const recipes = pgTable("recipes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  imageId: uuid("image").references(() => images.id, {
+  imageId: uuid("image_id").references(() => images.id, {
     onDelete: "set null",
   }),
   categoryId: uuid("category_id")
@@ -44,6 +45,20 @@ export const recipes = pgTable("recipes", {
       onDelete: "cascade",
     }),
 
+  // additional if recipe is from external source
+  isExternal: boolean("is_external").default(false),
+  author: varchar("author", {
+    length: 255,
+  }),
+  sourceUrl: varchar("source_url", {
+    length: 255,
+  }),
+  originalTitle: varchar("original_title", {
+    length: 255,
+  }),
+  licenseType: varchar("license_type", { length: 50 }), // np. "CC BY-NC-SA 3.0", "All rights reserved"
+  licenseLink: varchar("license_link", { length: 255 }),
+
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
@@ -67,6 +82,10 @@ export const recipesRelations = relations(recipes, ({ one, many }) => ({
     references: [categories.id],
   }),
 }));
+
+// Źródło: Homemade Pizza Dough z makebetterfood.com.
+// Licencja: CC BY-NC-SA 3.0.
+// Ten przepis został przetłumaczony na język polski i dostosowany do miar metrycznych. Możesz go udostępniać i modyfikować na tych samych warunkach.
 
 export type Recipe = typeof recipes.$inferSelect;
 export type RecipeInsert = typeof recipes.$inferInsert;

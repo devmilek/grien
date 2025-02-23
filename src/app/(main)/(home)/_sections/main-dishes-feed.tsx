@@ -16,6 +16,7 @@ const MainDishesFeed = async () => {
     .innerJoin(images, eq(recipes.imageId, images.id))
     .innerJoin(users, eq(recipes.userId, users.id))
     .innerJoin(categories, eq(recipes.categoryId, categories.id))
+    .where(eq(categories.slug, "dania-glowne"))
     .limit(4)
     .orderBy(asc(recipes.createdAt));
   return (
