@@ -16,7 +16,7 @@ const StepsForm = () => {
         <Button
           variant="outline"
           size="icon"
-          onClick={() => setCurrentStep("basics")}
+          onClick={() => setCurrentStep("ingredients")}
         >
           <ChevronLeft />
         </Button>

@@ -27,7 +27,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-24 pb-12 bg-gray-50">{children}</main>
+      <main className="min-h-screen pt-20 pb-12 bg-gray-50">{children}</main>
     </>
   );
 };

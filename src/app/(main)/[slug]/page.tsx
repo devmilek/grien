@@ -13,7 +13,6 @@ import {
   ChartNoAxesColumnDecreasing,
   ClockIcon,
   HeartIcon,
-  PlayIcon,
   ShareIcon,
 } from "lucide-react";
 import { formatDifficulty, formatTime } from "@/utils";
@@ -56,8 +55,8 @@ const RecipePage = async ({
   return (
     <div className="mx-auto container">
       {/* hero */}
-      <section className="grid grid-cols-2 gap-8 min-h-96 bg-white rounded-xl p-6">
-        <div className="size-full relative aspect-[4/3] rounded-lg overflow-hidden">
+      <section className="grid gap-4 lg:grid-cols-2 lg:gap-8 md:min-h-96 bg-white rounded-xl p-4 md:p-6">
+        <div className="w-full relative aspect-[4/3] rounded-lg overflow-hidden">
           {recipe.image && (
             <Image
               fill
@@ -102,34 +101,38 @@ const RecipePage = async ({
               {recipe.description}
             </p>
           </div>
-          <div className="border-t pt-2 flex gap-2">
-            <CookingModeModal steps={recipe.steps} />
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost">
-                    <HeartIcon />
-                    3.4k
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>Polub przepis</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <Button variant="ghost" className="ml-auto">
-              <Bookmark />
-              Zapisz
-            </Button>
+          <div className="border-t pt-2 flex gap-2 justify-between flex-col sm:flex-row mt-4">
+            <div className="space-x-2 flex">
+              <CookingModeModal steps={recipe.steps} />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost">
+                      <HeartIcon />
+                      3.4k
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Polub przepis</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+            <div className="space-x-2 flex">
+              <Button variant="ghost">
+                <Bookmark />
+                <span className="lg:hidden xl:inline-block">Zapisz</span>
+              </Button>
 
-            <Button variant="ghost">
-              <ShareIcon />
-              Udostępnij
-            </Button>
+              <Button variant="ghost">
+                <ShareIcon />
+                Udostępnij
+              </Button>
+            </div>
           </div>
         </div>
       </section>
       {/* LAYOUT */}
-      <div className="flex gap-6 mt-6">
-        <div className="w-[380px]">
+      <div className="flex gap-6 mt-6 flex-col lg:flex-row">
+        <div className="ld:w-[380px]">
           <IngredientsList
             ingredients={recipe.ingredients}
             portions={recipe.portions}
