@@ -9,7 +9,6 @@ import React from "react";
 import { pl } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import {
-  Bookmark,
   ChartNoAxesColumnDecreasing,
   ClockIcon,
   HeartIcon,
@@ -30,6 +29,7 @@ import CommentsCard from "./_components/comments-card";
 import { getCurrentSession } from "@/lib/auth/utils";
 import Link from "next/link";
 import ImageLicenceBadge from "@/components/global/image-licence-badge";
+import AddRecipeToCollectionModal from "./_components/add-recipe-to-collection-modal";
 
 const RecipePage = async ({
   params,
@@ -215,10 +215,7 @@ const RecipePage = async ({
                 )}
               </div>
               <div className="space-x-2 flex">
-                <Button variant="ghost">
-                  <Bookmark />
-                  <span className="lg:hidden xl:inline-block">Zapisz</span>
-                </Button>
+                <AddRecipeToCollectionModal recipeId={recipe.id} />
 
                 <Button variant="ghost">
                   <ShareIcon />
