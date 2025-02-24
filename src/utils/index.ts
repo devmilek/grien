@@ -65,3 +65,20 @@ export const getRecipesText = (count: number) => {
     return "przepisy";
   return "przepisów";
 };
+
+export function getInitials(value: string) {
+  const words = value
+    .trim()
+    .split(/[\s-]+/)
+    .filter((word) => word.length > 0);
+
+  const initials = words
+    .slice(0, 2)
+    .map((word, index, array) =>
+      array.length === 1 ? word.slice(0, 2) : word[0]
+    )
+    .join("")
+    .toUpperCase();
+
+  return initials;
+}

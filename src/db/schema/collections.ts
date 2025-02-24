@@ -15,10 +15,14 @@ export const favouriteRecipes = pgTable(
   {
     userId: varchar()
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
     recipeId: uuid()
       .notNull()
-      .references(() => recipes.id),
+      .references(() => recipes.id, {
+        onDelete: "cascade",
+      }),
   },
   (t) => [
     primaryKey({
@@ -59,7 +63,9 @@ export const collections = pgTable("collections", {
 
   userId: varchar()
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
@@ -84,10 +90,14 @@ export const collectionsRecipes = pgTable(
   {
     collectionId: uuid()
       .notNull()
-      .references(() => collections.id),
+      .references(() => collections.id, {
+        onDelete: "cascade",
+      }),
     recipeId: uuid()
       .notNull()
-      .references(() => recipes.id),
+      .references(() => recipes.id, {
+        onDelete: "cascade",
+      }),
   },
   (t) => [
     primaryKey({

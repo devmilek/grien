@@ -186,3 +186,24 @@ export const recipeAttributesRelation = relations(
 
 export type RecipeAttribute = typeof recipeAttributes.$inferSelect;
 export type RecipeAttributeInsert = typeof recipeAttributes.$inferInsert;
+
+export const recipeLikes = pgTable(
+  "recipe_likes",
+  {
+    recipeId: uuid("recipe_id")
+      .notNull()
+      .references(() => recipes.id, {
+        onDelete: "cascade",
+      }),
+    userId: varchar("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => [
+    primaryKey({
+      columns: [t.recipeId, t.userId],
+    }),
+  ]
+);
