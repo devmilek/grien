@@ -30,6 +30,8 @@ export type RecipeAttribute = {
 };
 
 type Store = {
+  id?: string;
+  setId: (id: string) => void;
   basics: RecipeBasicsSchema;
   setBasics: (basics: RecipeBasicsSchema) => void;
 
@@ -57,6 +59,8 @@ type Store = {
 };
 
 export const useRecipeStore = create<Store>()((set, get) => ({
+  id: undefined,
+  setId: (id) => set({ id }),
   basics: {
     name: "",
     description: "",

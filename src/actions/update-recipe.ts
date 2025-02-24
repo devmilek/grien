@@ -29,19 +29,20 @@ import { getCurrentSession } from "@/lib/auth/utils";
 import { z } from "zod";
 import { slugifyWithCounter } from "@sindresorhus/slugify";
 import { eq } from "drizzle-orm";
-import { v4 as uuid } from "uuid";
 
 const attributesSchema = z.object({
   id: z.string().uuid(),
   type: z.enum(["diet", "cuisine", "occasion"]),
 });
 
-export const publishRecipe = async ({
+export const updateRecipe = async ({
+  id,
   basics,
   ingredients,
   preparationSteps,
   attributes,
 }: {
+  id: string;
   basics: RecipeBasicsSchema;
   ingredients: IngredientWithId[];
   preparationSteps: PreparationStepWithId[];
@@ -53,6 +54,24 @@ export const publishRecipe = async ({
     return {
       status: 401,
       message: "Nie jesteś zalogowany",
+    };
+  }
+
+  const recipe = await db.query.recipes.findFirst({
+    where: eq(recipes.id, id),
+  });
+
+  if (!recipe) {
+    return {
+      status: 404,
+      message: "Nie znaleziono przepisu",
+    };
+  }
+
+  if (recipe.userId !== user.id) {
+    return {
+      status: 403,
+      message: "Nie masz uprawnień do edycji tego przepisu",
     };
   }
 
@@ -99,8 +118,7 @@ export const publishRecipe = async ({
 
   const slugify = slugifyWithCounter();
   let recipeSlug = slugify(basics.name);
-  let isUnique = false;
-  const recipeId = uuid();
+  let isUnique = recipeSlug === recipe.slug;
 
   try {
     while (!isUnique) {
@@ -119,25 +137,37 @@ export const publishRecipe = async ({
     }
 
     await db.transaction(async (tx) => {
-      await tx.insert(recipes).values({
-        name: basics.name,
-        description: basics.description,
-        difficulty: basics.difficulty,
-        preparationTime: basics.preparationTime,
-        portions: basics.portions,
-        categoryId: basics.categoryId,
-        slug: recipeSlug,
-        userId: user.id,
-        id: recipeId,
-        imageId: basics.imageId,
-      });
+      // Aktualizacja podstawowych danych przepisu
+      await tx
+        .update(recipes)
+        .set({
+          name: basics.name,
+          description: basics.description,
+          difficulty: basics.difficulty,
+          preparationTime: basics.preparationTime,
+          portions: basics.portions,
+          categoryId: basics.categoryId,
+          slug: recipeSlug,
+          imageId: basics.imageId,
+        })
+        .where(eq(recipes.id, id));
 
+      // Usuń stare dane
+      await tx
+        .delete(recipeIngredients)
+        .where(eq(recipeIngredients.recipeId, id));
+      await tx.delete(recipeSteps).where(eq(recipeSteps.recipeId, id));
+      await tx.delete(recipeOccasions).where(eq(recipeOccasions.recipeId, id));
+      await tx.delete(recipeCuisines).where(eq(recipeCuisines.recipeId, id));
+      await tx.delete(recipeDiets).where(eq(recipeDiets.recipeId, id));
+
+      // Dodaj nowe dane
       const ingredientBatch: RecipeIngredientInsert[] = ingredients.map(
         (ingredient) => ({
           ingredient: ingredient.name,
           amount: ingredient.amount?.toString(),
           unit: ingredient.unit,
-          recipeId: recipeId,
+          recipeId: id,
         })
       );
 
@@ -145,7 +175,7 @@ export const publishRecipe = async ({
         (step, index) => ({
           description: step.description,
           order: index + 1,
-          recipeId: recipeId,
+          recipeId: id,
           content: step.description,
           image: step.imageId,
         })
@@ -159,24 +189,24 @@ export const publishRecipe = async ({
 
       const occasionsBatch: RecipeOccasionInsert[] = occasionsData.map(
         (attr) => ({
-          recipeId: recipeId,
+          recipeId: id,
           occasionId: attr.id,
         })
       );
 
       const cuisinesBatch: RecipeCuisineInsert[] = cuisinesData.map((attr) => ({
-        recipeId: recipeId,
+        recipeId: id,
         cuisineId: attr.id,
       }));
 
       const dietsBatch: RecipeDietInsert[] = dietsData.map((attr) => ({
-        recipeId: recipeId,
+        recipeId: id,
         dietId: attr.id,
       }));
 
+      // Wstaw nowe dane
       await tx.insert(recipeIngredients).values(ingredientBatch);
       await tx.insert(recipeSteps).values(stepsBatch);
-      await tx.insert(recipeIngredients).values(ingredientBatch);
       if (occasionsBatch.length > 0) {
         await tx.insert(recipeOccasions).values(occasionsBatch);
       }
@@ -190,7 +220,7 @@ export const publishRecipe = async ({
 
     return {
       status: 200,
-      message: "Przepis opublikowany",
+      message: "Przepis zaktualizowany",
       data: {
         slug: recipeSlug,
       },

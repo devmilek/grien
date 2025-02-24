@@ -15,6 +15,14 @@ import {
 import { cn } from "@/lib/utils";
 import AdditionalForm from "./forms/additional-form";
 import Summary from "./forms/summary";
+import {
+  Recipe,
+  RecipeCuisine,
+  RecipeDiet,
+  RecipeIngredient,
+  RecipeOccasion,
+  RecipeStep,
+} from "@/db/schema";
 
 const steps = [
   {
@@ -49,8 +57,77 @@ const steps = [
   },
 ];
 
-const Stepper = () => {
-  const { currentStep, setCurrentStep } = useRecipeStore();
+const Stepper = ({
+  data,
+}: {
+  data?: {
+    recipe: Recipe;
+    ingredients: RecipeIngredient[];
+    steps: RecipeStep[];
+    occasions: RecipeOccasion[];
+    diets: RecipeDiet[];
+    cuisines: RecipeCuisine[];
+  };
+}) => {
+  const {
+    currentStep,
+    setCurrentStep,
+    setBasics,
+    setIngredients,
+    setPreparationSteps,
+    setAttributes,
+    setId,
+  } = useRecipeStore();
+
+  React.useEffect(() => {
+    if (data) {
+      const { recipe, ingredients } = data;
+
+      setId(recipe.id);
+
+      setBasics({
+        name: recipe.name,
+        description: recipe.description,
+        difficulty: recipe.difficulty,
+        preparationTime: recipe.preparationTime,
+        portions: recipe.portions,
+        categoryId: recipe.categoryId,
+      });
+
+      setIngredients(
+        ingredients.map((ingredient) => ({
+          id: ingredient.id,
+          name: ingredient.ingredient,
+          amount: ingredient.amount ? parseFloat(ingredient.amount) : 0, // Provide default 0 for null
+          unit: ingredient.unit ?? "", // Provide default empty string for null
+        }))
+      );
+
+      setPreparationSteps(
+        data.steps.map((step) => ({
+          description: step.content,
+          imageId: step.imageId ?? undefined,
+          id: step.id,
+        }))
+      );
+
+      setAttributes([
+        ...data.occasions.map((occasion) => ({
+          id: occasion.occasionId,
+          type: "occasion" as const, // Add 'as const' to narrow the type
+        })),
+        ...data.diets.map((diet) => ({
+          id: diet.dietId,
+          type: "diet" as const,
+        })),
+        ...data.cuisines.map((cuisine) => ({
+          id: cuisine.cuisineId,
+          type: "cuisine" as const,
+        })),
+      ]);
+    }
+  }, []);
+
   return (
     <div className="mx-auto">
       <div className="gap-4 mb-10 w-full border p-4 rounded-xl bg-background items-center flex justify-between">

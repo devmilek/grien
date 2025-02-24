@@ -81,6 +81,9 @@ export const recipesRelations = relations(recipes, ({ one, many }) => ({
     fields: [recipes.categoryId],
     references: [categories.id],
   }),
+  diets: many(recipeDiets),
+  cuisines: many(recipeCuisines),
+  occasions: many(recipeOccasions),
 }));
 
 // Źródło: Homemade Pizza Dough z makebetterfood.com.
@@ -104,12 +107,6 @@ export const recipeIngredients = pgTable("recipe_ingredients", {
   unit: varchar("unit", {
     length: 255,
   }),
-
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
 });
 
 export const recipeIngredientsRelations = relations(
@@ -139,12 +136,6 @@ export const recipeSteps = pgTable("recipe_steps", {
   imageId: uuid("image").references(() => images.id, {
     onDelete: "set null",
   }),
-
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at")
-    .notNull()
-    .defaultNow()
-    .$onUpdate(() => new Date()),
 });
 
 export const recipeStepsRelations = relations(recipeSteps, ({ one }) => ({

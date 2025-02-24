@@ -27,12 +27,15 @@ import {
 } from "@/components/ui/tooltip";
 import CookingModeModal from "./_components/cooking-mode-modal";
 import CommentsCard from "./_components/comments-card";
+import { getCurrentSession } from "@/lib/auth/utils";
+import Link from "next/link";
 
 const RecipePage = async ({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) => {
+  const { user } = await getCurrentSession();
   const slug = (await params).slug;
   const recipe = await db.query.recipes.findFirst({
     where: eq(recipes.slug, slug),
@@ -104,17 +107,23 @@ const RecipePage = async ({
           <div className="border-t pt-2 flex gap-2 justify-between flex-col sm:flex-row mt-4">
             <div className="space-x-2 flex">
               <CookingModeModal steps={recipe.steps} />
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button variant="ghost">
-                      <HeartIcon />
-                      3.4k
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>Polub przepis</TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              {user && user.id === recipe.userId ? (
+                <Button variant="outline" asChild>
+                  <Link href={`/recipe/create/${recipe.slug}`}>Edytuj</Link>
+                </Button>
+              ) : (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="ghost">
+                        <HeartIcon />
+                        3.4k
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Polub przepis</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
             </div>
             <div className="space-x-2 flex">
               <Button variant="ghost">
@@ -132,7 +141,7 @@ const RecipePage = async ({
       </section>
       {/* LAYOUT */}
       <div className="flex gap-6 mt-6 flex-col lg:flex-row">
-        <div className="ld:w-[380px]">
+        <div className="lg:w-[380px]">
           <IngredientsList
             ingredients={recipe.ingredients}
             portions={recipe.portions}

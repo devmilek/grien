@@ -15,6 +15,7 @@ import {
 import { toast } from "sonner";
 import { publishRecipe } from "@/actions/publish-recipe";
 import { useRouter } from "next/navigation";
+import { updateRecipe } from "@/actions/update-recipe";
 
 const AdditionalForm = () => {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -27,6 +28,7 @@ const AdditionalForm = () => {
     basics,
     ingredients,
     preparationSteps,
+    id,
   } = useRecipeStore();
   const { pending, data } = useQueries({
     queries: [
@@ -46,25 +48,20 @@ const AdditionalForm = () => {
     combine: (results) => {
       const [occasions, cuisines, diets] = results.map((result) => result.data);
       return {
-        // data: {
-        //   occasions,
-        //   cuisines,
-        //   diets,
-        // },
         data: [
           {
             name: "Okazje",
-            key: "occasions",
+            key: "occasion",
             items: occasions,
           },
           {
             name: "Kuchnie",
-            key: "cuisines",
+            key: "cuisine",
             items: cuisines,
           },
           {
             name: "Diety",
-            key: "diets",
+            key: "diet",
             items: diets,
           },
         ],
@@ -98,15 +95,23 @@ const AdditionalForm = () => {
       setCurrentStep("steps");
     }
 
-    const { status, data, message } = await publishRecipe({
-      basics: basics,
-      ingredients: ingredients,
-      preparationSteps: preparationSteps,
-      attributes,
-    });
+    const { status, data, message } = id
+      ? await updateRecipe({
+          id: id,
+          basics: basics,
+          ingredients: ingredients,
+          preparationSteps: preparationSteps,
+          attributes,
+        })
+      : await publishRecipe({
+          basics: basics,
+          ingredients: ingredients,
+          preparationSteps: preparationSteps,
+          attributes,
+        });
 
     if (status === 200) {
-      toast.success("Przepis został opublikowany");
+      toast.success(message);
       if (data) {
         router.push(`/${data.slug}`);
       } else {
@@ -179,7 +184,7 @@ const AdditionalForm = () => {
             disabled={isLoading}
             onClick={() => handlePublish()}
           >
-            Opublikuj
+            {id ? "Zapisz i opublikuj" : "Opublikuj przepis"}
           </Button>
         </div>
       </div>
