@@ -33,7 +33,7 @@ const BasicsForm = () => {
     resolver: zodResolver(recipeBasicsSchema),
     defaultValues: {
       description: basics.description,
-      imageSrc: basics.imageSrc,
+      imageId: basics.imageId,
       difficulty: basics.difficulty,
       preparationTime: basics.preparationTime,
       portions: basics.portions,
@@ -67,7 +67,7 @@ const BasicsForm = () => {
               )}
             />
             <FormField
-              name="imageSrc"
+              name="imageId"
               control={form.control}
               render={({ field }) => (
                 <FormItem>

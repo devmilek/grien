@@ -3,7 +3,7 @@
 import React from "react";
 import { IngredientWithId, useRecipeStore } from "../../use-recipe-store";
 import { Button } from "@/components/ui/button";
-import { GripVertical, PenIcon } from "lucide-react";
+import { GripVertical, PenIcon, TrashIcon } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -45,7 +45,9 @@ const IngredientsList = () => {
 
   return (
     <div>
-      {ingredients.length > 0 && <h3 className="font-semibold">Składniki</h3>}
+      {ingredients.length > 0 && (
+        <h3 className="text-2xl font-display mb-4 mt-6">Lista składników</h3>
+      )}
       <div>
         <DndContext
           sensors={sensors}
@@ -59,15 +61,6 @@ const IngredientsList = () => {
             {ingredients.map((ingredient) => (
               <SortableItem key={ingredient.id} {...ingredient} />
             ))}
-            {/* {ingredients.length === 0 && (
-              <div className="rounded-xl border border-dashed flex items-center justify-center flex-col p-8">
-                <LucideFileQuestion className="text-muted-foreground mb-2" />
-                <h4 className="font-semibold">Dodaj składniki</h4>
-                <p className="text-sm text-muted-foreground">
-                  Nie dodano jeszcze żadnych składników do przepisu.
-                </p>
-              </div>
-            )} */}
           </SortableContext>
         </DndContext>
       </div>
@@ -76,6 +69,7 @@ const IngredientsList = () => {
 };
 
 export function SortableItem(ingredient: IngredientWithId) {
+  const { removeIngredient } = useRecipeStore();
   const [editing, setEditing] = React.useState(false);
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: ingredient.id });
@@ -106,6 +100,13 @@ export function SortableItem(ingredient: IngredientWithId) {
         )}
       </div>
       <div className="ml-auto space-x-2">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => removeIngredient(ingredient.id)}
+        >
+          <TrashIcon />
+        </Button>
         <Button variant="ghost" size="icon" onClick={() => setEditing(true)}>
           <PenIcon />
         </Button>

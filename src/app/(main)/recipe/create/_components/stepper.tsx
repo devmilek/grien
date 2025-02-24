@@ -5,8 +5,16 @@ import BasicsForm from "./forms/basics-form";
 import { Step, useRecipeStore } from "./use-recipe-store";
 import IngredientsForm from "./forms/ingredients-form";
 import StepsForm from "./forms/steps-form";
-import { Carrot, ListCheck, Notebook, Sparkles } from "lucide-react";
+import {
+  Carrot,
+  CheckCheck,
+  ListCheck,
+  Notebook,
+  Sparkles,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import AdditionalForm from "./forms/additional-form";
+import Summary from "./forms/summary";
 
 const steps = [
   {
@@ -33,17 +41,23 @@ const steps = [
     icon: Sparkles,
     step: "additional",
   },
+  {
+    title: "Podsumowanie",
+    description: "Sprawdź i opublikuj",
+    icon: CheckCheck,
+    step: "summary",
+  },
 ];
 
 const Stepper = () => {
   const { currentStep, setCurrentStep } = useRecipeStore();
   return (
-    <div className="max-w-5xl mx-auto">
-      <div className="gap-4 mb-10 w-full grid grid-cols-4 border p-4 rounded-xl bg-background items-center mx-auto">
+    <div className="mx-auto">
+      <div className="gap-4 mb-10 w-full border p-4 rounded-xl bg-background items-center flex justify-between">
         {steps.map((step, index) => (
           <div
             key={index}
-            className="w-full cursor-pointer"
+            className="cursor-pointer"
             onClick={() => setCurrentStep(step.step as Step)}
           >
             <div className="flex items-center gap-2">
@@ -68,9 +82,13 @@ const Stepper = () => {
           </div>
         ))}
       </div>
-      <div>{currentStep === "basics" && <BasicsForm />}</div>
-      <div>{currentStep === "ingredients" && <IngredientsForm />}</div>
-      <div>{currentStep === "steps" && <StepsForm />}</div>
+      <div className="max-w-5xl mx-auto">
+        <div>{currentStep === "basics" && <BasicsForm />}</div>
+        <div>{currentStep === "ingredients" && <IngredientsForm />}</div>
+        <div>{currentStep === "steps" && <StepsForm />}</div>
+        <div>{currentStep === "additional" && <AdditionalForm />}</div>
+        <div>{currentStep === "summary" && <Summary />}</div>
+      </div>
     </div>
   );
 };

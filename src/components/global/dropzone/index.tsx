@@ -12,9 +12,11 @@ import { getR2ImageSrc } from "@/utils";
 const Dropzone = ({
   value,
   onChange,
+  className,
 }: {
   value?: string;
   onChange: (src?: string) => void;
+  className?: string;
 }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const onDrop = useCallback(
@@ -63,11 +65,12 @@ const Dropzone = ({
     <div
       {...getRootProps()}
       className={cn(
-        "p-6 rounded-xl overflow-hidden border border-dashed text-center cursor-pointer hover:bg-accent transition-colors relative",
+        "p-6 rounded-xl overflow-hidden border border-dashed text-center cursor-pointer hover:bg-accent transition-colors relative flex flex-col items-center justify-center",
         {
           "border-emerald-700": isDragActive,
           "opacity-50 animate-pulse": isLoading,
-        }
+        },
+        className
       )}
     >
       <input {...getInputProps()} />
@@ -78,7 +81,7 @@ const Dropzone = ({
           alt=""
           src={getR2ImageSrc(value)}
           unoptimized
-          className="mx-auto max-w-xs rounded-lg aspect-[4/3] object-cover mb-4"
+          className="mx-auto max-w-xs w-full rounded-lg aspect-[4/3] object-cover mb-4"
         />
       ) : (
         <ImageIcon className="mx-auto mb-2 text-muted-foreground" />
@@ -93,9 +96,11 @@ const Dropzone = ({
           <span> lub przeciągnij i upuść</span>
         </p>
       )}
-      <p className="text-xs text-muted-foreground">
-        PNG, JPG, AVIF lub WEBP (max 5MB)
-      </p>
+      {!value && (
+        <p className="text-xs text-muted-foreground">
+          PNG, JPG, AVIF lub WEBP (max 5MB)
+        </p>
+      )}
       {isLoading && (
         <div className="size-full absolute inset-0 bg-white/50 flex items-center justify-center backdrop-blur-sm">
           <Loader2 className="animate-spin" />
