@@ -1,5 +1,7 @@
 import Navbar from "@/components/global/navbar";
+import { getCurrentSession } from "@/lib/auth/utils";
 import { Metadata } from "next";
+import { redirect } from "next/navigation";
 import React from "react";
 
 export const metadata: Metadata = {
@@ -23,7 +25,11 @@ export const metadata: Metadata = {
   },
 };
 
-const MainLayout = ({ children }: { children: React.ReactNode }) => {
+const MainLayout = async ({ children }: { children: React.ReactNode }) => {
+  const { user } = await getCurrentSession();
+
+  if (user && !user.username) redirect("/uzupelnij-profil");
+
   return (
     <>
       <Navbar />

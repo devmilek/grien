@@ -17,3 +17,16 @@ export const useAttributes = () => {
 
   return { data, isLoading };
 };
+
+export const useFilteredAttributes = () => {
+  const { data, isLoading } = useAttributes();
+
+  return {
+    data: {
+      cuisines: data?.cuisines.filter((item) => item.type === "cuisines"),
+      diets: data?.diets.filter((item) => item.type === "diets"),
+      occasions: data?.occasions.filter((item) => item.type === "occasions"),
+    },
+    isLoading,
+  };
+};

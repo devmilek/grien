@@ -5,7 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { InfoIcon } from "lucide-react";
+import { Copyright } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { getDomainFromUrl } from "@/utils";
@@ -25,7 +25,7 @@ const ImageLicenceBadge = ({
           className={cn("bg-background cursor-pointer", className)}
           variant="outline"
         >
-          <InfoIcon />
+          <Copyright />
           By: {licence.author}
         </Badge>
       </HoverCardTrigger>

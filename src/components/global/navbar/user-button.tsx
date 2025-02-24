@@ -9,14 +9,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User } from "@/db/schema";
 import { authClient } from "@/lib/auth/auth-client";
+import { User } from "better-auth";
 import { Loader2Icon, LogOutIcon, PlusIcon, User2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
 
-const UserButton = ({ user }: { user: User }) => {
+const UserButton = ({
+  user,
+}: {
+  user: User & {
+    username?: string | null;
+  };
+}) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
