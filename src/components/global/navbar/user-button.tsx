@@ -58,7 +58,7 @@ const UserButton = ({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href="/profile">
+          <Link href={`/kucharze/${user.username}`}>
             <User2 />
             Profil
           </Link>
