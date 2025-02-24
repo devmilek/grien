@@ -11,6 +11,7 @@ const DrinksFeed = async () => {
       image: images.url,
       user: users.name,
       category: categories.name,
+      categorySlug: categories.slug,
     })
     .from(recipes)
     .innerJoin(images, eq(recipes.imageId, images.id))
@@ -31,6 +32,7 @@ const DrinksFeed = async () => {
             slug={recipe.slug}
             src={recipe.image}
             createdAt={recipe.createdAt}
+            categorySlug={recipe.categorySlug}
           />
         ))}
       </div>

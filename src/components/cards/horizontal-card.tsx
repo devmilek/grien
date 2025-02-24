@@ -9,6 +9,7 @@ const HorizontalCard = ({
   slug,
   name,
   category,
+  categorySlug,
   author,
   src,
   description,
@@ -18,6 +19,7 @@ const HorizontalCard = ({
   slug: string;
   name: string;
   category: string;
+  categorySlug: string;
   author: string;
   src: string;
   description: string;
@@ -43,12 +45,12 @@ const HorizontalCard = ({
       <div>
         <Link
           className="flex items-center space-x-2 text-emerald-700 font-semibold text-sm mb-1"
-          href={"/" + category}
+          href={"/" + categorySlug}
         >
           {category}
         </Link>
         <Link
-          href={"/" + slug}
+          href={"/" + categorySlug + "/" + slug}
           className="text-xl font-display link-underline link-underline-black"
         >
           {name}

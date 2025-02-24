@@ -12,6 +12,7 @@ export const getInfiniteScrollRecipes = async (page: number) => {
       image: images.url,
       user: users.name,
       category: categories.name,
+      categorySlug: categories.slug,
     })
     .from(recipes)
     .innerJoin(images, eq(recipes.imageId, images.id))

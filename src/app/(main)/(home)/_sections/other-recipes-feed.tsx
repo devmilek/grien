@@ -45,6 +45,7 @@ const OtherRecipesFeed = () => {
                 name={recipe.name}
                 slug={recipe.slug}
                 src={recipe.image}
+                categorySlug={recipe.categorySlug}
               />
             ))}
           </Fragment>

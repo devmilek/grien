@@ -10,6 +10,7 @@ const ImageBackgroudCard = ({
   slug,
   name,
   category,
+  categorySlug,
   author,
   src,
   className,
@@ -18,13 +19,14 @@ const ImageBackgroudCard = ({
   slug: string;
   name: string;
   category: string;
+  categorySlug: string;
   author: string;
   src: string;
   className?: string;
 }) => {
   return (
     <Link
-      href={"/" + slug}
+      href={"/" + categorySlug + "/" + slug}
       key={id}
       className={cn(
         "h-96 relative block rounded-xl overflow-hidden group",

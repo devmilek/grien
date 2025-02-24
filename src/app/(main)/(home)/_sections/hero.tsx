@@ -11,6 +11,7 @@ const HeroSection = async () => {
       image: images.url,
       user: users.name,
       category: categories.name,
+      categorySlug: categories.slug,
     })
     .from(recipes)
     .innerJoin(images, eq(recipes.imageId, images.id))
@@ -29,6 +30,7 @@ const HeroSection = async () => {
           name={recipe.name}
           slug={recipe.slug}
           src={recipe.image}
+          categorySlug={recipe.categorySlug}
         />
       ))}
     </div>

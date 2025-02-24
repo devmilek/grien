@@ -12,6 +12,7 @@ const SmallHorizontCard = ({
   author,
   src,
   className,
+  categorySlug,
   createdAt,
 }: {
   id: string;
@@ -20,6 +21,7 @@ const SmallHorizontCard = ({
   author: string;
   src: string;
   className?: string;
+  categorySlug: string;
   createdAt: Date;
 }) => {
   return (
@@ -34,7 +36,10 @@ const SmallHorizontCard = ({
         />
       </div>
       <div className="w-full">
-        <Link href={"/" + slug} className="font-display line-clamp-2">
+        <Link
+          href={"/" + categorySlug + "/" + slug}
+          className="font-display line-clamp-2"
+        >
           {name}
         </Link>
         <div className="flex items-center gap-2 mt-2">

@@ -9,6 +9,7 @@ const SmallRecipeCard = ({
   slug,
   name,
   category,
+  categorySlug,
   author,
   src,
   className,
@@ -17,6 +18,7 @@ const SmallRecipeCard = ({
   slug: string;
   name: string;
   category: string;
+  categorySlug: string;
   author: string;
   src: string;
   className?: string;
@@ -38,12 +40,12 @@ const SmallRecipeCard = ({
       <div className="w-full">
         <Link
           className="flex items-center space-x-2 text-emerald-700 font-semibold text-sm mb-1"
-          href={"/" + category}
+          href={"/" + categorySlug}
         >
           {category}
         </Link>
         <Link
-          href={"/" + slug}
+          href={"/" + categorySlug + "/" + slug}
           className="text-xl font-display link-underline link-underline-black line-clamp-2"
         >
           {name}

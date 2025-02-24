@@ -53,7 +53,7 @@ const CategoriesSection = ({ categories }: { categories: Category[] }) => {
               // }}
               className="basis-1/3 sm:basis-1/4 md:basis-1/6 lg:basis-1/8 xl:basis-1/10"
             >
-              <Link className="group" href={`/categories/${category.slug}`}>
+              <Link className="group" href={`/${category.slug}`}>
                 <div className="aspect-square w-full bg-white rounded-full border flex items-center justify-center">
                   <Image
                     src={`/${category.slug}.jpg`}

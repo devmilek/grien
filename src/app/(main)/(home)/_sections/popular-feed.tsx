@@ -11,6 +11,7 @@ const PopularFeed = async () => {
       image: images.url,
       user: users.name,
       category: categories.name,
+      categorySlug: categories.slug,
     })
     .from(recipes)
     .innerJoin(images, eq(recipes.imageId, images.id))
@@ -32,6 +33,7 @@ const PopularFeed = async () => {
             slug={recipe.slug}
             src={recipe.image}
             className={index === 2 ? "md:col-span-2" : ""}
+            categorySlug={recipe.categorySlug}
           />
         ))}
       </div>
