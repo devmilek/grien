@@ -13,8 +13,12 @@ import {
   recipeStepSchema,
 } from "../schema";
 import { toast } from "sonner";
+import { publishRecipe } from "@/actions/publish-recipe";
+import { useRouter } from "next/navigation";
 
 const AdditionalForm = () => {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const router = useRouter();
   const {
     attributes,
     addAttribute,
@@ -69,7 +73,8 @@ const AdditionalForm = () => {
     },
   });
 
-  const handlePublish = () => {
+  const handlePublish = async () => {
+    setIsLoading(true);
     const validatedBasics = recipeBasicsSchema.safeParse(basics);
 
     if (!validatedBasics.success) {
@@ -92,6 +97,25 @@ const AdditionalForm = () => {
       toast.error("Uzupełnij listę kroków");
       setCurrentStep("steps");
     }
+
+    const { status, data, message } = await publishRecipe({
+      basics: basics,
+      ingredients: ingredients,
+      preparationSteps: preparationSteps,
+      attributes,
+    });
+
+    if (status === 200) {
+      toast.success("Przepis został opublikowany");
+      if (data) {
+        router.push(`/${data.slug}`);
+      } else {
+        router.push("/moje-przepisy");
+      }
+    } else {
+      toast.error(message || "Wystąpił błąd");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -142,12 +166,19 @@ const AdditionalForm = () => {
           variant="outline"
           size="icon"
           onClick={() => setCurrentStep("steps")}
+          disabled={isLoading}
         >
           <ChevronLeft />
         </Button>
         <div className="flex gap-2">
-          <Button variant="outline">Zapisz jako szkic</Button>
-          <Button variant="default" onClick={() => handlePublish()}>
+          <Button variant="outline" disabled={isLoading}>
+            Zapisz jako szkic
+          </Button>
+          <Button
+            variant="default"
+            disabled={isLoading}
+            onClick={() => handlePublish()}
+          >
             Opublikuj
           </Button>
         </div>

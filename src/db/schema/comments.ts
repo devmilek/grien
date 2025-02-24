@@ -6,10 +6,14 @@ export const comments = pgTable("comments", {
   id: uuid().primaryKey().defaultRandom(),
   recipeId: uuid("recipe_id")
     .notNull()
-    .references(() => recipes.id),
+    .references(() => recipes.id, {
+      onDelete: "cascade",
+    }),
   userId: varchar("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, {
+      onDelete: "cascade",
+    }),
   content: varchar("content").notNull(),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),

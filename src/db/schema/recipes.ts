@@ -92,7 +92,7 @@ export type RecipeInsert = typeof recipes.$inferInsert;
 
 export const recipeIngredients = pgTable("recipe_ingredients", {
   id: uuid("id").primaryKey().defaultRandom(),
-  recipe_id: uuid("recipe_id")
+  recipeId: uuid("recipe_id")
     .notNull()
     .references(() => recipes.id, {
       onDelete: "cascade",
@@ -116,7 +116,7 @@ export const recipeIngredientsRelations = relations(
   recipeIngredients,
   ({ one }) => ({
     recipe: one(recipes, {
-      fields: [recipeIngredients.recipe_id],
+      fields: [recipeIngredients.recipeId],
       references: [recipes.id],
     }),
   })
@@ -127,7 +127,7 @@ export type RecipeIngredientInsert = typeof recipeIngredients.$inferInsert;
 
 export const recipeSteps = pgTable("recipe_steps", {
   id: uuid("id").primaryKey().defaultRandom(),
-  recipe_id: uuid("recipe_id")
+  recipeId: uuid("recipe_id")
     .notNull()
     .references(() => recipes.id, {
       onDelete: "cascade",
@@ -136,7 +136,7 @@ export const recipeSteps = pgTable("recipe_steps", {
     length: 500,
   }).notNull(),
   order: smallint("order").notNull(),
-  image: uuid("image").references(() => images.id, {
+  imageId: uuid("image").references(() => images.id, {
     onDelete: "set null",
   }),
 
@@ -149,11 +149,11 @@ export const recipeSteps = pgTable("recipe_steps", {
 
 export const recipeStepsRelations = relations(recipeSteps, ({ one }) => ({
   recipe: one(recipes, {
-    fields: [recipeSteps.recipe_id],
+    fields: [recipeSteps.recipeId],
     references: [recipes.id],
   }),
   image: one(images, {
-    fields: [recipeSteps.image],
+    fields: [recipeSteps.imageId],
     references: [images.id],
   }),
 }));

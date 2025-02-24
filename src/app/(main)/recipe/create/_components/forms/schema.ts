@@ -31,7 +31,7 @@ export const recipeIngredientSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Nazwa musi zawierać co najmniej 3 znaki" }),
-  amount: z.number(),
+  amount: z.coerce.number(),
   unit: z.string(),
 });
 
