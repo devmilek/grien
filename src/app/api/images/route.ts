@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       })
     );
 
-    const imageUrl = `${process.env.R2_PUBLIC_URL}/${fileName}`;
+    const imageUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${fileName}`;
 
     await db.insert(images).values({
       id: fileId,
