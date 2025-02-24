@@ -11,7 +11,7 @@ import { relations } from "drizzle-orm";
 
 export const images = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom(),
-  url: varchar("url").notNull(),
+  url: varchar("url").notNull().unique(),
   alt: varchar("alt", {
     length: 255,
   }),

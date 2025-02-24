@@ -17,6 +17,7 @@ import { authClient } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { signInSchema, SignInSchema } from "./schema";
 import { useRouter } from "next/navigation";
+import SocialSignIn from "../social-sign-in";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -49,46 +50,52 @@ const SignInForm = () => {
   };
 
   return (
-    <Form {...form}>
-      <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          name="email"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} type="email" autoComplete="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+    <div>
+      <Form {...form}>
+        <form
+          className="grid gap-4 mb-6"
+          onSubmit={form.handleSubmit(onSubmit)}
+        >
+          <FormField
+            name="email"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input {...field} type="email" autoComplete="email" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="password"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hasło</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type="password"
+                    autoComplete="current-password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          {error && (
+            <div className="bg-destructive/5 text-destructive border rounded-md border-destructive p-4">
+              {error}
+            </div>
           )}
-        />
-        <FormField
-          name="password"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Hasło</FormLabel>
-              <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  autoComplete="current-password"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        {error && (
-          <div className="bg-destructive/5 text-destructive border rounded-md border-destructive p-4">
-            {error}
-          </div>
-        )}
-        <Button>Zaloguj się</Button>
-      </form>
-    </Form>
+          <Button>Zaloguj się</Button>
+        </form>
+      </Form>
+      <SocialSignIn />
+    </div>
   );
 };
 

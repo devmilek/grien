@@ -1,3 +1,5 @@
+"use client";
+
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -6,12 +8,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { authClient } from "@/lib/auth/auth-client";
 import { User } from "better-auth";
-import { LogOutIcon, PlusIcon, User2 } from "lucide-react";
+import { Loader2Icon, LogOutIcon, PlusIcon, User2 } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useTransition } from "react";
 
 const UserButton = ({ user }: { user: User }) => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
+  const handleSignOut = async () => {
+    startTransition(() => {
+      authClient.signOut();
+      router.push("/");
+    });
+  };
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,11 +49,13 @@ const UserButton = ({ user }: { user: User }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/profile">
+        <DropdownMenuItem onClick={handleSignOut} disabled={isPending}>
+          {isPending ? (
+            <Loader2Icon className="animate-spin" />
+          ) : (
             <LogOutIcon />
-            Wyloguj się
-          </Link>
+          )}
+          Wyloguj się
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

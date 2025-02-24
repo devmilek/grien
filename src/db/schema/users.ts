@@ -16,12 +16,20 @@ export const users = pgTable("users", {
   })
     .notNull()
     .unique(),
+  username: varchar("username", {
+    length: 30,
+  }).unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
+  bio: varchar("bio", {
+    length: 500,
+  }),
 
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
 });
+
+export type User = typeof users.$inferSelect;
 
 export const sessions = pgTable("sessions", {
   id: varchar("id").primaryKey(),
