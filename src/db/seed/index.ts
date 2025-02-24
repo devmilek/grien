@@ -2,14 +2,10 @@
 import slugify from "@sindresorhus/slugify";
 import db from "..";
 import {
+  AttributeInsert,
+  attributes,
   categories,
   CategoryInsert,
-  CuisineInsert,
-  cuisines,
-  DietInsert,
-  diets,
-  OccasionInsert,
-  occasions,
 } from "../schema";
 
 const categoriesData = [
@@ -75,23 +71,26 @@ export async function seedAttributes() {
     slug: slugify(category.name),
   }));
 
-  const occasionsBatch: OccasionInsert[] = occasionsData.map((occasion) => ({
+  const occasionsBatch: AttributeInsert[] = occasionsData.map((occasion) => ({
     name: occasion.name,
     slug: slugify(occasion.name),
+    type: "occasions",
   }));
 
-  const cuisinesBatch: CuisineInsert[] = cuisinesData.map((cuisine) => ({
+  const cuisinesBatch: AttributeInsert[] = cuisinesData.map((cuisine) => ({
     name: cuisine.name,
     slug: slugify(cuisine.name),
+    type: "cuisines",
   }));
 
-  const dietsBatch: DietInsert[] = dietsData.map((diet) => ({
+  const dietsBatch: AttributeInsert[] = dietsData.map((diet) => ({
     name: diet.name,
     slug: slugify(diet.name),
+    type: "diets",
   }));
 
   await db.insert(categories).values(categoriesBatch);
-  await db.insert(occasions).values(occasionsBatch);
-  await db.insert(cuisines).values(cuisinesBatch);
-  await db.insert(diets).values(dietsBatch);
+  await db
+    .insert(attributes)
+    .values([...occasionsBatch, ...cuisinesBatch, ...dietsBatch]);
 }

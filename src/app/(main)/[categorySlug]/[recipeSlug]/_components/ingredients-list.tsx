@@ -60,10 +60,11 @@ const IngredientsList = ({
               htmlFor={ingredient.id}
               className="text-sm font-medium capitalize"
             >
-              {ingredient.ingredient}
+              {ingredient.name}
             </label>
             <p className="text-sm text-muted-foreground whitespace-nowrap ml-auto">
-              {ingredient.amount && calculateAmount(ingredient.amount)}{" "}
+              {Number(ingredient.amount) > 0 &&
+                calculateAmount(Number(ingredient.amount))}{" "}
               {ingredient.unit}
             </p>
           </div>

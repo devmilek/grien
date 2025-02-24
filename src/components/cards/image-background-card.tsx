@@ -4,6 +4,8 @@ import { Avatar, AvatarFallback } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Licence } from "@/db/schema";
+import ImageLicenceBadge from "../global/image-licence-badge";
 
 const ImageBackgroudCard = ({
   id,
@@ -14,6 +16,7 @@ const ImageBackgroudCard = ({
   author,
   src,
   className,
+  licence,
 }: {
   id: string;
   slug: string;
@@ -23,6 +26,7 @@ const ImageBackgroudCard = ({
   author: string;
   src: string;
   className?: string;
+  licence?: Licence | null;
 }) => {
   return (
     <Link
@@ -48,6 +52,12 @@ const ImageBackgroudCard = ({
           </Avatar>
           <p className="text-white text-sm font-medium">{author}</p>
         </div>
+        {licence && (
+          <ImageLicenceBadge
+            licence={licence}
+            className="absolute z-40 top-3 right-3"
+          />
+        )}
       </div>
       <Image
         src={src}

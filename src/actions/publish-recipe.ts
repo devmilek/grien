@@ -9,18 +9,15 @@ import {
 import {
   IngredientWithId,
   PreparationStepWithId,
-  RecipeAttribute,
 } from "@/app/(main)/utworz-przepis/_components/use-recipe-store";
 import db from "@/db";
 import {
-  RecipeCuisineInsert,
-  recipeCuisines,
-  RecipeDietInsert,
-  recipeDiets,
+  Attribute,
+  attributesTypes,
+  RecipeAttributeInsert,
+  recipeAttributes,
   RecipeIngredientInsert,
   recipeIngredients,
-  RecipeOccasionInsert,
-  recipeOccasions,
   recipes,
   RecipeStepInsert,
   recipeSteps,
@@ -33,7 +30,7 @@ import { v4 as uuid } from "uuid";
 
 const attributesSchema = z.object({
   id: z.string().uuid(),
-  type: z.enum(["diet", "cuisine", "occasion"]),
+  type: z.enum(attributesTypes),
 });
 
 export const publishRecipe = async ({
@@ -45,7 +42,7 @@ export const publishRecipe = async ({
   basics: RecipeBasicsSchema;
   ingredients: IngredientWithId[];
   preparationSteps: PreparationStepWithId[];
-  attributes: RecipeAttribute[];
+  attributes: Attribute[];
 }) => {
   const { user } = await getCurrentSession();
 
@@ -134,9 +131,9 @@ export const publishRecipe = async ({
 
       const ingredientBatch: RecipeIngredientInsert[] = ingredients.map(
         (ingredient) => ({
-          ingredient: ingredient.name,
-          amount: ingredient.amount?.toString(),
-          unit: ingredient.unit,
+          name: ingredient.name,
+          amount: ingredient.amount?.toString() ?? null,
+          unit: ingredient.unit ?? null,
           recipeId: recipeId,
         })
       );
@@ -151,40 +148,19 @@ export const publishRecipe = async ({
         })
       );
 
-      const occasionsData = attributes.filter(
-        (attr) => attr.type === "occasion"
-      );
-      const cuisinesData = attributes.filter((attr) => attr.type === "cuisine");
-      const dietsData = attributes.filter((attr) => attr.type === "diet");
-
-      const occasionsBatch: RecipeOccasionInsert[] = occasionsData.map(
+      const attributesBatch: RecipeAttributeInsert[] = attributes.map(
         (attr) => ({
+          attributeId: attr.id,
           recipeId: recipeId,
-          occasionId: attr.id,
         })
       );
-
-      const cuisinesBatch: RecipeCuisineInsert[] = cuisinesData.map((attr) => ({
-        recipeId: recipeId,
-        cuisineId: attr.id,
-      }));
-
-      const dietsBatch: RecipeDietInsert[] = dietsData.map((attr) => ({
-        recipeId: recipeId,
-        dietId: attr.id,
-      }));
 
       await tx.insert(recipeIngredients).values(ingredientBatch);
       await tx.insert(recipeSteps).values(stepsBatch);
       await tx.insert(recipeIngredients).values(ingredientBatch);
-      if (occasionsBatch.length > 0) {
-        await tx.insert(recipeOccasions).values(occasionsBatch);
-      }
-      if (cuisinesBatch.length > 0) {
-        await tx.insert(recipeCuisines).values(cuisinesBatch);
-      }
-      if (dietsBatch.length > 0) {
-        await tx.insert(recipeDiets).values(dietsBatch);
+
+      if (attributesBatch.length > 0) {
+        await tx.insert(recipeAttributes).values(attributesBatch);
       }
     });
 

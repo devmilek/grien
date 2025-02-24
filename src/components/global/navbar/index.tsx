@@ -11,9 +11,6 @@ import { getCurrentSession } from "@/lib/auth/utils";
 const Navbar = async () => {
   const { user } = await getCurrentSession();
   const categories = await db.query.categories.findMany();
-  const occasions = await db.query.occasions.findMany();
-  const cuisines = await db.query.cuisines.findMany();
-  const diets = await db.query.diets.findMany();
 
   return (
     <header className="h-16 border-b fixed left-0 w-full top-0 bg-white z-50">
@@ -25,13 +22,7 @@ const Navbar = async () => {
           <ChefHat />
           <span className="text-2xl text-foreground">grien</span>
         </Link>
-        <NavItems
-          className="mr-auto hidden lg:flex"
-          categories={categories}
-          occasions={occasions}
-          cuisines={cuisines}
-          diets={diets}
-        />
+        <NavItems className="mr-auto hidden lg:flex" categories={categories} />
         <Button variant="outline" size="icon" className="lg:hidden ml-auto">
           <MenuIcon />
         </Button>

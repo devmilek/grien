@@ -46,6 +46,7 @@ const OtherRecipesFeed = () => {
                 slug={recipe.slug}
                 src={recipe.image}
                 categorySlug={recipe.categorySlug}
+                licence={recipe.licence}
               />
             ))}
           </Fragment>

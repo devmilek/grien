@@ -1,5 +1,5 @@
 import {
-  boolean,
+  numeric,
   pgEnum,
   pgTable,
   primaryKey,
@@ -11,7 +11,8 @@ import {
 import { images } from "./image";
 import { users } from "./users";
 import { relations } from "drizzle-orm";
-import { categories, cuisines, diets } from "./attributes";
+import { attributes, categories } from "./attributes";
+import { licences } from "./licences";
 
 export const difficulties = ["easy", "medium", "hard"] as const;
 export type Difficulty = (typeof difficulties)[number];
@@ -46,18 +47,9 @@ export const recipes = pgTable("recipes", {
     }),
 
   // additional if recipe is from external source
-  isExternal: boolean("is_external").default(false),
-  author: varchar("author", {
-    length: 255,
+  licenceId: uuid("licence_id").references(() => licences.id, {
+    onDelete: "cascade",
   }),
-  sourceUrl: varchar("source_url", {
-    length: 255,
-  }),
-  originalTitle: varchar("original_title", {
-    length: 255,
-  }),
-  licenseType: varchar("license_type", { length: 50 }), // np. "CC BY-NC-SA 3.0", "All rights reserved"
-  licenseLink: varchar("license_link", { length: 255 }),
 
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
@@ -81,9 +73,11 @@ export const recipesRelations = relations(recipes, ({ one, many }) => ({
     fields: [recipes.categoryId],
     references: [categories.id],
   }),
-  diets: many(recipeDiets),
-  cuisines: many(recipeCuisines),
-  occasions: many(recipeOccasions),
+  attributes: many(recipeAttributes),
+  licence: one(licences, {
+    fields: [recipes.licenceId],
+    references: [licences.id],
+  }),
 }));
 
 // Źródło: Homemade Pizza Dough z makebetterfood.com.
@@ -100,10 +94,13 @@ export const recipeIngredients = pgTable("recipe_ingredients", {
     .references(() => recipes.id, {
       onDelete: "cascade",
     }),
-  ingredient: varchar("ingredient", {
+  name: varchar("name", {
     length: 255,
   }).notNull(),
-  amount: varchar("amount"),
+  amount: numeric("amount", {
+    precision: 5,
+    scale: 2,
+  }),
   unit: varchar("unit", {
     length: 255,
   }),
@@ -152,110 +149,40 @@ export const recipeStepsRelations = relations(recipeSteps, ({ one }) => ({
 export type RecipeStep = typeof recipeSteps.$inferSelect;
 export type RecipeStepInsert = typeof recipeSteps.$inferInsert;
 
-export const recipeDiets = pgTable(
-  "recipe_diets",
+export const recipeAttributes = pgTable(
+  "recipe_attributes",
   {
     recipeId: uuid("recipe_id")
       .notNull()
       .references(() => recipes.id, {
         onDelete: "cascade",
       }),
-    dietId: uuid("diet_id")
+    attributeId: uuid("attribute_id")
       .notNull()
-      .references(() => diets.id, {
+      .references(() => attributes.id, {
         onDelete: "cascade",
       }),
   },
   (t) => [
     primaryKey({
-      columns: [t.recipeId, t.dietId],
+      columns: [t.recipeId, t.attributeId],
     }),
   ]
 );
 
-export const recipeDietsRelations = relations(recipeDiets, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [recipeDiets.recipeId],
-    references: [recipes.id],
-  }),
-  diet: one(diets, {
-    fields: [recipeDiets.dietId],
-    references: [diets.id],
-  }),
-}));
-
-export type RecipeDiet = typeof recipeDiets.$inferSelect;
-export type RecipeDietInsert = typeof recipeDiets.$inferInsert;
-
-export const recipeCuisines = pgTable(
-  "recipe_cuisines",
-  {
-    recipeId: uuid("recipe_id")
-      .notNull()
-      .references(() => recipes.id, {
-        onDelete: "cascade",
-      }),
-    cuisineId: uuid("cuisine_id")
-      .notNull()
-      .references(() => cuisines.id, {
-        onDelete: "cascade",
-      }),
-  },
-  (t) => [
-    primaryKey({
-      columns: [t.recipeId, t.cuisineId],
-    }),
-  ]
-);
-
-export const recipeCuisinesRelations = relations(recipeCuisines, ({ one }) => ({
-  recipe: one(recipes, {
-    fields: [recipeCuisines.recipeId],
-    references: [recipes.id],
-  }),
-  cuisine: one(cuisines, {
-    fields: [recipeCuisines.cuisineId],
-    references: [cuisines.id],
-  }),
-}));
-
-export type RecipeCuisine = typeof recipeCuisines.$inferSelect;
-export type RecipeCuisineInsert = typeof recipeCuisines.$inferInsert;
-
-export const recipeOccasions = pgTable(
-  "recipe_occasions",
-  {
-    recipeId: uuid("recipe_id")
-      .notNull()
-      .references(() => recipes.id, {
-        onDelete: "cascade",
-      }),
-    occasionId: uuid("occasion_id")
-      .notNull()
-      .references(() => cuisines.id, {
-        onDelete: "cascade",
-      }),
-  },
-  (t) => [
-    primaryKey({
-      columns: [t.recipeId, t.occasionId],
-    }),
-  ]
-);
-
-export const recipeOccasionsRelations = relations(
-  recipeOccasions,
+export const recipeAttributesRelation = relations(
+  recipeAttributes,
   ({ one }) => ({
     recipe: one(recipes, {
-      fields: [recipeOccasions.recipeId],
+      fields: [recipeAttributes.recipeId],
       references: [recipes.id],
     }),
-    occasion: one(cuisines, {
-      fields: [recipeOccasions.occasionId],
-      references: [cuisines.id],
+    attribute: one(attributes, {
+      fields: [recipeAttributes.attributeId],
+      references: [attributes.id],
     }),
   })
 );
 
-export type RecipeOccasion = typeof recipeOccasions.$inferSelect;
-export type RecipeOccasionInsert = typeof recipeOccasions.$inferInsert;
+export type RecipeAttribute = typeof recipeAttributes.$inferSelect;
+export type RecipeAttributeInsert = typeof recipeAttributes.$inferInsert;

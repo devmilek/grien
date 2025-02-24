@@ -15,7 +15,7 @@ import {
   HeartIcon,
   ShareIcon,
 } from "lucide-react";
-import { formatDifficulty, formatTime } from "@/utils";
+import { formatDifficulty, formatTime, getDomainFromUrl } from "@/utils";
 import { Button } from "@/components/ui/button";
 import IngredientsList from "./_components/ingredients-list";
 import StepsList from "./_components/steps-list";
@@ -29,6 +29,7 @@ import CookingModeModal from "./_components/cooking-mode-modal";
 import CommentsCard from "./_components/comments-card";
 import { getCurrentSession } from "@/lib/auth/utils";
 import Link from "next/link";
+import ImageLicenceBadge from "@/components/global/image-licence-badge";
 
 const RecipePage = async ({
   params,
@@ -40,28 +41,23 @@ const RecipePage = async ({
   const recipe = await db.query.recipes.findFirst({
     where: eq(recipes.slug, slug),
     with: {
-      image: true,
+      image: {
+        with: {
+          licence: true,
+        },
+      },
       user: true,
       ingredients: true,
       category: true,
-      cuisines: {
-        with: {
-          cuisine: true,
-        },
-      },
-      diets: {
-        with: {
-          diet: true,
-        },
-      },
-      occasions: {
-        with: {
-          occasion: true,
-        },
-      },
       steps: {
         with: {
           image: true,
+        },
+      },
+      licence: true,
+      attributes: {
+        with: {
+          attribute: true,
         },
       },
     },
@@ -70,6 +66,18 @@ const RecipePage = async ({
   if (!recipe) {
     notFound();
   }
+
+  const occasions = recipe.attributes.filter(
+    (attr) => attr.attribute.type === "occasions"
+  );
+
+  const cuisines = recipe.attributes.filter(
+    (attr) => attr.attribute.type === "cuisines"
+  );
+
+  const diets = recipe.attributes.filter(
+    (attr) => attr.attribute.type === "diets"
+  );
 
   return (
     <div className="mx-auto container">
@@ -86,16 +94,26 @@ const RecipePage = async ({
                 objectFit="cover"
               />
             )}
+            {recipe.image?.licence && (
+              <ImageLicenceBadge
+                licence={recipe.image.licence}
+                className="absolute z-40 right-4 bottom-4 "
+              />
+            )}
           </div>
           <div className="flex flex-col">
             <div className="flex-1">
               <h1 className="text-3xl font-display">{recipe.name}</h1>
               <div className="flex items-center gap-2 mt-2">
                 <Avatar className=" size-7">
-                  <AvatarFallback>{recipe.user.name[0]}</AvatarFallback>
+                  <AvatarFallback>
+                    {recipe.licence
+                      ? recipe.licence.author.charAt(0) || "A"
+                      : recipe.user.name[0]}
+                  </AvatarFallback>
                 </Avatar>
                 <p className="text-emerald-700 font-medium text-sm">
-                  {recipe.user.name}
+                  {recipe.licence ? recipe.licence.author : recipe.user.name}
                 </p>
                 <p className="text-gray-400">&#8226;</p>
                 <p className="text-muted-foreground text-sm">
@@ -116,53 +134,56 @@ const RecipePage = async ({
                   <ChartNoAxesColumnDecreasing className="size-3 mr-1" />
                   {formatDifficulty(recipe.difficulty)}
                 </Badge>
-                {recipe.cuisines.length > 0 && (
+                {cuisines.length > 0 && (
                   <Tooltip>
                     <TooltipTrigger>
                       <Badge variant="outline">
-                        {recipe.cuisines.length > 1
-                          ? `${recipe.cuisines.length} kuchnie`
-                          : recipe.cuisines[0].cuisine.name}
+                        {cuisines.length > 1
+                          ? `${cuisines.length} kuchnie`
+                          : cuisines[0].attribute.name}
                       </Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      {recipe.cuisines.map((cuisine) => (
-                        <span key={cuisine.cuisine.id}>
-                          {cuisine.cuisine.name},{" "}
+                      {cuisines.map((cuisine) => (
+                        <span key={cuisine.attribute.id}>
+                          {cuisine.attribute.id},{" "}
                         </span>
                       ))}
                     </TooltipContent>
                   </Tooltip>
                 )}
-                {recipe.diets.length > 0 && (
+                {diets.length > 0 && (
                   <Tooltip>
                     <TooltipTrigger>
                       <Badge variant="outline">
-                        {recipe.diets.length > 1
-                          ? `${recipe.diets.length} diety`
-                          : recipe.diets[0].diet.name}
+                        {diets.length > 1
+                          ? `${diets.length} diety`
+                          : diets[0].attribute.name}
                       </Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      {recipe.diets.map((diet) => (
-                        <span key={diet.diet.id}>{diet.diet.name}, </span>
+                      {diets.map((diet) => (
+                        <span key={diet.attribute.id}>
+                          {diet.attribute.name},{" "}
+                        </span>
                       ))}
                     </TooltipContent>
                   </Tooltip>
                 )}
-                {recipe.occasions.length > 0 && (
+
+                {occasions.length > 0 && (
                   <Tooltip>
                     <TooltipTrigger>
                       <Badge variant="outline">
-                        {recipe.occasions.length > 1
-                          ? `${recipe.occasions.length} okazje`
-                          : recipe.occasions[0].occasion.name}
+                        {occasions.length > 1
+                          ? `${occasions.length} okazje`
+                          : occasions[0].attribute.name}
                       </Badge>
                     </TooltipTrigger>
                     <TooltipContent>
-                      {recipe.occasions.map((occasion) => (
-                        <span key={occasion.occasion.id}>
-                          {occasion.occasion.name},{" "}
+                      {occasions.map((occasion) => (
+                        <span key={occasion.attribute.id}>
+                          {occasion.attribute.name},{" "}
                         </span>
                       ))}
                     </TooltipContent>
@@ -218,6 +239,38 @@ const RecipePage = async ({
         </div>
         <div className="flex-1 space-y-8">
           <StepsList steps={recipe.steps} />
+          {recipe.licence && (
+            <div className="p-6 rounded-xl border border-blue-500 bg-blue-50 text-sm space-y-1">
+              <p className="">
+                Źródło:{" "}
+                <span className="font-medium">
+                  {recipe.licence.originalTitle}
+                </span>{" "}
+                z{" "}
+                <Link
+                  href={recipe.licence.sourceUrl}
+                  className="underline font-medium"
+                >
+                  {getDomainFromUrl(recipe.licence.sourceUrl)}
+                </Link>
+              </p>
+              <p>
+                Licencja:{" "}
+                <Link href={recipe.licence.licenseLink} className="font-medium">
+                  {recipe.licence.licenseType}
+                </Link>
+              </p>
+              <p>
+                Autor przepisu:{" "}
+                <span className="font-medium">{recipe.licence.author}</span>
+              </p>
+              <p>
+                Ten przepis został przetłumaczony na język polski i dostosowany
+                do miar metrycznych. Możesz go udostępniać i modyfikować na tych
+                samych warunkach.
+              </p>
+            </div>
+          )}
           <CommentsCard recipeId={recipe.id} />
         </div>
       </div>

@@ -45,3 +45,12 @@ export const getR2ImageSrc = (id: string) => {
 
   return `${r2PublicUrl}/${id}.webp`;
 };
+
+export const getDomainFromUrl = (url: string) => {
+  try {
+    const urlObject = new URL(url);
+    return urlObject.hostname;
+  } catch {
+    return url;
+  }
+};

@@ -4,6 +4,7 @@ import {
   RecipeIngredientSchema,
   RecipeStepSchema,
 } from "./forms/schema";
+import { Attribute, AttributesType } from "@/db/schema";
 
 export const steps = ["basics", "ingredients", "steps", "additional"] as const;
 export type Step = (typeof steps)[number];
@@ -16,7 +17,7 @@ export type PreparationStepWithId = RecipeStepSchema & {
   id: string;
 };
 
-export type RecipeAttributeType = "diet" | "cuisine" | "occasion";
+export type RecipeAttributeType = AttributesType;
 
 export type RecipeAttribute = {
   id: string;
@@ -43,9 +44,9 @@ type Store = {
   removePreparationStep: (id: string) => void;
   getPreparationStepById: (id: string) => PreparationStepWithId | undefined;
 
-  attributes: RecipeAttribute[];
-  setAttributes: (attributes: RecipeAttribute[]) => void;
-  addAttribute: (attribute: RecipeAttribute) => void;
+  attributes: Attribute[];
+  setAttributes: (attributes: Attribute[]) => void;
+  addAttribute: (attribute: Attribute) => void;
   removeAttribute: (id: string) => void;
 
   currentStep: Step;

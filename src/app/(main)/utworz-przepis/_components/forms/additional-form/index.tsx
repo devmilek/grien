@@ -1,10 +1,8 @@
 "use client";
 
-import { getCuisines, getDiets, getOccasions } from "@/actions";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useQueries } from "@tanstack/react-query";
 import React from "react";
-import { RecipeAttributeType, useRecipeStore } from "../../use-recipe-store";
+import { useRecipeStore } from "../../use-recipe-store";
 import { ChevronLeft, Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +14,7 @@ import { toast } from "sonner";
 import { publishRecipe } from "@/actions/publish-recipe";
 import { useRouter } from "next/navigation";
 import { updateRecipe } from "@/actions/update-recipe";
+import { useAttributes } from "@/hooks/use-attributes";
 
 interface ValidationResult {
   isValid: boolean;
@@ -38,45 +37,22 @@ const AdditionalForm = () => {
     id,
     reset,
   } = useRecipeStore();
-  const { pending, data } = useQueries({
-    queries: [
-      {
-        queryKey: ["occasions"],
-        queryFn: async () => await getOccasions(),
-      },
-      {
-        queryKey: ["cuisines"],
-        queryFn: async () => await getCuisines(),
-      },
-      {
-        queryKey: ["diets"],
-        queryFn: async () => await getDiets(),
-      },
-    ],
-    combine: (results) => {
-      const [occasions, cuisines, diets] = results.map((result) => result.data);
-      return {
-        data: [
-          {
-            name: "Okazje",
-            key: "occasion",
-            items: occasions,
-          },
-          {
-            name: "Kuchnie",
-            key: "cuisine",
-            items: cuisines,
-          },
-          {
-            name: "Diety",
-            key: "diet",
-            items: diets,
-          },
-        ],
-        pending: results.some((result) => result.isPending),
-      };
+  const { data, isLoading: pending } = useAttributes();
+
+  const attributesData = [
+    {
+      name: "Kuchnie świata",
+      items: data?.cuisines,
     },
-  });
+    {
+      name: "Okazje",
+      items: data?.occasions,
+    },
+    {
+      name: "Diety",
+      items: data?.diets,
+    },
+  ];
 
   const validateRecipe = (): ValidationResult => {
     const validatedBasics = recipeBasicsSchema.safeParse(basics);
@@ -180,16 +156,9 @@ const AdditionalForm = () => {
             <Loader2Icon className="animate-spin size-4" />
           </div>
         )}
-        {data.map((group) => (
-          <div
-            key={group.key}
-            role="group"
-            aria-labelledby={`group-${group.key}`}
-          >
-            <h3
-              id={`group-${group.key}`}
-              className="text-lg font-semibold mb-4"
-            >
+        {attributesData.map((group, index) => (
+          <div key={index} role="group" aria-labelledby={`group-${index}`}>
+            <h3 id={`group-${index}`} className="text-lg font-semibold mb-4">
               {group.name}
             </h3>
             <div className="grid grid-cols-3 gap-4">
@@ -200,10 +169,7 @@ const AdditionalForm = () => {
                     checked={attributes.some((attr) => attr.id === item.id)}
                     onCheckedChange={(checked) => {
                       if (checked) {
-                        addAttribute({
-                          type: group.key as RecipeAttributeType,
-                          id: item.id,
-                        });
+                        addAttribute(item);
                       } else {
                         removeAttribute(item.id);
                       }

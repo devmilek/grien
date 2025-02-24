@@ -1,5 +1,4 @@
 import {
-  boolean,
   integer,
   pgTable,
   timestamp,
@@ -7,6 +6,8 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { users } from "./users";
+import { licences } from "./licences";
+import { relations } from "drizzle-orm";
 
 export const images = pgTable("images", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -28,18 +29,9 @@ export const images = pgTable("images", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 
-  isExternal: boolean("is_external").default(false),
-  author: varchar("author", {
-    length: 255,
+  licenceId: uuid("licence_id").references(() => licences.id, {
+    onDelete: "cascade",
   }),
-  sourceUrl: varchar("source_url", {
-    length: 255,
-  }),
-  originalTitle: varchar("original_title", {
-    length: 255,
-  }),
-  licenseType: varchar("license_type", { length: 50 }), // np. "CC BY-NC-SA 3.0", "All rights reserved"
-  licenseLink: varchar("license_link", { length: 255 }),
 
   uploadedBy: varchar("uploaded_by")
     .notNull()
@@ -47,6 +39,13 @@ export const images = pgTable("images", {
       onDelete: "cascade",
     }),
 });
+
+export const imagesRelations = relations(images, ({ one }) => ({
+  licence: one(licences, {
+    fields: [images.licenceId],
+    references: [licences.id],
+  }),
+}));
 
 export type Image = typeof images.$inferSelect;
 export type ImageInsert = typeof images.$inferInsert;

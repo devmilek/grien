@@ -8,20 +8,8 @@ export const getCategories = async () => {
   return data;
 };
 
-export const getCuisines = async () => {
-  const data = await db.query.cuisines.findMany();
-
-  return data;
-};
-
-export const getOccasions = async () => {
-  const data = await db.query.occasions.findMany();
-
-  return data;
-};
-
-export const getDiets = async () => {
-  const data = await db.query.categories.findMany();
+export const getAttributes = async () => {
+  const data = await db.query.attributes.findMany();
 
   return data;
 };

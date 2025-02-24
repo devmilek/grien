@@ -3,6 +3,8 @@ import React from "react";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Licence } from "@/db/schema";
+import ImageLicenceBadge from "../global/image-licence-badge";
 
 const HorizontalCard = ({
   id,
@@ -14,6 +16,7 @@ const HorizontalCard = ({
   src,
   description,
   className,
+  licence,
 }: {
   id: string;
   slug: string;
@@ -24,6 +27,7 @@ const HorizontalCard = ({
   src: string;
   description: string;
   className?: string;
+  licence?: Licence | null;
 }) => {
   return (
     <div
@@ -41,6 +45,12 @@ const HorizontalCard = ({
           fill
           className="group-hover:scale-105 transition-transform transform"
         />
+        {licence && (
+          <ImageLicenceBadge
+            licence={licence}
+            className="absolute z-40 top-2 right-2"
+          />
+        )}
       </div>
       <div>
         <Link

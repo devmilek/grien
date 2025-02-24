@@ -1,6 +1,6 @@
 import db from "@/db";
 import React from "react";
-import { categories, images, recipes, users } from "@/db/schema";
+import { categories, images, licences, recipes, users } from "@/db/schema";
 import { desc, eq, getTableColumns } from "drizzle-orm";
 import ImageBackgroudCard from "@/components/cards/image-background-card";
 
@@ -12,11 +12,15 @@ const PopularFeed = async () => {
       user: users.name,
       category: categories.name,
       categorySlug: categories.slug,
+      licence: {
+        ...getTableColumns(licences),
+      },
     })
     .from(recipes)
     .innerJoin(images, eq(recipes.imageId, images.id))
     .innerJoin(users, eq(recipes.userId, users.id))
     .innerJoin(categories, eq(recipes.categoryId, categories.id))
+    .leftJoin(licences, eq(recipes.licenceId, licences.id))
     .limit(3)
     .orderBy(desc(recipes.createdAt));
   return (
@@ -34,6 +38,7 @@ const PopularFeed = async () => {
             src={recipe.image}
             className={index === 2 ? "md:col-span-2" : ""}
             categorySlug={recipe.categorySlug}
+            licence={recipe.licence}
           />
         ))}
       </div>

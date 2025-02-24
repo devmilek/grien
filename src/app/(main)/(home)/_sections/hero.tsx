@@ -1,6 +1,6 @@
 import ImageBackgroudCard from "@/components/cards/image-background-card";
 import db from "@/db";
-import { categories, images, recipes, users } from "@/db/schema";
+import { categories, images, licences, recipes, users } from "@/db/schema";
 import { eq, getTableColumns } from "drizzle-orm";
 import React from "react";
 
@@ -12,11 +12,15 @@ const HeroSection = async () => {
       user: users.name,
       category: categories.name,
       categorySlug: categories.slug,
+      licence: {
+        ...getTableColumns(licences),
+      },
     })
     .from(recipes)
     .innerJoin(images, eq(recipes.imageId, images.id))
     .innerJoin(users, eq(recipes.userId, users.id))
     .innerJoin(categories, eq(recipes.categoryId, categories.id))
+    .leftJoin(licences, eq(recipes.licenceId, licences.id))
     .limit(3);
 
   return (
@@ -31,6 +35,7 @@ const HeroSection = async () => {
           slug={recipe.slug}
           src={recipe.image}
           categorySlug={recipe.categorySlug}
+          licence={recipe.licence}
         />
       ))}
     </div>
