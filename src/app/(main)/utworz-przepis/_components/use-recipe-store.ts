@@ -5,13 +5,7 @@ import {
   RecipeStepSchema,
 } from "./forms/schema";
 
-export const steps = [
-  "basics",
-  "ingredients",
-  "steps",
-  "additional",
-  "summary",
-] as const;
+export const steps = ["basics", "ingredients", "steps", "additional"] as const;
 export type Step = (typeof steps)[number];
 
 export type IngredientWithId = RecipeIngredientSchema & {
@@ -56,6 +50,8 @@ type Store = {
 
   currentStep: Step;
   setCurrentStep: (step: Step) => void;
+
+  reset: () => void;
 };
 
 export const useRecipeStore = create<Store>()((set, get) => ({
@@ -141,6 +137,23 @@ export const useRecipeStore = create<Store>()((set, get) => ({
       attributes: state.attributes.filter((attribute) => attribute.id !== id),
     })),
 
-  currentStep: "ingredients",
+  currentStep: "basics",
   setCurrentStep: (currentStep) => set({ currentStep }),
+
+  reset: () =>
+    set({
+      id: undefined,
+      basics: {
+        name: "",
+        description: "",
+        difficulty: "easy",
+        preparationTime: 0,
+        portions: 0,
+        categoryId: "",
+      },
+      ingredients: [],
+      preparationSteps: [],
+      attributes: [],
+      currentStep: "basics",
+    }),
 }));

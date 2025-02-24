@@ -5,16 +5,9 @@ import BasicsForm from "./forms/basics-form";
 import { Step, useRecipeStore } from "./use-recipe-store";
 import IngredientsForm from "./forms/ingredients-form";
 import StepsForm from "./forms/steps-form";
-import {
-  Carrot,
-  CheckCheck,
-  ListCheck,
-  Notebook,
-  Sparkles,
-} from "lucide-react";
+import { Carrot, ListCheck, Notebook, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdditionalForm from "./forms/additional-form";
-import Summary from "./forms/summary";
 import {
   Recipe,
   RecipeCuisine,
@@ -48,12 +41,6 @@ const steps = [
     description: "Więcej informacji",
     icon: Sparkles,
     step: "additional",
-  },
-  {
-    title: "Podsumowanie",
-    description: "Sprawdź i opublikuj",
-    icon: CheckCheck,
-    step: "summary",
   },
 ];
 
@@ -164,7 +151,6 @@ const Stepper = ({
         <div>{currentStep === "ingredients" && <IngredientsForm />}</div>
         <div>{currentStep === "steps" && <StepsForm />}</div>
         <div>{currentStep === "additional" && <AdditionalForm />}</div>
-        <div>{currentStep === "summary" && <Summary />}</div>
       </div>
     </div>
   );

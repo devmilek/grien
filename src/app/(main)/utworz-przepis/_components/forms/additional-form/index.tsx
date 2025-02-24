@@ -17,8 +17,15 @@ import { publishRecipe } from "@/actions/publish-recipe";
 import { useRouter } from "next/navigation";
 import { updateRecipe } from "@/actions/update-recipe";
 
+interface ValidationResult {
+  isValid: boolean;
+  step?: "basics" | "ingredients" | "steps";
+  message?: string;
+}
+
 const AdditionalForm = () => {
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isDraftSaving, setIsDraftSaving] = React.useState(false);
   const router = useRouter();
   const {
     attributes,
@@ -29,6 +36,7 @@ const AdditionalForm = () => {
     ingredients,
     preparationSteps,
     id,
+    reset,
   } = useRecipeStore();
   const { pending, data } = useQueries({
     queries: [
@@ -70,79 +78,126 @@ const AdditionalForm = () => {
     },
   });
 
-  const handlePublish = async () => {
-    setIsLoading(true);
+  const validateRecipe = (): ValidationResult => {
     const validatedBasics = recipeBasicsSchema.safeParse(basics);
-
     if (!validatedBasics.success) {
-      toast.error("Uzupełnij podstawowe informacje");
-      setCurrentStep("basics");
+      return {
+        isValid: false,
+        step: "basics",
+        message: "Uzupełnij podstawowe informacje",
+      };
     }
 
-    const validatedIngredients = recipeIngredientSchema
-      .array()
-      .safeParse(ingredients);
-
-    if (!validatedIngredients.success || ingredients.length === 0) {
-      toast.error("Uzupełnij listę składników");
-      setCurrentStep("ingredients");
+    if (
+      !ingredients.length ||
+      !recipeIngredientSchema.array().safeParse(ingredients).success
+    ) {
+      return {
+        isValid: false,
+        step: "ingredients",
+        message: "Uzupełnij listę składników",
+      };
     }
 
-    const validatedSteps = recipeStepSchema.array().safeParse(preparationSteps);
-
-    if (!validatedSteps.success || preparationSteps.length === 0) {
-      toast.error("Uzupełnij listę kroków");
-      setCurrentStep("steps");
+    if (
+      !preparationSteps.length ||
+      !recipeStepSchema.array().safeParse(preparationSteps).success
+    ) {
+      return {
+        isValid: false,
+        step: "steps",
+        message: "Uzupełnij listę kroków",
+      };
     }
 
-    const { status, data, message } = id
-      ? await updateRecipe({
-          id: id,
-          basics: basics,
-          ingredients: ingredients,
-          preparationSteps: preparationSteps,
-          attributes,
-        })
-      : await publishRecipe({
-          basics: basics,
-          ingredients: ingredients,
-          preparationSteps: preparationSteps,
-          attributes,
-        });
+    return { isValid: true };
+  };
 
-    if (status === 200) {
-      toast.success(message);
-      if (data) {
-        router.push(`/${data.slug}`);
-      } else {
-        router.push("/moje-przepisy");
+  const handlePublish = async () => {
+    try {
+      setIsLoading(true);
+      const validation = validateRecipe();
+
+      if (!validation.isValid) {
+        toast.error(validation.message);
+        setCurrentStep(validation.step!);
+        return;
       }
-    } else {
-      toast.error(message || "Wystąpił błąd");
+
+      const {
+        status,
+        data: responseData,
+        message,
+      } = id
+        ? await updateRecipe({
+            id,
+            basics,
+            ingredients,
+            preparationSteps,
+            attributes,
+          })
+        : await publishRecipe({
+            basics,
+            ingredients,
+            preparationSteps,
+            attributes,
+          });
+
+      if (status === 200) {
+        toast.success(message);
+        reset();
+        router.push(
+          responseData?.slug ? `/${responseData.slug}` : "/moje-przepisy"
+        );
+      } else {
+        throw new Error(message || "Wystąpił błąd");
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Wystąpił nieoczekiwany błąd"
+      );
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
+  };
+
+  const handleSaveDraft = async () => {
+    // Implement draft saving logic here
+    setIsDraftSaving(true);
+    // ... draft saving code ...
+    setIsDraftSaving(false);
   };
 
   return (
-    <div>
+    <div role="form" aria-label="Dodatkowe informacje o przepisie">
       <h2 className="font-display text-3xl mb-4">Dodatkowe informacje</h2>
       <div className="gap-4 grid p-6 rounded-xl bg-white">
         {pending && (
-          <div className="w-full p-8 flex justify-center">
+          <div
+            className="w-full p-8 flex justify-center"
+            aria-label="Ładowanie"
+          >
             <Loader2Icon className="animate-spin size-4" />
           </div>
         )}
         {data.map((group) => (
-          <div key={group.key}>
-            <h3 className="text-lg font-semibold mb-4">{group.name}</h3>
+          <div
+            key={group.key}
+            role="group"
+            aria-labelledby={`group-${group.key}`}
+          >
+            <h3
+              id={`group-${group.key}`}
+              className="text-lg font-semibold mb-4"
+            >
+              {group.name}
+            </h3>
             <div className="grid grid-cols-3 gap-4">
               {group?.items?.map((item) => (
                 <div key={item.id} className="flex items-center gap-2">
                   <Checkbox
                     id={item.id}
-                    checked={attributes.some(
-                      (attribute) => attribute.id === item.id
-                    )}
+                    checked={attributes.some((attr) => attr.id === item.id)}
                     onCheckedChange={(checked) => {
                       if (checked) {
                         addAttribute({
@@ -153,10 +208,11 @@ const AdditionalForm = () => {
                         removeAttribute(item.id);
                       }
                     }}
+                    aria-label={item.name}
                   />
                   <label
                     htmlFor={item.id}
-                    className="font-medium text-sm leading-none"
+                    className="font-medium text-sm leading-none cursor-pointer"
                   >
                     {item.name}
                   </label>
@@ -171,20 +227,29 @@ const AdditionalForm = () => {
           variant="outline"
           size="icon"
           onClick={() => setCurrentStep("steps")}
-          disabled={isLoading}
+          disabled={isLoading || isDraftSaving}
+          aria-label="Wróć do poprzedniego kroku"
         >
           <ChevronLeft />
         </Button>
         <div className="flex gap-2">
-          <Button variant="outline" disabled={isLoading}>
-            Zapisz jako szkic
+          <Button
+            variant="outline"
+            disabled={isLoading || isDraftSaving}
+            onClick={handleSaveDraft}
+          >
+            {isDraftSaving ? "Zapisywanie..." : "Zapisz jako szkic"}
           </Button>
           <Button
             variant="default"
-            disabled={isLoading}
-            onClick={() => handlePublish()}
+            disabled={isLoading || isDraftSaving}
+            onClick={handlePublish}
           >
-            {id ? "Zapisz i opublikuj" : "Opublikuj przepis"}
+            {isLoading
+              ? "Publikowanie..."
+              : id
+              ? "Zapisz i opublikuj"
+              : "Opublikuj przepis"}
           </Button>
         </div>
       </div>
