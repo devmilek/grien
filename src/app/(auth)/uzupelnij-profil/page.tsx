@@ -5,6 +5,15 @@ import { redirect } from "next/navigation";
 import db from "@/db";
 import { eq } from "drizzle-orm";
 import { users } from "@/db/schema";
+import { constructMetadata } from "@/utils/construct-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Uzupełnij profil",
+  description:
+    "Pozwól innym użytkowniką cie rozpoznać uzupełniając poniższe pola.",
+  noIndex: true,
+});
 
 const Page = async () => {
   const { session } = await getCurrentSession();

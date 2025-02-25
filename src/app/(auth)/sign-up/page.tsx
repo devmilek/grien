@@ -1,6 +1,14 @@
 import React from "react";
 import SignUpForm from "../_components/sign-up-form";
 import Link from "next/link";
+import { constructMetadata } from "@/utils/construct-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Utwórz konto",
+  description:
+    "Zacznij swoją kulinarną przygodę i utwórz swoje konto z użyciem adresu email lub kontynuuj z Google lub Facebook.",
+});
 
 const SignUpPage = () => {
   return (

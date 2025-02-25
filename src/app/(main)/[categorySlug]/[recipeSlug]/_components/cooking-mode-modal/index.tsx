@@ -132,8 +132,8 @@ const CookingModeModal = ({
           Tryb gotowania
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="max-h-[90vh] overflow-y-auto" showClose={false}>
+        <DialogHeader className="sr-only">
           <DialogTitle>Tryb gotowania</DialogTitle>
           <DialogDescription>
             Śledź kroki i przygotuj pyszne danie!
@@ -151,6 +151,9 @@ const CookingModeModal = ({
         )}
         {/* stepper */}
         <div>
+          <p className="font-medium mb-2">
+            Krok {currentStep + 1} z {steps.length}
+          </p>
           <div className="flex gap-3">
             {steps.map((step, index) => (
               <div
@@ -161,9 +164,6 @@ const CookingModeModal = ({
               />
             ))}
           </div>
-          <p className="font-medium mt-2">
-            Krok {currentStep + 1} z {steps.length}
-          </p>
         </div>
         <StepView step={steps[currentStep]} />
         {/* timer */}

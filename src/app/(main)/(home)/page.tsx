@@ -6,6 +6,10 @@ import MainDishesFeed from "./_sections/main-dishes-feed";
 import OtherRecipesFeed from "./_sections/other-recipes-feed";
 import QuoteCard from "./_sections/quote-card";
 import DrinksFeed from "./_sections/drinks-feed";
+import { constructMetadata } from "@/utils/construct-metadata";
+import { Metadata } from "next";
+
+export const metadata: Metadata = constructMetadata();
 
 export default async function Home() {
   const categories = await db.query.categories.findMany();
