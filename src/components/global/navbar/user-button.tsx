@@ -11,7 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { authClient } from "@/lib/auth/auth-client";
 import { User } from "better-auth";
-import { Loader2Icon, LogOutIcon, PlusIcon, User2 } from "lucide-react";
+import {
+  Loader2Icon,
+  LogOutIcon,
+  PlusIcon,
+  Settings,
+  User2,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useTransition } from "react";
@@ -68,6 +74,12 @@ const UserButton = ({
           <Link href="/utworz-przepis">
             <PlusIcon />
             Utwórz przepis
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/kucharze/ustawienia">
+            <Settings />
+            Ustawienia
           </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />

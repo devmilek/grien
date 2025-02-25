@@ -33,6 +33,7 @@ export async function generateMetadata({
   return constructMetadata({
     title: "Kucharz " + user.name,
     url: `/kucharze/${user.username}`,
+    noIndex: true,
   });
 }
 

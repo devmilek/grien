@@ -49,7 +49,7 @@ const CompleteProfileForm = ({ user }: { user: User }) => {
 
     toast.success("Profil zaktualizowany");
     router.refresh();
-    router.push("/");
+    router.replace("/");
   };
 
   return (

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import db from "@/db";
 import UserButton from "./user-button";
 import { getCurrentSession } from "@/lib/auth/utils";
+import NavbarSearch from "./navbar-search";
 
 const Navbar = async () => {
   const { user } = await getCurrentSession();
@@ -27,7 +28,9 @@ const Navbar = async () => {
           <MenuIcon />
         </Button>
         <div className="gap-2 hidden lg:flex">
-          <Input placeholder="Wyszukaj przepisu..." />
+          <NavbarSearch>
+            <Input placeholder="Wyszukaj przepisu..." />
+          </NavbarSearch>
           {user ? (
             <>
               <Button variant="ghost" size="icon" className="shrink-0">
