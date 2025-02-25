@@ -1,21 +1,42 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import db from "@/db";
-import { recipes as dbRecipes, users } from "@/db/schema";
+import { recipes as dbRecipes, follows, users } from "@/db/schema";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
 import RecipesFeed from "./recipes-feed";
+import { Metadata } from "next";
+import { constructMetadata } from "@/utils/construct-metadata";
+import { getInitials } from "@/utils";
 
-const ProfilePage = async ({
-  params,
-}: {
+interface ProfilePageProps {
   params: Promise<{
     username: string;
   }>;
-}) => {
+}
+
+export async function generateMetadata({
+  params,
+}: ProfilePageProps): Promise<Metadata> {
+  const username = (await params).username;
+  const user = await db.query.users.findFirst({
+    where: eq(users.username, username),
+  });
+
+  if (!user) {
+    return {};
+  }
+
+  return constructMetadata({
+    title: "Kucharz " + user.name,
+    url: `/kucharze/${user.username}`,
+  });
+}
+
+const ProfilePage = async ({ params }: ProfilePageProps) => {
   const { user: currentUser } = await getCurrentSession();
   const username = (await params).username;
 
@@ -30,6 +51,11 @@ const ProfilePage = async ({
   const recipesCount = await db.$count(
     dbRecipes,
     eq(dbRecipes.userId, user.id)
+  );
+
+  const followersCount = await db.$count(
+    follows,
+    eq(follows.followingId, user.id)
   );
 
   return (
@@ -50,7 +76,7 @@ const ProfilePage = async ({
         <div className="px-8 -mt-8 flex items-end gap-6">
           <Avatar className="size-32 border-[6px] border-background bg-background z-20">
             {user.image && <AvatarImage src={user.image} />}
-            <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
           <div className="pb-4 flex justify-between flex-1">
             <div className="">
@@ -65,7 +91,7 @@ const ProfilePage = async ({
                 </span>
               </p>
               <p className="font-bold">
-                {recipesCount}
+                {followersCount}
                 <span className="text-muted-foreground text-sm font-normal ml-2">
                   Obserwujących
                 </span>

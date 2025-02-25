@@ -27,9 +27,10 @@ const UserButton = ({
   const [isPending, startTransition] = useTransition();
 
   const handleSignOut = async () => {
-    startTransition(() => {
-      authClient.signOut();
-      router.push("/");
+    startTransition(async () => {
+      await authClient.signOut();
+      router.refresh();
+      router.push("/logowanie");
     });
   };
   return (
@@ -64,7 +65,7 @@ const UserButton = ({
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/recipe/create">
+          <Link href="/utworz-przepis">
             <PlusIcon />
             Utwórz przepis
           </Link>

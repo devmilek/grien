@@ -41,10 +41,10 @@ const Navbar = async () => {
           ) : (
             <>
               <Button variant="outline" asChild>
-                <Link href="/sign-in">Zaloguj się</Link>
+                <Link href="/logowanie">Zaloguj się</Link>
               </Button>
               <Button variant="default" asChild>
-                <Link href="/sign-up">Zarejestruj się</Link>
+                <Link href="/rejestracja">Zarejestruj się</Link>
               </Button>
             </>
           )}
