@@ -1,54 +1,27 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import db from "@/db";
-import { recipes as dbRecipes, follows, users } from "@/db/schema";
+import { recipes as dbRecipes, follows } from "@/db/schema";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { eq } from "drizzle-orm";
 import Image from "next/image";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import React from "react";
 import RecipesFeed from "./recipes-feed";
 import { Metadata } from "next";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { getInitials } from "@/utils";
 
-interface ProfilePageProps {
-  params: Promise<{
-    username: string;
-  }>;
-}
+export const metadata: Metadata = constructMetadata({
+  title: "Twoje konto",
+  noIndex: true,
+});
 
-export async function generateMetadata({
-  params,
-}: ProfilePageProps): Promise<Metadata> {
-  const username = (await params).username;
-  const user = await db.query.users.findFirst({
-    where: eq(users.username, username),
-  });
+const ProfilePage = async () => {
+  const { user } = await getCurrentSession();
 
   if (!user) {
-    return {};
-  }
-
-  return constructMetadata({
-    title: "Kucharz " + user.name,
-    url: `/kucharze/${user.username}`,
-    noIndex: true,
-  });
-}
-
-const ProfilePage = async ({ params }: ProfilePageProps) => {
-  const { user: currentUser } = await getCurrentSession();
-  const username = (await params).username;
-
-  if (username === currentUser?.username) redirect("/konto");
-
-  const user = await db.query.users.findFirst({
-    where: eq(users.username, username),
-  });
-
-  if (!user) {
-    return notFound();
+    return redirect("/logowanie");
   }
 
   const recipesCount = await db.$count(

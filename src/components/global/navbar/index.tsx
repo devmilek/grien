@@ -1,4 +1,4 @@
-import { BellIcon, ChefHat, HeartIcon, MenuIcon } from "lucide-react";
+import { BellIcon, BookmarkIcon, ChefHat, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import NavItems from "./nav-items";
@@ -37,7 +37,9 @@ const Navbar = async () => {
                 <BellIcon />
               </Button>
               <Button variant="ghost" size="icon" className="shrink-0">
-                <HeartIcon />
+                <Link href="/kucharze/ksiazki-kucharskie">
+                  <BookmarkIcon />
+                </Link>
               </Button>
               <UserButton user={user} />
             </>
