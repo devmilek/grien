@@ -9,11 +9,12 @@ import { getInitials } from "@/utils";
 
 const SmallRecipeCard = ({
   slug,
-  image,
+  imageSrc,
   category,
   name,
   user,
   className,
+  licence,
 }: RecipeForCard & {
   className?: string;
 }) => {
@@ -24,14 +25,14 @@ const SmallRecipeCard = ({
     >
       <div className="aspect-[4/3] w-full shrink-0 relative rounded-lg overflow-hidden">
         <Image
-          src={image.url}
+          src={imageSrc}
           alt={"Zdjęcie przepisu " + name}
           fill
           className="group-hover:scale-105 transition-transform transform object-cover"
         />
-        {image.licence && (
+        {licence && (
           <ImageLicenceBadge
-            licence={image.licence}
+            licence={licence}
             className="absolute z-40 top-3 right-3"
           />
         )}

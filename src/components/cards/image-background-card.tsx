@@ -10,11 +10,12 @@ import { getInitials } from "@/utils";
 
 const ImageBackgroudCard = ({
   slug,
-  image,
+  imageSrc,
   category,
   name,
   user,
   className,
+  licence,
 }: RecipeForCard & {
   className?: string;
 }) => {
@@ -43,15 +44,15 @@ const ImageBackgroudCard = ({
           </Avatar>
           <p className="text-white text-sm font-medium">{user.name}</p>
         </div>
-        {image.licence && (
+        {licence && (
           <ImageLicenceBadge
-            licence={image.licence}
+            licence={licence}
             className="absolute z-40 top-3 right-3"
           />
         )}
       </div>
       <Image
-        src={image.url}
+        src={imageSrc}
         alt={"Zdjęcie przepisu " + name}
         width={400}
         height={400}

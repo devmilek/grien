@@ -12,6 +12,9 @@ export const licences = pgTable("licences", {
   originalTitle: varchar("original_title", {
     length: 255,
   }),
+  imagesAuthor: varchar("image_author", {
+    length: 255,
+  }),
   licenseType: varchar("license_type", { length: 50 }).notNull(), // np. "CC BY-NC-SA 3.0", "All rights reserved"
   licenseLink: varchar("license_link", { length: 255 }).notNull(),
 });

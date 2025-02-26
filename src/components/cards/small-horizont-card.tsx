@@ -8,7 +8,7 @@ import { RecipeForCard } from "@/actions/get-recipes-for-cards";
 
 const SmallHorizontCard = ({
   slug,
-  image,
+  imageSrc,
   category,
   name,
   user,
@@ -21,7 +21,7 @@ const SmallHorizontCard = ({
     <div key={slug} className={cn("group flex items-center gap-4", className)}>
       <div className="aspect-square w-20 shrink-0 relative rounded-lg overflow-hidden">
         <Image
-          src={image.url}
+          src={imageSrc}
           alt={"Zdjęcie przepisu " + name}
           fill
           className="group-hover:scale-105 transition-transform transform object-cover"

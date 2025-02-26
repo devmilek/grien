@@ -1,16 +1,21 @@
 import db from "@/db";
-import { categories, Licence, Recipe } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import {
+  categories,
+  images,
+  Licence,
+  licences,
+  Recipe,
+  recipes,
+  users,
+} from "@/db/schema";
+import { and, eq, getTableColumns } from "drizzle-orm";
 
 export type RecipeForCard = Recipe & {
   category: {
     name: string;
     slug: string;
   };
-  image: {
-    url: string;
-    licence: Licence | null;
-  };
+  imageSrc: string;
   licence: Licence | null;
   user: {
     name: string;
@@ -26,34 +31,30 @@ export async function getRecipesForCards({
   limit?: number;
   categorySlug?: string;
 }): Promise<RecipeForCard[]> {
-  const data = await db.query.recipes.findMany({
-    with: {
+  const data = await db
+    .select({
+      ...getTableColumns(recipes),
       category: {
-        columns: {
-          name: true,
-          slug: true,
-        },
+        name: categories.name,
+        slug: categories.slug,
       },
-      image: {
-        with: {
-          licence: true,
-        },
-        columns: {
-          url: true,
-        },
+      imageSrc: images.url,
+      licence: {
+        ...getTableColumns(licences),
       },
-      licence: true,
       user: {
-        columns: {
-          name: true,
-          username: true,
-          image: true,
-        },
+        name: users.name,
+        username: users.username,
+        image: users.image,
       },
-    },
-    where: and(categorySlug ? eq(categories.slug, categorySlug) : undefined),
-    limit,
-  });
+    })
+    .from(recipes)
+    .innerJoin(categories, eq(recipes.categoryId, categories.id))
+    .innerJoin(images, eq(recipes.imageId, images.id))
+    .innerJoin(users, eq(recipes.userId, users.id))
+    .leftJoin(licences, eq(recipes.licenceId, licences.id))
+    .limit(limit)
+    .where(categorySlug ? and(eq(categories.slug, categorySlug)) : undefined);
 
   return data;
 }
