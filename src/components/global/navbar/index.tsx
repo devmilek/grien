@@ -37,7 +37,7 @@ const Navbar = async () => {
                 <BellIcon />
               </Button>
               <Button variant="ghost" size="icon" className="shrink-0">
-                <Link href="/kucharze/ksiazki-kucharskie">
+                <Link href="/konto/ksiazki-kucharskie">
                   <BookmarkIcon />
                 </Link>
               </Button>

@@ -5,12 +5,12 @@ import {
   RecipeBasicsSchema,
   recipeIngredientSchema,
   recipeStepSchema,
-} from "@/app/(main)/utworz-przepis/_components/forms/schema";
+} from "@/app/(main)/przepisy/utworz/_components/forms/schema";
 import {
   IngredientWithId,
   PreparationStepWithId,
   RecipeAttribute,
-} from "@/app/(main)/utworz-przepis/_components/use-recipe-store";
+} from "@/app/(main)/przepisy/utworz/_components/use-recipe-store";
 import db from "@/db";
 import {
   RecipeCuisineInsert,

@@ -20,9 +20,11 @@ export const difficultiesEnum = pgEnum("difficulty", difficulties);
 
 export const recipes = pgTable("recipes", {
   id: uuid("id").primaryKey().defaultRandom(),
-  imageId: uuid("image_id").references(() => images.id, {
-    onDelete: "set null",
-  }),
+  imageId: uuid("image_id")
+    .references(() => images.id, {
+      onDelete: "cascade",
+    })
+    .notNull(),
   categoryId: uuid("category_id")
     .notNull()
     .references(() => categories.id),

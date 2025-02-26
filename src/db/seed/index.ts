@@ -9,17 +9,56 @@ import {
 } from "../schema";
 
 const categoriesData = [
-  { name: "Śniadania" },
-  { name: "Zupy" },
-  { name: "Dania główne" },
-  { name: "Desery" },
-  { name: "Napoje" },
-  { name: "Przekąski" },
-  { name: "Sałatki" },
-  { name: "Przetwory" },
-  { name: "Dodatki" },
-  { name: "Pieczywo" },
-  { name: "Wędliny" },
+  {
+    name: "Śniadania",
+    description:
+      "Pyszne i pożywne propozycje na dobry początek dnia, od owsianki po jajecznicę.",
+  },
+  {
+    name: "Zupy",
+    description:
+      "Rozgrzewające i aromatyczne zupy, idealne na każdą porę roku.",
+  },
+  {
+    name: "Dania główne",
+    description:
+      "Syte i smaczne potrawy, które sprawdzą się na rodzinny obiad lub kolację.",
+  },
+  {
+    name: "Desery",
+    description:
+      "Słodkie przyjemności, od domowych ciast po lekkie musy i lody.",
+  },
+  {
+    name: "Napoje",
+    description:
+      "Orzeźwiające i rozgrzewające napoje, zarówno bezalkoholowe, jak i koktajle.",
+  },
+  {
+    name: "Przekąski",
+    description: "Szybkie i smaczne propozycje na mały głód w ciągu dnia.",
+  },
+  {
+    name: "Sałatki",
+    description:
+      "Świeże i lekkie kompozycje warzywne, mięsne i z dodatkiem serów.",
+  },
+  {
+    name: "Przetwory",
+    description: "Domowe konfitury, kiszonki i inne zapasy na zimowe miesiące.",
+  },
+  {
+    name: "Dodatki",
+    description: "Sosy, dipy i inne smakołyki, które wzbogacą smak Twoich dań.",
+  },
+  {
+    name: "Pieczywo",
+    description: "Chrupiące domowe chleby, bułki i inne wypieki.",
+  },
+  {
+    name: "Wędliny",
+    description: "Tradycyjne domowe wędliny, pasztety i inne mięsne specjały.",
+  },
 ];
 
 const occasionsData = [
@@ -69,6 +108,7 @@ export async function seedAttributes() {
   const categoriesBatch: CategoryInsert[] = categoriesData.map((category) => ({
     name: category.name,
     slug: slugify(category.name),
+    description: category.description,
   }));
 
   const occasionsBatch: AttributeInsert[] = occasionsData.map((occasion) => ({

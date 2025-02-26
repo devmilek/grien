@@ -79,7 +79,7 @@ export const collectionsRelations = relations(collections, ({ one, many }) => ({
     fields: [collections.userId],
     references: [users.id],
   }),
-  recipes: many(recipes),
+  recipes: many(collectionsRecipes),
 }));
 
 export type Collection = typeof collections.$inferSelect;
