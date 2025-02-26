@@ -4,7 +4,7 @@ import { getRecipesForCards } from "@/actions/get-recipes-for-cards";
 
 const MainDishesFeed = async () => {
   const data = await getRecipesForCards({
-    limit: 3,
+    limit: 5,
     categorySlug: "dania-glowne",
   });
   return (

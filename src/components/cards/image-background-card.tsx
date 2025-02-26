@@ -55,7 +55,6 @@ const ImageBackgroudCard = ({
         alt={"Zdjęcie przepisu " + name}
         width={400}
         height={400}
-        objectFit="cover"
         className="z-0 size-full object-cover group-hover:scale-105 transition-transform transform"
       />
     </Link>

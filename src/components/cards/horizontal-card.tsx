@@ -30,9 +30,8 @@ const HorizontalCard = ({
         <Image
           src={image.url}
           alt={"Zdjęcie przepisu " + name}
-          objectFit="cover"
           fill
-          className="group-hover:scale-105 transition-transform transform"
+          className="group-hover:scale-105 transition-transform transform object-cover"
         />
         {image.licence && (
           <ImageLicenceBadge
