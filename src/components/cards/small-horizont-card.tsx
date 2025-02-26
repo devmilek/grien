@@ -4,31 +4,24 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNowStrict } from "date-fns";
 import { pl } from "date-fns/locale";
+import { RecipeForCard } from "@/actions/get-recipes-for-cards";
 
 const SmallHorizontCard = ({
-  id,
   slug,
+  image,
+  category,
   name,
-  author,
-  src,
+  user,
   className,
-  categorySlug,
   createdAt,
-}: {
-  id: string;
-  slug: string;
-  name: string;
-  author: string;
-  src: string;
+}: RecipeForCard & {
   className?: string;
-  categorySlug: string;
-  createdAt: Date;
 }) => {
   return (
-    <div key={id} className={cn("group flex items-center gap-4", className)}>
+    <div key={slug} className={cn("group flex items-center gap-4", className)}>
       <div className="aspect-square w-20 shrink-0 relative rounded-lg overflow-hidden">
         <Image
-          src={src}
+          src={image.url}
           alt={"Zdjęcie przepisu " + name}
           objectFit="cover"
           fill
@@ -37,13 +30,13 @@ const SmallHorizontCard = ({
       </div>
       <div className="w-full">
         <Link
-          href={"/" + categorySlug + "/" + slug}
+          href={"/przepisy/" + category.slug}
           className="font-display line-clamp-2"
         >
           {name}
         </Link>
         <div className="flex items-center gap-2 mt-2">
-          <p className="text-xs font-medium">{author}</p>
+          <p className="text-xs font-medium">{user.name}</p>
           <p className="text-xs text-muted-foreground">
             {formatDistanceToNowStrict(createdAt, {
               addSuffix: true,

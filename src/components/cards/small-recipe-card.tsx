@@ -1,48 +1,38 @@
 import Link from "next/link";
 import React from "react";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import ImageLicenceBadge from "../global/image-licence-badge";
-import { Licence } from "@/db/schema";
+import { RecipeForCard } from "@/actions/get-recipes-for-cards";
+import { getInitials } from "@/utils";
 
 const SmallRecipeCard = ({
-  id,
   slug,
-  name,
+  image,
   category,
-  categorySlug,
-  author,
-  src,
+  name,
+  user,
   className,
-  licence,
-}: {
-  id: string;
-  slug: string;
-  name: string;
-  category: string;
-  categorySlug: string;
-  author: string;
-  src: string;
+}: RecipeForCard & {
   className?: string;
-  licence?: Licence | null;
 }) => {
   return (
     <div
-      key={id}
+      key={slug}
       className={cn("group flex flex-col items-center gap-4", className)}
     >
       <div className="aspect-[4/3] w-full shrink-0 relative rounded-lg overflow-hidden">
         <Image
-          src={src}
+          src={image.url}
           alt={"Zdjęcie przepisu " + name}
           objectFit="cover"
           fill
           className="group-hover:scale-105 transition-transform transform"
         />
-        {licence && (
+        {image.licence && (
           <ImageLicenceBadge
-            licence={licence}
+            licence={image.licence}
             className="absolute z-40 top-3 right-3"
           />
         )}
@@ -50,21 +40,22 @@ const SmallRecipeCard = ({
       <div className="w-full">
         <Link
           className="flex items-center space-x-2 text-emerald-700 font-semibold text-sm mb-1"
-          href={"/" + categorySlug}
+          href={"/kategorie/" + category.slug}
         >
-          {category}
+          {category.name}
         </Link>
         <Link
-          href={"/" + categorySlug + "/" + slug}
+          href={"/przepisy/" + slug}
           className="text-xl font-display link-underline link-underline-black line-clamp-2"
         >
           {name}
         </Link>
         <div className="flex items-center gap-2 mt-2">
           <Avatar className="size-7">
-            <AvatarFallback>{author[0].toUpperCase()}</AvatarFallback>
+            {user.image && <AvatarImage src={user.image} alt={user.name} />}
+            <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
-          <p className="text-sm font-medium">{author}</p>
+          <p className="text-sm font-medium">{user.name}</p>
         </div>
       </div>
     </div>

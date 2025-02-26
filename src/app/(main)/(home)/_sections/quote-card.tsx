@@ -65,7 +65,12 @@ const QuoteCard = () => {
             className="flex-1"
           >
             <p>{quotes[currentQuote].content}</p>
-            <p className="font-medium">- {quotes[currentQuote].author}</p>
+            <p
+              className="
+            font-medium"
+            >
+              - {quotes[currentQuote].author}
+            </p>
           </motion.div>
         </AnimatePresence>
       </div>

@@ -37,17 +37,7 @@ const OtherRecipesFeed = () => {
         {data?.pages.map((page, index) => (
           <Fragment key={index}>
             {page.map((recipe) => (
-              <SmallRecipeCard
-                key={recipe.id}
-                author={recipe.user}
-                category={recipe.category}
-                id={recipe.id}
-                name={recipe.name}
-                slug={recipe.slug}
-                src={recipe.image}
-                categorySlug={recipe.categorySlug}
-                licence={recipe.licence}
-              />
+              <SmallRecipeCard key={recipe.id} {...recipe} />
             ))}
           </Fragment>
         ))}
