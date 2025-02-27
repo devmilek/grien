@@ -16,7 +16,7 @@ export const categories = pgTable("categories", {
     .unique(),
   description: varchar("description", {
     length: 255,
-  }),
+  }).notNull(),
 });
 
 export type Category = typeof categories.$inferSelect;
@@ -33,6 +33,9 @@ export const attributes = pgTable("attributes", {
   })
     .notNull()
     .unique(),
+  description: varchar("description", {
+    length: 255,
+  }).notNull(),
 });
 
 export type Attribute = typeof attributes.$inferSelect;

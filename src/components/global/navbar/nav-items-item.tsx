@@ -3,18 +3,35 @@ import {
   NavigationMenuItem,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
-import { Attribute, Category } from "@/db/schema";
+import { Attribute, AttributesType, Category } from "@/db/schema";
 import Link from "next/link";
 import React from "react";
 
 const NavItemsItem = ({
   title,
   items,
+  type,
 }: {
   title: string;
   items?: Attribute[] | Category[];
-  isLoading?: boolean;
+  type: AttributesType | "categories";
 }) => {
+  const getLink = () => {
+    switch (type) {
+      case "categories":
+        return "/kategorie";
+
+      case "cuisines":
+        return "/kuchnie-swiata";
+
+      case "occasions":
+        return "/okazje";
+
+      case "diets":
+        return "/diety";
+    }
+  };
+
   return (
     <NavigationMenuItem>
       <NavigationMenuTrigger>{title}</NavigationMenuTrigger>
@@ -24,7 +41,7 @@ const NavItemsItem = ({
           {items?.map((item) => (
             <li key={item.id}>
               <Link
-                href={`/kategoria/${item.name}`}
+                href={`${getLink()}/${item.slug}`}
                 className="text-sm hover:underline"
               >
                 {item.name}

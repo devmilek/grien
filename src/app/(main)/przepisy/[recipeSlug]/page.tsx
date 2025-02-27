@@ -57,8 +57,8 @@ const RecipePage = async ({ params }: RecipePageProps) => {
     where: eq(recipes.slug, slug),
     with: {
       image: {
-        with: {
-          licence: true,
+        columns: {
+          url: true,
         },
       },
       user: true,
@@ -93,10 +93,7 @@ const RecipePage = async ({ params }: RecipePageProps) => {
       <TooltipProvider>
         <section className="grid gap-4 lg:grid-cols-2 lg:gap-8 md:min-h-96 bg-white rounded-xl p-4 md:p-6">
           {recipe.image && (
-            <RecipeImage
-              imageUrl={recipe.image.url}
-              licence={recipe.image.licence}
-            />
+            <RecipeImage imageUrl={recipe.image.url} licence={recipe.licence} />
           )}
           <div className="flex flex-col">
             <div className="flex-1">

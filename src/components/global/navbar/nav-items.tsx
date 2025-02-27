@@ -23,10 +23,22 @@ const NavItems = ({
     <>
       <NavigationMenu className={className}>
         <NavigationMenuList>
-          <NavItemsItem title="Kategorie" items={categories} />
-          <NavItemsItem title="Kuchnie świata" items={data?.cuisines} />
-          <NavItemsItem title="Okazje" items={data?.occasions} />
-          <NavItemsItem title="Diety" items={data?.diets} />
+          <NavItemsItem
+            title="Kategorie"
+            items={categories}
+            type="categories"
+          />
+          <NavItemsItem
+            title="Kuchnie świata"
+            items={data?.cuisines}
+            type="cuisines"
+          />
+          <NavItemsItem
+            title="Okazje"
+            items={data?.occasions}
+            type="occasions"
+          />
+          <NavItemsItem title="Diety" items={data?.diets} type="diets" />
         </NavigationMenuList>
       </NavigationMenu>
     </>

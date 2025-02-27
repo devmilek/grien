@@ -4,20 +4,22 @@ import db from "@/db";
 import { categories, images, licences, recipes, users } from "@/db/schema";
 import { asc, eq, getTableColumns } from "drizzle-orm";
 
-export const getInfiniteScrollRecipes = async (
-  page: number,
-  userId: string
-) => {
-  console.log(page);
+export async function getInfiniteScrollRecipes(page: number, userId: string) {
   const data = await db
     .select({
       ...getTableColumns(recipes),
-      image: images.url,
-      user: users.name,
-      category: categories.name,
-      categorySlug: categories.slug,
+      category: {
+        name: categories.name,
+        slug: categories.slug,
+      },
+      imageSrc: images.url,
       licence: {
         ...getTableColumns(licences),
+      },
+      user: {
+        name: users.name,
+        username: users.username,
+        image: users.image,
       },
     })
     .from(recipes)
@@ -31,4 +33,4 @@ export const getInfiniteScrollRecipes = async (
     .orderBy(asc(recipes.createdAt));
 
   return data;
-};
+}

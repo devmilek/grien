@@ -7,14 +7,14 @@ import { getInfiniteScrollRecipes } from "./actions";
 import SmallRecipeCard from "@/components/cards/small-recipe-card";
 import { FileQuestion, Loader2Icon } from "lucide-react";
 
-const RecipesFeed = ({ userId }: { userId: string }) => {
+const RecipesFeed = ({ categorySlug }: { categorySlug: string }) => {
   const { ref, inView } = useInView();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ["user-recipes", userId],
+      queryKey: ["recipes", categorySlug],
       queryFn: async ({ pageParam }) =>
-        await getInfiniteScrollRecipes(pageParam, userId),
+        await getInfiniteScrollRecipes(pageParam, categorySlug),
       initialPageParam: 0,
       getNextPageParam: (lastPage, allPages, lastPageParam) => {
         if (lastPage.length === 0) {
@@ -29,6 +29,7 @@ const RecipesFeed = ({ userId }: { userId: string }) => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
+
   return (
     <div className="p-6 rounded-xl bg-white">
       <h2 className="text-3xl font-display mb-6">
@@ -39,7 +40,7 @@ const RecipesFeed = ({ userId }: { userId: string }) => {
           <FileQuestion className="text-muted-foreground mx-auto mb-4" />
           <p className="font-semibold">Brak przepisów</p>
           <p className="text-sm text-muted-foreground">
-            Ten użytkownik nie dodał jeszcze żadnych przepisów.
+            Nie znaleziono przepisów w tej kategorii.
           </p>
         </div>
       )}

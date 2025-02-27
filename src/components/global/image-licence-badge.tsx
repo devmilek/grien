@@ -5,7 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Copyright } from "lucide-react";
+import { CreativeCommons } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { getDomainFromUrl } from "@/utils";
@@ -25,8 +25,10 @@ const ImageLicenceBadge = ({
           className={cn("bg-background cursor-pointer", className)}
           variant="outline"
         >
-          <Copyright />
-          By: {licence.author}
+          <CreativeCommons />
+          {licence.imagesAuthor
+            ? `By: ${licence.imagesAuthor}`
+            : licence.licenseType}
         </Badge>
       </HoverCardTrigger>
       <HoverCardContent className="text-sm w-[300px] z-50">
@@ -43,8 +45,14 @@ const ImageLicenceBadge = ({
           </Link>
         </p>
         <p>
-          Autor zdjęcia: <span className="font-medium">{licence.author}</span>
+          Autor przepisu: <span className="font-medium">{licence.author}</span>
         </p>
+        {licence.imagesAuthor && (
+          <p>
+            Autor zdjęcia:{" "}
+            <span className="font-medium">{licence.imagesAuthor}</span>
+          </p>
+        )}
       </HoverCardContent>
     </HoverCard>
   );
