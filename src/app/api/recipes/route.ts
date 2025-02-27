@@ -1,5 +1,3 @@
-"use server";
-
 import db from "@/db";
 import {
   attributes,
@@ -10,16 +8,10 @@ import {
   recipes,
   users,
 } from "@/db/schema";
-import {
-  and,
-  count,
-  eq,
-  getTableColumns,
-  ilike,
-  inArray,
-  or,
-  SQL,
-} from "drizzle-orm";
+import { and, eq, getTableColumns, ilike, inArray, or, SQL } from "drizzle-orm";
+import { NextRequest } from "next/server";
+
+const MAX_ITEMS = 10;
 
 interface FacatedParams {
   categorySlug?: string | null;
@@ -65,15 +57,27 @@ const getFilters = ({
   return filters;
 };
 
-export const getFilteredRecipes = async ({
-  categorySlug,
-  cuisineSlugs,
-  occassionSlugs,
-  dietSlugs,
-  query,
-  page,
-}: FacatedParams) => {
-  const dbQuery = db
+const parseStringArrayParam = (param: string | null) => {
+  return param ? param.split(",") : [];
+};
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+
+  const searchQuery = searchParams.get("query");
+  const categorySlug = searchParams.get("categorySlug");
+  const cuisineSlugs = parseStringArrayParam(searchParams.get("cuisineSlugs"));
+  const occassionSlugs = parseStringArrayParam(
+    searchParams.get("occassionSlugs")
+  );
+  const dietSlugs = parseStringArrayParam(searchParams.get("dietSlugs"));
+  const limit = Math.min(
+    parseInt(searchParams.get("limit") || "10", 10),
+    MAX_ITEMS
+  );
+  const page = parseInt(searchParams.get("page") || "1", 10);
+
+  const query = db
     .select({
       ...getTableColumns(recipes),
       category: {
@@ -98,56 +102,27 @@ export const getFilteredRecipes = async ({
     .leftJoin(recipeAttributes, eq(recipes.id, recipeAttributes.recipeId))
     .leftJoin(attributes, eq(recipeAttributes.attributeId, attributes.id))
     .where(
-      and(
-        ...getFilters({
-          categorySlug,
-          cuisineSlugs,
-          occassionSlugs,
-          dietSlugs,
-          query,
-        })
-      )
+      searchQuery
+        ? or(
+            ilike(recipes.name, `%${searchQuery}%`),
+            ilike(recipes.description, `%${searchQuery}%`)
+          )
+        : undefined
     )
     .limit(10);
 
   if (page) {
-    dbQuery.offset(page * 10);
+    query.offset(page * 10);
   }
 
-  const data = await dbQuery;
+  const data = await query;
 
-  return data;
-};
-
-export const countFilteredRecipes = async ({
-  categorySlug,
-  cuisineSlugs,
-  occassionSlugs,
-  dietSlugs,
-  query,
-}: FacatedParams) => {
-  const [data] = await db
-    .select({
-      count: count(recipes.id),
-    })
-    .from(recipes)
-    .innerJoin(images, eq(recipes.imageId, images.id))
-    .innerJoin(users, eq(recipes.userId, users.id))
-    .innerJoin(categories, eq(recipes.categoryId, categories.id))
-    .leftJoin(licences, eq(recipes.licenceId, licences.id))
-    .leftJoin(recipeAttributes, eq(recipes.id, recipeAttributes.recipeId))
-    .leftJoin(attributes, eq(recipeAttributes.attributeId, attributes.id))
-    .where(
-      and(
-        ...getFilters({
-          categorySlug,
-          cuisineSlugs,
-          occassionSlugs,
-          dietSlugs,
-          query,
-        })
-      )
-    );
-
-  return data.count;
-};
+  return Response.json({
+    searchQuery,
+    categorySlug,
+    cuisineSlugs,
+    occassionSlugs,
+    dietSlugs,
+    data,
+  });
+}

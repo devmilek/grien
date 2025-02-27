@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import db from "@/db";
 import { recipes as dbRecipes, follows } from "@/db/schema";
@@ -11,6 +11,7 @@ import RecipesFeed from "./recipes-feed";
 import { Metadata } from "next";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { getInitials } from "@/utils";
+import EditProfileModal from "./_components/edit-profile-modal";
 
 export const metadata: Metadata = constructMetadata({
   title: "Twoje konto",
@@ -72,7 +73,9 @@ const ProfilePage = async () => {
                   Obserwujących
                 </span>
               </p>
-              <Button variant="outline">Edytuj profil</Button>
+              <EditProfileModal>
+                <Button variant="outline">Edytuj profil</Button>
+              </EditProfileModal>
             </div>
           </div>
         </div>

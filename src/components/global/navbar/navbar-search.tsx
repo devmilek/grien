@@ -34,6 +34,9 @@ const NavbarSearch = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const addSearch = (search: string) => {
+    if (!search) {
+      return;
+    }
     const newSearches = [
       search,
       ...recentSearches.filter((s) => s !== search),

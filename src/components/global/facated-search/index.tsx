@@ -7,12 +7,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useFilteredAttributes } from "@/hooks/use-attributes";
 import React from "react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { Attribute } from "@/db/schema";
 import { useCategories } from "@/hooks/use-categories";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useAttributes } from "@/hooks/use-attributes";
 
 const FacatedSearch = ({
   showCategories = true,
@@ -25,7 +25,7 @@ const FacatedSearch = ({
   showOccasions?: boolean;
   showDiets?: boolean;
 }) => {
-  const { data } = useFilteredAttributes();
+  const { data } = useAttributes();
 
   return (
     <div className="bg-white rounded-xl p-6 py-3">
@@ -34,21 +34,21 @@ const FacatedSearch = ({
         {showCuisines && (
           <AccordionFacatedItem
             title="Kuchnie świata"
-            items={data.cuisines}
+            items={data?.cuisines}
             value="kuchnie"
           />
         )}
         {showOccasions && (
           <AccordionFacatedItem
             title="Okazje"
-            items={data.occasions}
+            items={data?.occasions}
             value="okazje"
           />
         )}
         {showDiets && (
           <AccordionFacatedItem
             title="Diety"
-            items={data.diets}
+            items={data?.diets}
             value="diety"
           />
         )}

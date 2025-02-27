@@ -5,7 +5,7 @@ import React, { Fragment, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import { FileQuestion, Loader2Icon } from "lucide-react";
 import HorizontalCard from "@/components/cards/horizontal-card";
-import { getFilteredRecipes } from "@/actions/get-filtered-recipes";
+import { getFilteredRecipes } from "./actions";
 
 export type RecipeFilterParams = {
   categorySlug?: string | null;
@@ -14,7 +14,6 @@ export type RecipeFilterParams = {
   cuisineSlugs?: string[];
   dietSlugs?: string[];
   occassionSlugs?: string[];
-  // Add other filter parameters as needed
 };
 
 interface InfiniteRecipesFeedProps {
@@ -29,7 +28,6 @@ const InfiniteRecipesFeed = ({
   title = "Przepisy",
 }: InfiniteRecipesFeedProps) => {
   const { ref, inView } = useInView();
-
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
       queryKey: ["recipes", filterParams],

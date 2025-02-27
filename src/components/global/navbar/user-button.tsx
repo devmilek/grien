@@ -65,19 +65,19 @@ const UserButton = ({
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={`/kucharze/${user.username}`}>
+          <Link href={`/konto`}>
             <User2 />
             Profil
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/utworz-przepis">
+          <Link href="/przepisy/utworz">
             <PlusIcon />
             Utwórz przepis
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/kucharze/ustawienia">
+          <Link href="/konto/ustawienia">
             <Settings />
             Ustawienia
           </Link>
