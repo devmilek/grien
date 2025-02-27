@@ -46,18 +46,7 @@ const RecipesFeed = ({ query }: { query: string | null }) => {
       <h2 className="text-3xl font-display">Wyniki ({data?.length})</h2>
       <div className="space-y-4 mt-4">
         {data?.map((recipe) => (
-          <HorizontalCard
-            key={recipe.id}
-            author={recipe.user}
-            category={recipe.category}
-            categorySlug={recipe.categorySlug}
-            description={recipe.description}
-            id={recipe.id}
-            name={recipe.name}
-            slug={recipe.slug}
-            src={recipe.image}
-            licence={recipe.licence}
-          />
+          <HorizontalCard key={recipe.id} {...recipe} />
         ))}
       </div>
     </div>

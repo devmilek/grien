@@ -1,4 +1,5 @@
 import {
+  integer,
   numeric,
   pgEnum,
   pgTable,
@@ -47,6 +48,8 @@ export const recipes = pgTable("recipes", {
     .references(() => users.id, {
       onDelete: "cascade",
     }),
+
+  views: integer("views").notNull().default(0),
 
   // additional if recipe is from external source
   licenceId: uuid("licence_id").references(() => licences.id, {

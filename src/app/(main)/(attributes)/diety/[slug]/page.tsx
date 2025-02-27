@@ -1,11 +1,11 @@
+import InfiniteRecipes from "@/components/global/infinite-recipes-feed";
 import db from "@/db";
-import { categories } from "@/db/schema";
+import { attributes } from "@/db/schema";
 import { constructMetadata } from "@/utils/construct-metadata";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
-import InfiniteRecipes from "@/components/global/infinite-recipes-feed";
 
 interface CategoriesPageProps {
   params: Promise<{ slug: string }>;
@@ -14,38 +14,38 @@ interface CategoriesPageProps {
 export const generateMetadata = async ({ params }: CategoriesPageProps) => {
   const slug = (await params).slug;
 
-  const category = await db.query.categories.findFirst({
-    where: eq(categories.slug, slug),
+  const attribute = await db.query.attributes.findFirst({
+    where: and(eq(attributes.slug, slug), eq(attributes.type, "diets")),
   });
 
-  if (!category) notFound();
+  if (!attribute) notFound();
 
   return constructMetadata({
-    title: `Przepisy na ${category.name}`,
-    description: category.description,
-    image: `/${category.slug}.jpg`,
+    title: `Przepisy ${attribute.name}`,
+    description: attribute.description,
+    image: `/food.jpg`,
   });
 };
 
 const CategoriesPage = async ({ params }: CategoriesPageProps) => {
   const slug = (await params).slug;
 
-  const category = await db.query.categories.findFirst({
-    where: eq(categories.slug, slug),
+  const diet = await db.query.attributes.findFirst({
+    where: and(eq(attributes.slug, slug), eq(attributes.type, "diets")),
   });
 
-  if (!category) notFound();
+  if (!diet) notFound();
 
   return (
     <div className="container space-y-8">
       <div className="h-96 w-full relative overflow-hidden rounded-xl">
         <div className="z-40 bg-black/60 size-full absolute flex items-center justify-center flex-col text-white">
-          <h1 className="font-display text-5xl mt-1">{category.name}</h1>
-          <p className="text-sm mt-4">{category.description}</p>
+          <h1 className="font-display text-5xl mt-1">{diet.name}</h1>
+          <p className="text-sm mt-4">{diet.description}</p>
         </div>
-        <Image src={`/${category.slug}.jpg`} alt="" fill objectFit="cover" />
+        <Image src={`/food.jpg`} alt="" fill className="object-cover" />
       </div>
-      <InfiniteRecipes categorySlug={category.slug} />
+      <InfiniteRecipes dietSlugs={[diet.slug]} />
     </div>
   );
 };

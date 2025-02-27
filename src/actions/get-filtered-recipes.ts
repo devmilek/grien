@@ -22,11 +22,12 @@ import {
 } from "drizzle-orm";
 
 interface FacatedParams {
-  categorySlug: string | null;
-  cuisineSlugs: string[];
-  occassionSlugs: string[];
-  dietSlugs: string[];
-  query: string | null;
+  categorySlug?: string | null;
+  cuisineSlugs?: string[];
+  occassionSlugs?: string[];
+  dietSlugs?: string[];
+  query?: string | null;
+  page?: number;
 }
 
 const getFilters = ({
@@ -36,7 +37,19 @@ const getFilters = ({
   dietSlugs,
   query,
 }: FacatedParams) => {
-  const attributesSlugs = [...cuisineSlugs, ...occassionSlugs, ...dietSlugs];
+  const attributesSlugs = [];
+
+  if (cuisineSlugs) {
+    attributesSlugs.push(...cuisineSlugs);
+  }
+
+  if (occassionSlugs) {
+    attributesSlugs.push(...occassionSlugs);
+  }
+
+  if (dietSlugs) {
+    attributesSlugs.push(...dietSlugs);
+  }
 
   // Create filters and remove undefined values in one go
   const filters = [
@@ -58,16 +71,23 @@ export const getFilteredRecipes = async ({
   occassionSlugs,
   dietSlugs,
   query,
+  page,
 }: FacatedParams) => {
-  const data = await db
+  const dbQuery = db
     .select({
       ...getTableColumns(recipes),
-      image: images.url,
-      user: users.name,
-      category: categories.name,
-      categorySlug: categories.slug,
+      category: {
+        name: categories.name,
+        slug: categories.slug,
+      },
+      imageSrc: images.url,
       licence: {
         ...getTableColumns(licences),
+      },
+      user: {
+        name: users.name,
+        username: users.username,
+        image: users.image,
       },
     })
     .from(recipes)
@@ -87,7 +107,14 @@ export const getFilteredRecipes = async ({
           query,
         })
       )
-    );
+    )
+    .limit(10);
+
+  if (page) {
+    dbQuery.offset(page * 10);
+  }
+
+  const data = await dbQuery;
 
   return data;
 };

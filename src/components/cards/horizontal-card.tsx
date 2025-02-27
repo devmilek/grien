@@ -16,8 +16,10 @@ const HorizontalCard = ({
   user,
   className,
   licence,
+  showCategory = true,
 }: RecipeForCard & {
   className?: string;
+  showCategory?: boolean;
 }) => {
   return (
     <div
@@ -42,12 +44,14 @@ const HorizontalCard = ({
         )}
       </div>
       <div>
-        <Link
-          className="flex items-center space-x-2 text-emerald-700 font-semibold text-xs mb-1"
-          href={"/kategorie/" + slug}
-        >
-          {category.name}
-        </Link>
+        {showCategory && (
+          <Link
+            className="flex items-center space-x-2 text-emerald-700 font-semibold text-xs mb-1"
+            href={"/kategorie/" + slug}
+          >
+            {category.name}
+          </Link>
+        )}
         <Link
           href={"/przepisy/" + slug}
           className="text-2xl font-display link-underline link-underline-black"
