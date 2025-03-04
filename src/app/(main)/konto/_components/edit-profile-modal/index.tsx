@@ -20,10 +20,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ImagePlusIcon } from "lucide-react";
 import Image from "next/image";
 import React from "react";
 import { useForm } from "react-hook-form";
+import AvatarUploader from "./avatar-uploader";
 
 const EditProfileModal = ({ children }: { children: React.ReactNode }) => {
   const form = useForm({});
@@ -40,9 +40,9 @@ const EditProfileModal = ({ children }: { children: React.ReactNode }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="relative h-32">
-          <Image src="/food.jpg" alt="" fill className="object-cover" />
+          <Image src="/food2.jpg" alt="" fill className="object-cover" />
         </div>
-        <div className="-mt-10 px-6">
+        {/* <div className="-mt-10 px-6">
           <div className="border-background bg-muted relative flex size-20 items-center justify-center overflow-hidden rounded-full border-4 shadow-xs shadow-black/10">
             <Image
               src="/food.jpg"
@@ -66,7 +66,8 @@ const EditProfileModal = ({ children }: { children: React.ReactNode }) => {
               aria-label="Upload profile picture"
             />
           </div>
-        </div>
+        </div> */}
+        <AvatarUploader />
         <Form {...form}>
           <form className="px-6 pt-4 pb-6 grid gap-4">
             <FormField

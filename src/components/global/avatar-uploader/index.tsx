@@ -3,11 +3,10 @@
 import { cn } from "@/lib/utils";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 import { TrashIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { useImageUpload } from "@/hooks/use-image-upload";
 
 const AvatarUploader = ({
   value,
@@ -18,57 +17,22 @@ const AvatarUploader = ({
   onChange: (src: string | null) => void;
   className?: string;
 }) => {
-  const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
-  const [isLoading, setIsLoading] = React.useState(false);
+  const { uploadImage, deleteImage, isLoading } = useImageUpload({
+    onSuccess: (url) => onChange(url),
+  });
+
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
-      setIsLoading(true);
-      const formdata = new FormData();
-      formdata.append("file", acceptedFiles[0]);
-
-      if (value && value.startsWith(R2_PUBLIC_URL)) {
-        try {
-          const id = value
-            .split("/")
-            [value.split("/").length - 1].split(".")[0];
-          await axios.delete(`/api/images/${id}`);
-        } catch (e) {
-          if (e instanceof AxiosError) {
-            console.error(e.response?.data ? e.response.data : e.message);
-            toast.error("Nie udało się usunąć poprzedniego obrazka");
-          }
-        }
-      }
-
-      try {
-        const res = await axios.post("/api/images", formdata);
-        onChange(res.data.url);
-      } catch (e) {
-        if (e instanceof AxiosError) {
-          console.error(e.response?.data ? e.response.data : e.message);
-          toast.error("Nie udało się przesłać obrazka");
-        }
-      } finally {
-        setIsLoading(false);
+      if (acceptedFiles.length > 0) {
+        await uploadImage(acceptedFiles[0], value);
       }
     },
-    [R2_PUBLIC_URL, onChange, value]
+    [uploadImage, value]
   );
 
-  const handleDelete = async () => {
-    if (value && value.startsWith(R2_PUBLIC_URL)) {
-      // extract id from value url
-      // remove extension
-      const id = value.split("/")[value.split("/").length - 1].split(".")[0];
-
-      console.log(id);
-
-      try {
-        await axios.delete(`/api/images/${id}`);
-      } catch {
-        toast.error("Nie udało się usunąć obrazka");
-      }
-    }
+  const handleDelete = async (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    await deleteImage(value);
     onChange(null);
   };
 
@@ -111,10 +75,7 @@ const AvatarUploader = ({
         size="icon"
         variant="outline"
         className="size-8 right-0 bottom-0 absolute rounded-full"
-        onClick={(e) => {
-          e.preventDefault();
-          handleDelete();
-        }}
+        onClick={handleDelete}
       >
         <TrashIcon />
       </Button>

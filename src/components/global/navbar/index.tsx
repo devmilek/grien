@@ -1,4 +1,4 @@
-import { BellIcon, BookmarkIcon, ChefHat, MenuIcon } from "lucide-react";
+import { BellIcon, BookmarkIcon, ChefHat } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import NavItems from "./nav-items";
@@ -8,6 +8,7 @@ import db from "@/db";
 import UserButton from "./user-button";
 import { getCurrentSession } from "@/lib/auth/utils";
 import NavbarSearch from "./navbar-search";
+import MobileNav from "./mobile-nav";
 
 const Navbar = async () => {
   const { user } = await getCurrentSession();
@@ -24,9 +25,7 @@ const Navbar = async () => {
           <span className="text-2xl text-foreground">grien</span>
         </Link>
         <NavItems className="mr-auto hidden lg:flex" categories={categories} />
-        <Button variant="outline" size="icon" className="lg:hidden ml-auto">
-          <MenuIcon />
-        </Button>
+        <MobileNav />
         <div className="gap-2 hidden lg:flex">
           <NavbarSearch>
             <Input placeholder="Wyszukaj przepisu..." />

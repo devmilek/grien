@@ -10,6 +10,7 @@ import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { getDomainFromUrl } from "@/utils";
 import { cn } from "@/lib/utils";
+import { HoverCardPortal } from "@radix-ui/react-hover-card";
 
 const ImageLicenceBadge = ({
   licence,
@@ -31,29 +32,33 @@ const ImageLicenceBadge = ({
             : licence.licenseType}
         </Badge>
       </HoverCardTrigger>
-      <HoverCardContent className="text-sm w-[300px] z-50">
-        <p>
-          Źródło: <span className="font-medium">{licence.originalTitle}</span> z{" "}
-          <Link href={licence.sourceUrl} className="underline font-medium">
-            {getDomainFromUrl(licence.sourceUrl)}
-          </Link>
-        </p>
-        <p>
-          Licencja:{" "}
-          <Link href={licence.licenseLink} className="font-medium">
-            {licence.licenseType}
-          </Link>
-        </p>
-        <p>
-          Autor przepisu: <span className="font-medium">{licence.author}</span>
-        </p>
-        {licence.imagesAuthor && (
+      <HoverCardPortal>
+        <HoverCardContent className="text-sm w-[300px] z-50">
           <p>
-            Autor zdjęcia:{" "}
-            <span className="font-medium">{licence.imagesAuthor}</span>
+            Źródło: <span className="font-medium">{licence.originalTitle}</span>{" "}
+            z{" "}
+            <Link href={licence.sourceUrl} className="underline font-medium">
+              {getDomainFromUrl(licence.sourceUrl)}
+            </Link>
           </p>
-        )}
-      </HoverCardContent>
+          <p>
+            Licencja:{" "}
+            <Link href={licence.licenseLink} className="font-medium">
+              {licence.licenseType}
+            </Link>
+          </p>
+          <p>
+            Autor przepisu:{" "}
+            <span className="font-medium">{licence.author}</span>
+          </p>
+          {licence.imagesAuthor && (
+            <p>
+              Autor zdjęcia:{" "}
+              <span className="font-medium">{licence.imagesAuthor}</span>
+            </p>
+          )}
+        </HoverCardContent>
+      </HoverCardPortal>
     </HoverCard>
   );
 };
