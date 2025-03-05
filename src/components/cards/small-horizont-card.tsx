@@ -30,11 +30,11 @@ const SmallHorizontCard = ({
       <div className="w-full">
         <Link
           href={"/przepisy/" + category.slug}
-          className="font-display line-clamp-2"
+          className="font-display line-clamp-2 text-lg"
         >
           {name}
         </Link>
-        <div className="flex items-center gap-2 mt-2">
+        <div className="flex items-center gap-2 mt-1">
           <p className="text-xs font-medium">{user.name}</p>
           <p className="text-xs text-muted-foreground">
             {formatDistanceToNowStrict(createdAt, {

@@ -84,16 +84,7 @@ export async function GET(request: NextRequest) {
 
     const data = await query;
 
-    return Response.json({
-      searchQuery,
-      page,
-      limit,
-      categorySlug,
-      cuisineSlugs,
-      occassionSlugs,
-      dietSlugs,
-      data,
-    });
+    return Response.json(data);
   } catch (error) {
     console.error("Error fetching recipes:", error);
     return Response.json({ error: "Failed to fetch recipes" }, { status: 500 });

@@ -20,7 +20,6 @@ export const images = pgTable("images", {
     length: 255,
   }).notNull(),
   size: integer("size").notNull(),
-
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
@@ -33,13 +32,6 @@ export const images = pgTable("images", {
       onDelete: "cascade",
     }),
 });
-
-// export const imagesRelations = relations(images, ({ one }) => ({
-//   licence: one(licences, {
-//     fields: [images.licenceId],
-//     references: [licences.id],
-//   }),
-// }));
 
 export type Image = typeof images.$inferSelect;
 export type ImageInsert = typeof images.$inferInsert;

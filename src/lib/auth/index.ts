@@ -70,4 +70,18 @@ export const auth = betterAuth({
       });
     },
   },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          // Modify the user object before it is created
+          return {
+            data: {
+              ...user,
+            },
+          };
+        },
+      },
+    },
+  },
 });
