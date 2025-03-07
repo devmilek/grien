@@ -3,6 +3,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { username } from "better-auth/plugins";
 import { sendEmail } from "../nodemailer";
+import { openAPI } from "better-auth/plugins";
 
 const DISABLED_USERNAMES = [
   "admin",
@@ -14,6 +15,7 @@ const DISABLED_USERNAMES = [
 
 export const auth = betterAuth({
   plugins: [
+    openAPI(),
     username({
       usernameValidator: (username) => {
         if (DISABLED_USERNAMES.includes(username)) return false;
@@ -69,6 +71,9 @@ export const auth = betterAuth({
         text: `Kliknij w link, aby potwierdzić adres email: ${url}. Twój token to: ${token}`,
       });
     },
+  },
+  advanced: {
+    generateId: false,
   },
   databaseHooks: {
     user: {

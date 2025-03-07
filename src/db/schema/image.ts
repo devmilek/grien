@@ -26,7 +26,7 @@ export const images = pgTable("images", {
     .defaultNow()
     .$onUpdate(() => new Date()),
 
-  uploadedBy: varchar("uploaded_by")
+  uploadedBy: uuid("uploaded_by")
     .notNull()
     .references(() => users.id, {
       onDelete: "cascade",

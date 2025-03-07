@@ -4,10 +4,11 @@ import {
   timestamp,
   boolean,
   varchar,
+  uuid,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   name: varchar("name", {
     length: 255,
   }).notNull(),
@@ -32,7 +33,7 @@ export const users = pgTable("users", {
 export type User = typeof users.$inferSelect;
 
 export const sessions = pgTable("sessions", {
-  id: varchar("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   expiresAt: timestamp("expires_at").notNull(),
   token: varchar("token").notNull().unique(),
   createdAt: timestamp("created_at").notNull(),
@@ -43,16 +44,16 @@ export const sessions = pgTable("sessions", {
   userAgent: varchar("user_agent", {
     length: 255,
   }),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
 export const accounts = pgTable("accounts", {
-  id: varchar("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   accountId: varchar("account_id").notNull(),
   providerId: varchar("provider_id").notNull(),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
@@ -67,10 +68,10 @@ export const accounts = pgTable("accounts", {
 });
 
 export const verifications = pgTable("verifications", {
-  id: varchar("id").primaryKey(),
+  id: uuid("id").primaryKey().defaultRandom(),
   identifier: varchar("identifier").notNull(),
   value: varchar("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });

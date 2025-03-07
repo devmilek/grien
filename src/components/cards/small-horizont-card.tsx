@@ -9,7 +9,7 @@ import { RecipeForCard } from "@/actions/get-recipes-for-cards";
 const SmallHorizontCard = ({
   slug,
   imageSrc,
-  category,
+  // category,
   name,
   user,
   className,
@@ -29,7 +29,7 @@ const SmallHorizontCard = ({
       </div>
       <div className="w-full">
         <Link
-          href={"/przepisy/" + category.slug}
+          href={"/przepisy/" + slug}
           className="font-display line-clamp-2 text-lg"
         >
           {name}

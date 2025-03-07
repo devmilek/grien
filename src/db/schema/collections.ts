@@ -13,7 +13,7 @@ import { recipes } from "./recipes";
 export const favouriteRecipes = pgTable(
   "favourite_recipes",
   {
-    userId: varchar()
+    userId: uuid()
       .notNull()
       .references(() => users.id, {
         onDelete: "cascade",
@@ -61,7 +61,7 @@ export const collections = pgTable("collections", {
 
   public: boolean().notNull().default(false),
 
-  userId: varchar()
+  userId: uuid()
     .notNull()
     .references(() => users.id, {
       onDelete: "cascade",

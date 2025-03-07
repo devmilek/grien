@@ -9,7 +9,7 @@ export const comments = pgTable("comments", {
     .references(() => recipes.id, {
       onDelete: "cascade",
     }),
-  userId: varchar("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => users.id, {
       onDelete: "cascade",

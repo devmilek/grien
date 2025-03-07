@@ -43,7 +43,7 @@ export const recipes = pgTable("recipes", {
   difficulty: difficultiesEnum("difficulty").notNull(),
   preparationTime: smallint("preparation_time").notNull(),
   portions: smallint("portions").notNull(),
-  userId: varchar("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => users.id, {
       onDelete: "cascade",
@@ -200,7 +200,7 @@ export const recipeLikes = pgTable(
       .references(() => recipes.id, {
         onDelete: "cascade",
       }),
-    userId: varchar("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => users.id, {
         onDelete: "cascade",

@@ -1,15 +1,15 @@
-import { pgTable, primaryKey, varchar } from "drizzle-orm/pg-core";
+import { pgTable, primaryKey, uuid } from "drizzle-orm/pg-core";
 import { users } from "./users";
 
 export const follows = pgTable(
   "follows",
   {
-    followerId: varchar("follower_id")
+    followerId: uuid("follower_id")
       .notNull()
       .references(() => users.id, {
         onDelete: "cascade",
       }),
-    followingId: varchar("following_id")
+    followingId: uuid("following_id")
       .notNull()
       .references(() => users.id, {
         onDelete: "cascade",
