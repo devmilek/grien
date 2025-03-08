@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import db from "@/db";
 import { recipes as dbRecipes, follows } from "@/db/schema";
@@ -52,7 +52,7 @@ const ProfilePage = async () => {
         </div>
         <div className="px-8 -mt-8 flex items-end gap-6">
           <Avatar className="size-32 border-[6px] border-background bg-background z-20">
-            {/* {user?.image && <AvatarImage src={user.image} />} */}
+            {user?.image && <AvatarImage src={user.image} />}
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
           <div className="pb-4 flex justify-between flex-1">

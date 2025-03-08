@@ -40,7 +40,14 @@ export const recipeIngredientSchema = z.object({
   name: z
     .string()
     .min(3, { message: "Nazwa musi zawierać co najmniej 3 znaki" }),
-  amount: z.coerce.number().optional(),
+  amount: z.coerce
+    .number({
+      message: "Ilość musi być liczbą",
+      invalid_type_error: "Ilość musi być liczbą",
+    })
+    .positive({
+      message: "Ilość musi być większa niż 0",
+    }),
   unit: z.string().optional(),
 });
 
@@ -73,15 +80,27 @@ export interface Recipe {
 // Domyślne wartości dla nowego przepisu
 const defaultRecipe: Recipe = {
   basics: {
-    name: "",
-    description: "",
-    difficulty: undefined as never,
-    preparationTime: 0,
-    portions: 0,
-    categoryId: "",
+    name: "Naleśniki z kurczakiem w sosie bolognese",
+    description: "Pyszne nalesniki",
+    difficulty: "easy",
+    preparationTime: 90,
+    portions: 4,
+    categoryId: "83b7fdd7-e846-49f3-9cc9-7879ff028338",
   },
-  ingredients: [],
-  steps: [],
+  ingredients: [
+    {
+      id: "f5d8bc39-350f-4246-a9e7-e071c8f767f3",
+      name: "Mąka",
+      amount: 1,
+      unit: "szklanka",
+    },
+  ],
+  steps: [
+    {
+      description:
+        "Filet z piersi kurczaka obierz z błonek i podziel na niewielkie, ale równej wielkości sześciany. Marchewkę umyj, obierz i pokrój w kostkę. Włącz piekarnik i ustaw temperaturę na 200°C. Zanim się nagrzeje, zetrzyj ser żółty na grubej tarce.",
+    },
+  ],
 };
 
 export type RecipeCreationStep =

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import {
   Form,
   FormControl,
@@ -19,51 +19,117 @@ import {
   useRecipe,
 } from "../../../context";
 import { v4 } from "uuid";
+import { cn } from "@/lib/utils";
+import {
+  Button as AriaButton,
+  Group,
+  Input as AriaInput,
+  NumberField,
+} from "react-aria-components";
+import { MinusIcon, PlusIcon } from "lucide-react";
 
-const IngredientForm = ({
-  id,
-  onSubmit,
-}: {
+// const COMMON_UNITS = [
+//   "g",
+//   "kg",
+//   "ml",
+//   "l",
+//   "szt.",
+//   "łyżka",
+//   "łyżeczka",
+//   "szklanka",
+//   "szczypta",
+// ];
+
+interface IngredientFormProps {
   id?: string;
   onSubmit?: () => void;
-}) => {
-  const { recipe, updateIngredient, addIngredient } = useRecipe();
+  onCancel?: () => void;
+}
 
-  const ingredient = recipe.ingredients.find((ing) => ing.id === id);
+const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
+  const { recipe, updateIngredient, addIngredient } = useRecipe();
+  const isEditing = Boolean(id);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const ingredient = id
+    ? recipe.ingredients.find((ing) => ing.id === id)
+    : undefined;
 
   const form = useForm<RecipeIngredientFormSchema>({
     resolver: zodResolver(recipeIngredientFormSchema),
     defaultValues: {
       name: ingredient?.name || "",
-      amount: ingredient?.amount || 0,
+      amount: ingredient?.amount || 1, // Nie ustawiaj domyślnie 0
       unit: ingredient?.unit || "",
     },
   });
 
+  const {
+    formState: { isSubmitting, isDirty },
+  } = form;
+
+  useEffect(() => {
+    if (isEditing && onCancel) {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          formRef.current &&
+          !formRef.current.contains(event.target as Node)
+        ) {
+          onCancel();
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isEditing, onCancel]);
+
   const handleSubmit = (data: RecipeIngredientFormSchema) => {
-    if (id) {
+    console.log("data", data);
+    if (isEditing && id) {
       updateIngredient(id, data);
     } else {
+      console.log("data", data);
       addIngredient({
         ...data,
         id: v4(),
       });
     }
-    form.reset({
-      name: "",
-      amount: 0,
-      unit: "",
-    });
+
+    if (!isEditing) {
+      form.reset({
+        name: "",
+        amount: 1,
+        unit: "",
+      });
+    }
+
     onSubmit?.();
   };
 
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl p-12 mt-6">
+    <div
+      ref={formRef}
+      className={cn(
+        "bg-white rounded-xl",
+        isEditing && "p-8",
+        !isEditing && "p-12"
+      )}
+    >
       <Form {...form}>
         <form
           className="flex w-full gap-4 items-start"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
+          {/* ...existing code... */}
           <FormField
             name="name"
             control={form.control}
@@ -84,7 +150,27 @@ const IngredientForm = ({
               <FormItem>
                 <FormLabel>Ilość</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" placeholder="np. 200" />
+                  <NumberField
+                    minValue={1}
+                    {...field}
+                    aria-label="Ilość składnika"
+                  >
+                    <Group className="border-input data-focus-within:border-ring data-focus-within:ring-ring/50 data-focus-within:has-aria-invalid:ring-destructive/20 dark:data-focus-within:has-aria-invalid:ring-destructive/40 data-focus-within:has-aria-invalid:border-destructive relative inline-flex h-9 w-full items-center overflow-hidden rounded-md border text-sm whitespace-nowrap shadow-xs transition-[color,box-shadow] outline-none data-disabled:opacity-50 data-focus-within:ring-[3px]">
+                      <AriaButton
+                        slot="decrement"
+                        className="border-input bg-background text-muted-foreground/80 hover:bg-accent hover:text-foreground -ms-px flex aspect-square h-[inherit] items-center justify-center rounded-s-md border text-sm transition-[color,box-shadow] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <MinusIcon size={16} aria-hidden="true" />
+                      </AriaButton>
+                      <AriaInput className="bg-background text-foreground w-full grow px-3 py-2 text-center tabular-nums" />
+                      <AriaButton
+                        slot="increment"
+                        className="border-input bg-background text-muted-foreground/80 hover:bg-accent hover:text-foreground -me-px flex aspect-square h-[inherit] items-center justify-center rounded-e-md border text-sm transition-[color,box-shadow] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <PlusIcon size={16} aria-hidden="true" />
+                      </AriaButton>
+                    </Group>
+                  </NumberField>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,10 +180,10 @@ const IngredientForm = ({
             name="unit"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-[200px]">
                 <FormLabel>Jednostka</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="np. Gram" />
+                  <Input {...field} placeholder="np. gram" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -105,9 +191,18 @@ const IngredientForm = ({
           />
         </form>
       </Form>
-      <div className="justify-end w-full mt-6 flex">
-        <Button onClick={form.handleSubmit(handleSubmit)}>
-          {id ? "Zapisz zmiany" : "Dodaj składnik"}
+      <div className="flex gap-2 justify-end mt-6">
+        {isEditing && (
+          <Button type="button" variant="outline" onClick={handleCancel}>
+            Anuluj
+          </Button>
+        )}
+        <Button
+          type="submit"
+          onClick={form.handleSubmit(handleSubmit)}
+          disabled={isSubmitting || (!isDirty && isEditing)}
+        >
+          {isEditing ? "Zapisz zmiany" : "Dodaj składnik"}
         </Button>
       </div>
     </div>
