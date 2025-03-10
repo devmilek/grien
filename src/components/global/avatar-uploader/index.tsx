@@ -6,7 +6,7 @@ import { useDropzone } from "react-dropzone";
 import { TrashIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useImageUpload } from "@/hooks/use-image-upload";
+import { useAvatarUpload } from "@/hooks/use-avatar-upload";
 
 const AvatarUploader = ({
   value,
@@ -17,22 +17,22 @@ const AvatarUploader = ({
   onChange: (src: string | null) => void;
   className?: string;
 }) => {
-  const { uploadImage, deleteImage, isLoading } = useImageUpload({
+  const { uploadAvatar, deleteAvatar, isLoading } = useAvatarUpload({
     onSuccess: (url) => onChange(url),
   });
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
-        await uploadImage(acceptedFiles[0], value);
+        await uploadAvatar(acceptedFiles[0], value);
       }
     },
-    [uploadImage, value]
+    [uploadAvatar, value]
   );
 
   const handleDelete = async (e?: React.MouseEvent) => {
     if (e) e.preventDefault();
-    await deleteImage(value);
+    await deleteAvatar(value);
     onChange(null);
   };
 

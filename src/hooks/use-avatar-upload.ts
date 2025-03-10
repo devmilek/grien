@@ -8,11 +8,11 @@ interface UseImageUploadOptions {
   onDelete?: () => void;
 }
 
-export const useImageUpload = (options?: UseImageUploadOptions) => {
+export const useAvatarUpload = (options?: UseImageUploadOptions) => {
   const [isLoading, setIsLoading] = useState(false);
   const R2_PUBLIC_URL = process.env.NEXT_PUBLIC_R2_PUBLIC_URL!;
 
-  const uploadImage = useCallback(
+  const uploadAvatar = useCallback(
     async (file: File, currentImage: string | null = null) => {
       setIsLoading(true);
       const formdata = new FormData();
@@ -54,7 +54,7 @@ export const useImageUpload = (options?: UseImageUploadOptions) => {
     [R2_PUBLIC_URL, options]
   );
 
-  const deleteImage = useCallback(
+  const deleteAvatar = useCallback(
     async (imageUrl: string | null) => {
       if (!imageUrl || !imageUrl.startsWith(R2_PUBLIC_URL)) {
         options?.onDelete?.();
@@ -78,8 +78,8 @@ export const useImageUpload = (options?: UseImageUploadOptions) => {
   );
 
   return {
-    uploadImage,
-    deleteImage,
+    uploadAvatar,
+    deleteAvatar,
     isLoading,
   };
 };

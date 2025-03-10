@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { username } from "better-auth/plugins";
 import { sendEmail } from "../nodemailer";
 import { openAPI } from "better-auth/plugins";
+import { users } from "@/db/schema";
 
 const DISABLED_USERNAMES = [
   "admin",
@@ -78,13 +79,12 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
-        before: async (user) => {
-          // Modify the user object before it is created
-          return {
-            data: {
-              ...user,
-            },
-          };
+        after: async (user) => {
+          if (user.image) {
+            await db.update(users).set({
+              imageType: "url",
+            });
+          }
         },
       },
     },

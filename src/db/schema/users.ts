@@ -5,7 +5,12 @@ import {
   boolean,
   varchar,
   uuid,
+  pgEnum,
 } from "drizzle-orm/pg-core";
+
+export const userImageTypes = ["none", "url", "r2"] as const;
+export type UserImageType = (typeof userImageTypes)[number];
+export const userImageTypeEnum = pgEnum("user_image_type", userImageTypes);
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
