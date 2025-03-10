@@ -1,3 +1,4 @@
+import Footer from "@/components/global/footer";
 import Navbar from "@/components/global/navbar";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { redirect } from "next/navigation";
@@ -11,7 +12,10 @@ const MainLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Navbar />
-      <main className="min-h-screen pt-20 pb-12 bg-gray-50">{children}</main>
+      <main className="pt-20 bg-gray-50">
+        <div className="min-h-screen pb-12">{children}</div>
+        <Footer />
+      </main>
     </>
   );
 };
