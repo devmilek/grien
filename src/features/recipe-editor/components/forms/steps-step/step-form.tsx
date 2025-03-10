@@ -14,11 +14,11 @@ import Dropzone from "@/components/global/dropzone";
 import { Textarea } from "@/components/ui/textarea";
 import { v4 } from "uuid";
 import { Button } from "@/components/ui/button";
+import { useRecipe } from "@/features/recipe-editor/context/use-recipe-context";
 import {
   recipeStepFormSchema,
   RecipeStepFormSchema,
-  useRecipe,
-} from "../../../context";
+} from "@/features/recipe-editor/schema/recipe-step-schema";
 
 const StepForm = ({
   id,

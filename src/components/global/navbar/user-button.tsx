@@ -71,7 +71,7 @@ const UserButton = ({
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <Link href="/utworz-przepis">
+          <Link href="/przepisy/utworz">
             <PlusIcon />
             Utwórz przepis
           </Link>

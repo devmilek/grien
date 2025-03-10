@@ -22,13 +22,13 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import Dropzone from "@/components/global/dropzone";
-import {
-  RecipeBasicsSchema,
-  recipeBasicsSchema,
-  useRecipe,
-} from "../../context";
 import { CategoryCombobox } from "../comboboxes/category-combobox";
 import { TimeCombobox } from "../comboboxes/time-combobox";
+import { useRecipe } from "../../context/use-recipe-context";
+import {
+  recipeBasicsSchema,
+  RecipeBasicsSchema,
+} from "../../schema/recipe-basics-schema";
 
 const BasicsForm = () => {
   const { setRecipeBasics, recipe, nextStep } = useRecipe();

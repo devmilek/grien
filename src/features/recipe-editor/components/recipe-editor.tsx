@@ -4,7 +4,7 @@ import RecipeStepper from "./recipe-stepper";
 import { RecipeInitializer } from "../context/use-recipe-context";
 import { ContextRecipe } from "../types";
 
-const Page = ({ recipe }: { recipe?: ContextRecipe | undefined }) => {
+const RecipeEditor = ({ recipe }: { recipe?: ContextRecipe | undefined }) => {
   return (
     <div>
       <RecipeInitializer initialRecipe={recipe}>
@@ -15,4 +15,4 @@ const Page = ({ recipe }: { recipe?: ContextRecipe | undefined }) => {
   );
 };
 
-export default Page;
+export default RecipeEditor;

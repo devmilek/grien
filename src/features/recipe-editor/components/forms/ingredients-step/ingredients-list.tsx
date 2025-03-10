@@ -16,8 +16,8 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useRecipe } from "../../../context";
 import { IngredientsListItem } from "./ingredients-list-item";
+import { useRecipe } from "@/features/recipe-editor/context/use-recipe-context";
 
 const IngredientsList = () => {
   const { recipe, setFullRecipe } = useRecipe();

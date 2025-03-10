@@ -13,11 +13,6 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
-import {
-  recipeIngredientFormSchema,
-  RecipeIngredientFormSchema,
-  useRecipe,
-} from "../../../context";
 import { v4 } from "uuid";
 import { cn } from "@/lib/utils";
 import {
@@ -27,6 +22,11 @@ import {
   NumberField,
 } from "react-aria-components";
 import { MinusIcon, PlusIcon } from "lucide-react";
+import {
+  recipeIngredientFormSchema,
+  RecipeIngredientFormSchema,
+} from "@/features/recipe-editor/schema/recipe-ingredient-shema";
+import { useRecipe } from "@/features/recipe-editor/context/use-recipe-context";
 
 // const COMMON_UNITS = [
 //   "g",

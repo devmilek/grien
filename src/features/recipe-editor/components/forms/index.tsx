@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { useRecipe } from "../../context";
 import BasicsForm from "./basics-form";
 import IngredientsStep from "./ingredients-step";
 import StepsStep from "./steps-step";
@@ -9,6 +8,7 @@ import AdditionalStep from "./additional-step";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { useRecipe } from "../../context/use-recipe-context";
 
 const FormsView = () => {
   const {

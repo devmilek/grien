@@ -23,8 +23,9 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import StepForm from "./step-form";
-import { RecipeStepSchema, useRecipe } from "../../../context";
 import { cn } from "@/lib/utils";
+import { useRecipe } from "@/features/recipe-editor/context/use-recipe-context";
+import { RecipeStepSchema } from "@/features/recipe-editor/schema/recipe-step-schema";
 
 const StepsList = () => {
   const { setFullRecipe, recipe } = useRecipe();

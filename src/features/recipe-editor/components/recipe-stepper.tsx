@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { RecipeCreationStep, useRecipe } from "../context";
 import {
   Stepper,
   StepperDescription,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/stepper";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { RecipeCreationStep, useRecipe } from "../context/use-recipe-context";
 
 interface Step {
   title: string;

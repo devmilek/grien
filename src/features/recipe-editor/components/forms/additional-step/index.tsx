@@ -4,7 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
 import { Loader2Icon } from "lucide-react";
 import { useAttributes } from "@/hooks/use-attributes";
-import { useRecipe } from "../../../context";
+import { useRecipe } from "@/features/recipe-editor/context/use-recipe-context";
 
 const AdditionalStep = () => {
   const { recipe, toggleAttribute } = useRecipe();

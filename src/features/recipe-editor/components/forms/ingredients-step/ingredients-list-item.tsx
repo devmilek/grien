@@ -3,9 +3,10 @@ import { GripVertical, PenIcon, TrashIcon } from "lucide-react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import IngredientForm from "./ingredient-form";
-import { RecipeIngredientSchema, useRecipe } from "../../../context";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { RecipeIngredientSchema } from "@/features/recipe-editor/schema/recipe-ingredient-shema";
+import { useRecipe } from "@/features/recipe-editor/context/use-recipe-context";
 
 export function IngredientsListItem(ingredient: RecipeIngredientSchema) {
   const { removeIngredient } = useRecipe();
