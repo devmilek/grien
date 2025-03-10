@@ -18,10 +18,9 @@ import {
 } from "@dnd-kit/sortable";
 import { useRecipe } from "../../../context";
 import { IngredientsListItem } from "./ingredients-list-item";
-import { Button } from "@/components/ui/button";
 
 const IngredientsList = () => {
-  const { recipe, setFullRecipe, previousStep, nextStep } = useRecipe();
+  const { recipe, setFullRecipe } = useRecipe();
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -67,12 +66,6 @@ const IngredientsList = () => {
             </div>
           </SortableContext>
         </DndContext>
-      </div>
-      <div className="mt-8 flex justify-between">
-        <Button variant="outline" onClick={previousStep}>
-          Cofnij
-        </Button>
-        <Button onClick={nextStep}>Dalej</Button>
       </div>
     </div>
   );

@@ -6,9 +6,11 @@ import React, {
   useState,
   useCallback,
   ReactNode,
+  useMemo,
 } from "react";
-import { difficulties } from "@/db/schema";
+import { difficulties, RecipeStatus } from "@/db/schema";
 import { z } from "zod";
+import { createRecipe, updateRecipe as updateRecipeAction } from "./actions";
 
 // Schematy walidacji
 export const recipeBasicsSchema = z.object({
@@ -16,7 +18,9 @@ export const recipeBasicsSchema = z.object({
     .string()
     .min(3, { message: "Nazwa musi zawierać co najmniej 3 znaki" })
     .max(255, { message: "Nazwa nie może przekraczać 255 znaków" }),
-  imageId: z.string().uuid().optional(),
+  imageId: z.string().uuid({
+    message: "Musisz wybrać zdjęcie przepisu",
+  }),
   description: z
     .string()
     .min(3, { message: "Opis musi zawierać co najmniej 3 znaki" })
@@ -79,15 +83,18 @@ export type RecipeStepFormSchema = z.infer<typeof recipeStepFormSchema>;
 
 // Definicja całego przepisu
 export interface Recipe {
+  id?: string;
   basics: RecipeBasicsSchema;
   ingredients: RecipeIngredientSchema[];
   steps: RecipeStepSchema[];
   attributes: string[];
+  status?: RecipeStatus;
 }
 
 // Domyślne wartości dla nowego przepisu
 const defaultRecipe: Recipe = {
   basics: {
+    imageId: "",
     name: "Naleśniki z kurczakiem w sosie bolognese",
     description: "Pyszne nalesniki",
     difficulty: "easy",
@@ -111,6 +118,7 @@ const defaultRecipe: Recipe = {
     },
   ],
   attributes: [],
+  status: "draft",
 };
 
 export type RecipeCreationStep =
@@ -139,6 +147,16 @@ interface RecipeContextType {
   setFullRecipe: (recipe: Recipe) => void;
   resetRecipe: () => void;
   toggleAttribute: (attribute: string) => void;
+  isNew: boolean; // Czy to nowy przepis czy edycja
+  isPublishing: boolean;
+  isSaving: boolean;
+  publishRecipe: () => Promise<{
+    success: boolean;
+    error?: string;
+    id?: string;
+  }>;
+  saveAsDraft: () => Promise<{ success: boolean; error?: string; id?: string }>;
+  updateRecipe: () => Promise<{ success: boolean; error?: string }>;
 }
 
 // Tworzenie kontekstu z wartościami domyślnymi
@@ -167,6 +185,10 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
   const [recipe, setRecipe] = useState<Recipe>(initialRecipe || defaultRecipe);
   const [currentStep, setCurrentStep] =
     useState<RecipeCreationStep>(initialStep);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const isNew = useMemo(() => !recipe.id, [recipe.id]);
 
   const nextStep = useCallback(() => {
     console.log("nextStep");
@@ -234,7 +256,6 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
   }, []);
 
   // Aktualizacja istniejącego kroku
-  // Aktualizacja istniejącego kroku
   const updateStep = useCallback(
     (id: string, step: Partial<RecipeStepSchema>) => {
       setRecipe((prev) => {
@@ -276,6 +297,208 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
     });
   }, []);
 
+  const validateRecipe = useCallback(() => {
+    try {
+      // Walidacja podstawowych informacji
+      recipeBasicsSchema.parse(recipe.basics);
+
+      // Walidacja składników
+      if (recipe.ingredients.length === 0) {
+        setCurrentStep("ingredients");
+        return {
+          valid: false,
+          error: "Przepis musi zawierać co najmniej jeden składnik",
+        };
+      }
+
+      try {
+        for (const ingredient of recipe.ingredients) {
+          recipeIngredientSchema.parse(ingredient);
+        }
+      } catch (error) {
+        setCurrentStep("ingredients");
+        if (error instanceof z.ZodError) {
+          return {
+            valid: false,
+            error: error.errors[0].message || "Niepoprawne dane składnika",
+          };
+        }
+      }
+
+      // Walidacja kroków
+      if (recipe.steps.length === 0) {
+        setCurrentStep("steps");
+        return {
+          valid: false,
+          error: "Przepis musi zawierać co najmniej jeden krok",
+        };
+      }
+
+      try {
+        for (const step of recipe.steps) {
+          recipeStepSchema.parse(step);
+        }
+      } catch (error) {
+        setCurrentStep("steps");
+        if (error instanceof z.ZodError) {
+          return {
+            valid: false,
+            error: error.errors[0].message || "Niepoprawne dane kroku",
+          };
+        }
+      }
+
+      return { valid: true };
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return {
+          valid: false,
+          error: error.errors[0].message || "Niepoprawne dane przepisu",
+        };
+      }
+      return {
+        valid: false,
+        error: "Wystąpił błąd podczas walidacji przepisu",
+      };
+    }
+  }, [recipe]);
+
+  // Publikowanie przepisu (nowy lub aktualizacja)
+  const publishRecipe = useCallback(async () => {
+    try {
+      setIsPublishing(true);
+
+      // Walidacja przepisu
+      const validation = validateRecipe();
+      if (!validation.valid) {
+        setCurrentStep("basics");
+        return { success: false, error: validation.error };
+      }
+
+      // Przygotuj obiekt przepisu z statusem "published"
+      const recipeToSave = { ...recipe, status: "published" as RecipeStatus };
+
+      // Użyj Server Action do zapisania przepisu
+      const result = isNew
+        ? await createRecipe(recipeToSave)
+        : await updateRecipeAction(recipeToSave);
+
+      if (result.success && result.id) {
+        // Aktualizuj lokalne ID i status jeśli to był nowy przepis
+        if (isNew) {
+          setRecipe((prev) => ({
+            ...prev,
+            id: result.id,
+            status: "published",
+          }));
+        } else {
+          setRecipe((prev) => ({ ...prev, status: "published" }));
+        }
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Błąd podczas publikowania przepisu:", error);
+      return {
+        success: false,
+        error: "Wystąpił błąd podczas publikowania przepisu",
+      };
+    } finally {
+      setIsPublishing(false);
+    }
+  }, [recipe, isNew, validateRecipe]);
+
+  // Zapisywanie przepisu jako wersji roboczej
+  const saveAsDraft = useCallback(async () => {
+    try {
+      setIsSaving(true);
+
+      // Dla wersji roboczej wymagamy tylko podstawowych danych
+      try {
+        recipeBasicsSchema.parse(recipe.basics);
+        setCurrentStep("basics");
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          return {
+            success: false,
+            error:
+              error.errors[0].message || "Niepoprawne dane podstawowe przepisu",
+          };
+        }
+      }
+
+      // Przygotuj obiekt przepisu z statusem "draft"
+      const recipeToSave = { ...recipe, status: "draft" as RecipeStatus };
+
+      // Użyj Server Action do zapisania przepisu
+      const result = isNew
+        ? await createRecipe(recipeToSave)
+        : await updateRecipeAction(recipeToSave);
+
+      if (result.success && result.id && isNew) {
+        setRecipe((prev) => ({ ...prev, id: result.id, status: "draft" }));
+      }
+
+      return result;
+    } catch (error) {
+      console.error("Błąd podczas zapisywania wersji roboczej:", error);
+      return {
+        success: false,
+        error: "Wystąpił błąd podczas zapisywania wersji roboczej",
+      };
+    } finally {
+      setIsSaving(false);
+    }
+  }, [recipe, isNew]);
+
+  // Aktualizacja istniejącego przepisu (zachowując jego status)
+  const updateRecipe = useCallback(async () => {
+    if (isNew) {
+      return {
+        success: false,
+        error: "Nie można zaktualizować przepisu, który jeszcze nie istnieje",
+      };
+    }
+
+    try {
+      setIsSaving(true);
+
+      // Walidacja zależy od statusu przepisu
+      if (recipe.status === "published") {
+        const validation = validateRecipe();
+        if (!validation.valid) {
+          return { success: false, error: validation.error };
+        }
+      } else {
+        // Dla draftu wymagamy tylko podstawowych danych
+        try {
+          recipeBasicsSchema.parse(recipe.basics);
+        } catch (error) {
+          setCurrentStep("basics");
+          if (error instanceof z.ZodError) {
+            return {
+              success: false,
+              error:
+                error.errors[0].message ||
+                "Niepoprawne dane podstawowe przepisu",
+            };
+          }
+        }
+      }
+
+      // Użyj Server Action do aktualizacji przepisu
+      return await updateRecipeAction(recipe);
+    } catch (error) {
+      console.error("Błąd podczas aktualizacji przepisu:", error);
+      return {
+        success: false,
+        error: "Wystąpił błąd podczas aktualizacji przepisu",
+      };
+    } finally {
+      setIsSaving(false);
+    }
+  }, [recipe, isNew, validateRecipe]);
+
   return (
     <RecipeContext.Provider
       value={{
@@ -294,6 +517,12 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
         nextStep,
         previousStep,
         toggleAttribute,
+        isNew,
+        isPublishing,
+        isSaving,
+        publishRecipe,
+        saveAsDraft,
+        updateRecipe,
       }}
     >
       {children}

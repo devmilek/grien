@@ -150,7 +150,9 @@ export function SortableItem({
         </div>
       </header>
       <div className="flex gap-4 items-center">
-        <p className="text-muted-foreground text-sm">{step.description}</p>
+        <p className="text-muted-foreground text-sm flex-1">
+          {step.description}
+        </p>
         {step.imageId && (
           <Image
             src={getR2ImageSrc(step.imageId)}

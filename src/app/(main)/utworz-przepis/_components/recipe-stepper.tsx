@@ -11,6 +11,8 @@ import {
   StepperTitle,
   StepperTrigger,
 } from "@/components/ui/stepper";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface Step {
   title: string;
@@ -52,14 +54,25 @@ const RecipeStepper = () => {
 
   return (
     <div className="container mt-6 mb-10">
-      <Stepper value={currentStepIndex + 1} onValueChange={handleStepChange}>
+      <Stepper
+        value={currentStepIndex + 1}
+        onValueChange={(val) => {
+          if (currentStep === "basics") {
+            toast.info(
+              "Użyj przycisku 'Dalej' aby przejść do kolejnego kroku."
+            );
+            return;
+          }
+          handleStepChange(val);
+        }}
+      >
         {steps.map(({ step, title, desc }, index) => (
           <StepperItem
             key={step}
             step={index + 1}
-            className="not-last:flex-1 max-md:items-start"
+            className={cn("not-last:flex-1 max-md:items-start", {})}
           >
-            <StepperTrigger className="rounded max-md:flex-col">
+            <StepperTrigger className="rounded max-md:flex-col cursor-pointer">
               <StepperIndicator />
               <div className="text-center md:text-left">
                 <StepperTitle>{title}</StepperTitle>

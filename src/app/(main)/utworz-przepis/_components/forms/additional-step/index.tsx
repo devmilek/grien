@@ -2,8 +2,7 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import React from "react";
-import { ChevronLeft, Loader2Icon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 import { useAttributes } from "@/hooks/use-attributes";
 import { useRecipe } from "../../../context";
 
@@ -69,19 +68,6 @@ const AdditionalStep = () => {
             </div>
           </div>
         ))}
-      </div>
-      <div className="w-full justify-between flex items-center mt-4">
-        <Button
-          variant="outline"
-          size="icon"
-          aria-label="Wróć do poprzedniego kroku"
-        >
-          <ChevronLeft />
-        </Button>
-        <div className="flex gap-2">
-          <Button variant="outline">Zapisz jako szkic</Button>
-          <Button variant="default">Dupa</Button>
-        </div>
       </div>
     </div>
   );

@@ -43,6 +43,7 @@ const BasicsForm = () => {
       categoryId: recipe.basics.categoryId,
       name: recipe.basics.name,
     },
+    mode: "all",
   });
 
   const onSubmit = (data: RecipeBasicsSchema) => {

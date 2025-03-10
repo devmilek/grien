@@ -19,6 +19,10 @@ export const difficulties = ["easy", "medium", "hard"] as const;
 export type Difficulty = (typeof difficulties)[number];
 export const difficultiesEnum = pgEnum("difficulty", difficulties);
 
+export const recipeStatuses = ["draft", "published"] as const;
+export type RecipeStatus = (typeof recipeStatuses)[number];
+export const statusesEnum = pgEnum("status", recipeStatuses);
+
 export const recipes = pgTable("recipes", {
   id: uuid("id").primaryKey().defaultRandom(),
   imageId: uuid("image_id")
@@ -48,6 +52,7 @@ export const recipes = pgTable("recipes", {
     .references(() => users.id, {
       onDelete: "cascade",
     }),
+  status: statusesEnum("status").notNull().default("draft"),
 
   views: integer("views").notNull().default(0),
 
