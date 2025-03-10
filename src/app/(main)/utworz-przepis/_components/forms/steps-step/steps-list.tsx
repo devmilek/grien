@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { PreparationStepWithId, useRecipeStore } from "../../use-recipe-store";
 import Image from "next/image";
 import { getR2ImageSrc } from "@/utils";
 import { Button } from "@/components/ui/button";
@@ -24,9 +23,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import StepForm from "./step-form";
+import { RecipeStepSchema, useRecipe } from "../../../context";
+import { cn } from "@/lib/utils";
 
 const StepsList = () => {
-  const { preparationSteps, setPreparationSteps } = useRecipeStore();
+  const { setFullRecipe, recipe } = useRecipe();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -39,20 +40,17 @@ const StepsList = () => {
     const { active, over } = event;
 
     if (active.id !== over?.id) {
-      const oldIndex = preparationSteps.findIndex(
-        (step) => step.id === active.id
-      );
-      const newIndex = preparationSteps.findIndex(
-        (step) => step.id === over?.id
-      );
+      const oldIndex = recipe.steps.findIndex((step) => step.id === active.id);
+      const newIndex = recipe.steps.findIndex((step) => step.id === over?.id);
 
-      setPreparationSteps(arrayMove(preparationSteps, oldIndex, newIndex));
+      const newSteps = arrayMove(recipe.steps, oldIndex, newIndex);
+      setFullRecipe({ ...recipe, steps: newSteps });
     }
   }
 
   return (
-    <div className="mt-6">
-      {preparationSteps.length > 0 && (
+    <div className="mt-12">
+      {recipe.steps.length > 0 && (
         <h3 className="text-2xl font-display mb-4">Lista kroków</h3>
       )}
       <DndContext
@@ -61,11 +59,11 @@ const StepsList = () => {
         onDragEnd={handleDragEnd}
       >
         <SortableContext
-          items={preparationSteps.map((item) => item.id)}
+          items={recipe.steps.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
         >
           <div className="space-y-4">
-            {preparationSteps.map((step, index) => (
+            {recipe.steps.map((step, index) => (
               <SortableItem key={step.id} step={step} index={index} />
             ))}
           </div>
@@ -79,13 +77,19 @@ export function SortableItem({
   step,
   index,
 }: {
-  step: PreparationStepWithId;
+  step: RecipeStepSchema;
   index: number;
 }) {
-  const { removePreparationStep } = useRecipeStore();
+  const { removeStep } = useRecipe();
   const [editing, setEditing] = React.useState(false);
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: step.id });
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: step.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -93,13 +97,23 @@ export function SortableItem({
   };
 
   if (editing) {
-    return <StepForm data={step} onSubmit={() => setEditing(false)} />;
+    return (
+      <StepForm
+        id={step.id}
+        onSubmit={() => setEditing(false)}
+        onCancel={() => {
+          setEditing(false);
+        }}
+      />
+    );
   }
 
   return (
     <article
       key={step.id}
-      className="gap-4 rounded-xl bg-white p-6"
+      className={cn("gap-4 rounded-xl bg-white p-6 z-10 relative", {
+        "bg-white/40 z-50 border shadow-md backdrop-blur-sm": isDragging,
+      })}
       ref={setNodeRef}
       style={style}
     >
@@ -119,12 +133,18 @@ export function SortableItem({
             size="icon"
             variant="ghost"
             onClick={() => {
-              removePreparationStep(step.id);
+              removeStep(step.id);
             }}
           >
             <TrashIcon />
           </Button>
-          <Button size="icon" variant="ghost" {...attributes} {...listeners}>
+          <Button
+            className="cursor-grab active:cursor-grabbing"
+            size="icon"
+            variant="ghost"
+            {...attributes}
+            {...listeners}
+          >
             <GripVertical />
           </Button>
         </div>

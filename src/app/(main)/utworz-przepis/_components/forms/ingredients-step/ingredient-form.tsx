@@ -87,11 +87,9 @@ const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
   }, [isEditing, onCancel]);
 
   const handleSubmit = (data: RecipeIngredientFormSchema) => {
-    console.log("data", data);
     if (isEditing && id) {
       updateIngredient(id, data);
     } else {
-      console.log("data", data);
       addIngredient({
         ...data,
         id: v4(),

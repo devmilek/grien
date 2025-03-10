@@ -27,8 +27,8 @@ import {
   recipeBasicsSchema,
   useRecipe,
 } from "../../context";
-import { CategoryCombobox } from "@/app/(main)/przepisy/utworz/_components/comboboxes/category-combobox";
-import { TimeCombobox } from "@/app/(main)/przepisy/utworz/_components/comboboxes/time-combobox";
+import { CategoryCombobox } from "../comboboxes/category-combobox";
+import { TimeCombobox } from "../comboboxes/time-combobox";
 
 const BasicsForm = () => {
   const { setRecipeBasics, recipe, nextStep } = useRecipe();
@@ -63,7 +63,21 @@ const BasicsForm = () => {
                 <FormItem>
                   <FormLabel>Nazwa</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="np. Gyros w picie" />
+                    <Input
+                      {...field}
+                      placeholder="np. Gyros w picie"
+                      onChange={(e) => {
+                        const value = e.target.value.trim();
+                        if (value.length < 3) {
+                          const title = `Edytowanie przepisu | Grien`;
+                          window.document.title = title;
+                        } else {
+                          const title = `Edytowanie: ${e.target.value} | Grien`;
+                          window.document.title = title;
+                        }
+                        field.onChange(e);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

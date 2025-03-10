@@ -1,9 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-import { RecipeStepSchema, recipeStepSchema } from "../schema";
 import {
   Form,
   FormControl,
@@ -13,34 +12,62 @@ import {
 } from "@/components/ui/form";
 import Dropzone from "@/components/global/dropzone";
 import { Textarea } from "@/components/ui/textarea";
-import { PreparationStepWithId, useRecipeStore } from "../../use-recipe-store";
 import { v4 } from "uuid";
 import { Button } from "@/components/ui/button";
+import {
+  recipeStepFormSchema,
+  RecipeStepFormSchema,
+  useRecipe,
+} from "../../../context";
 
 const StepForm = ({
-  data,
+  id,
   onSubmit,
+  onCancel,
 }: {
-  data?: PreparationStepWithId;
+  id?: string;
   onSubmit?: () => void;
+  onCancel?: () => void;
 }) => {
-  const { addPreparationStep, updatePreparationStep } = useRecipeStore();
-  const form = useForm<RecipeStepSchema>({
-    resolver: zodResolver(recipeStepSchema),
+  const { recipe, addStep, updateStep } = useRecipe();
+  const isEditing = Boolean(id);
+  const formRef = useRef<HTMLDivElement>(null);
+
+  const step = id ? recipe.steps.find((step) => step.id === id) : undefined;
+
+  const form = useForm<RecipeStepFormSchema>({
+    resolver: zodResolver(recipeStepFormSchema),
     defaultValues: {
-      description: data?.description || "",
-      imageId: data?.imageId,
+      description: step?.description || "",
+      imageId: step?.imageId,
     },
   });
 
-  const handleSubmit = (values: RecipeStepSchema) => {
-    if (data) {
-      updatePreparationStep({
+  useEffect(() => {
+    if (isEditing && onCancel) {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (
+          formRef.current &&
+          !formRef.current.contains(event.target as Node)
+        ) {
+          onCancel();
+        }
+      };
+
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [isEditing, onCancel]);
+
+  const handleSubmit = (values: RecipeStepFormSchema) => {
+    if (isEditing && id) {
+      updateStep(id, {
         ...values,
-        id: data.id,
       });
     } else {
-      addPreparationStep({
+      addStep({
         ...values,
         id: v4(),
       });
@@ -49,8 +76,14 @@ const StepForm = ({
     form.reset();
   };
 
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    }
+  };
+
   return (
-    <div className="rounded-xl p-6 bg-white">
+    <div className="rounded-xl p-6 bg-white" ref={formRef}>
       <Form {...form}>
         <form className="flex gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
           <FormField
@@ -79,9 +112,14 @@ const StepForm = ({
           />
         </form>
       </Form>
-      <div className="flex justify-end mt-4">
+      <div className="flex justify-end mt-4 gap-4">
+        {isEditing && (
+          <Button type="button" variant="outline" onClick={handleCancel}>
+            Anuluj
+          </Button>
+        )}
         <Button onClick={form.handleSubmit(handleSubmit)}>
-          {data ? "Zapisz zmiany" : "Dodaj krok"}
+          {isEditing ? "Zapisz zmiany" : "Dodaj krok"}
         </Button>
       </div>
     </div>

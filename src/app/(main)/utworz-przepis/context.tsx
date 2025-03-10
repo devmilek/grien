@@ -62,6 +62,7 @@ export type RecipeIngredientFormSchema = z.infer<
 >;
 
 export const recipeStepSchema = z.object({
+  id: z.string().uuid(),
   imageId: z.string().uuid().optional(),
   description: z
     .string()
@@ -70,11 +71,18 @@ export const recipeStepSchema = z.object({
 
 export type RecipeStepSchema = z.infer<typeof recipeStepSchema>;
 
+export const recipeStepFormSchema = recipeStepSchema.omit({
+  id: true,
+});
+
+export type RecipeStepFormSchema = z.infer<typeof recipeStepFormSchema>;
+
 // Definicja całego przepisu
 export interface Recipe {
   basics: RecipeBasicsSchema;
   ingredients: RecipeIngredientSchema[];
   steps: RecipeStepSchema[];
+  attributes: string[];
 }
 
 // Domyślne wartości dla nowego przepisu
@@ -97,10 +105,12 @@ const defaultRecipe: Recipe = {
   ],
   steps: [
     {
+      id: "f5d8bc39-350f-4246-a9e7-e071c8f767f3",
       description:
         "Filet z piersi kurczaka obierz z błonek i podziel na niewielkie, ale równej wielkości sześciany. Marchewkę umyj, obierz i pokrój w kostkę. Włącz piekarnik i ustaw temperaturę na 200°C. Zanim się nagrzeje, zetrzyj ser żółty na grubej tarce.",
     },
   ],
+  attributes: [],
 };
 
 export type RecipeCreationStep =
@@ -124,10 +134,11 @@ interface RecipeContextType {
   ) => void;
   removeIngredient: (id: string) => void;
   addStep: (step: RecipeStepSchema) => void;
-  updateStep: (index: number, step: Partial<RecipeStepSchema>) => void;
-  removeStep: (index: number) => void;
+  updateStep: (id: string, step: Partial<RecipeStepSchema>) => void;
+  removeStep: (id: string) => void;
   setFullRecipe: (recipe: Recipe) => void;
   resetRecipe: () => void;
+  toggleAttribute: (attribute: string) => void;
 }
 
 // Tworzenie kontekstu z wartościami domyślnymi
@@ -223,9 +234,13 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
   }, []);
 
   // Aktualizacja istniejącego kroku
+  // Aktualizacja istniejącego kroku
   const updateStep = useCallback(
-    (index: number, step: Partial<RecipeStepSchema>) => {
+    (id: string, step: Partial<RecipeStepSchema>) => {
       setRecipe((prev) => {
+        const index = prev.steps.findIndex((item) => item.id === id);
+        if (index === -1) return prev; // nie znaleziono kroku o podanym ID
+
         const updatedSteps = [...prev.steps];
         updatedSteps[index] = { ...updatedSteps[index], ...step };
         return { ...prev, steps: updatedSteps };
@@ -235,10 +250,10 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
   );
 
   // Usuwanie kroku
-  const removeStep = useCallback((index: number) => {
+  const removeStep = useCallback((id: string) => {
     setRecipe((prev) => ({
       ...prev,
-      steps: prev.steps.filter((_, i) => i !== index),
+      steps: prev.steps.filter((step) => step.id !== id),
     }));
   }, []);
 
@@ -250,6 +265,15 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
   // Reset przepisu do wartości domyślnych
   const resetRecipe = useCallback(() => {
     setRecipe(defaultRecipe);
+  }, []);
+
+  const toggleAttribute = useCallback((attribute: string) => {
+    setRecipe((prev) => {
+      const attributes = prev.attributes.includes(attribute)
+        ? prev.attributes.filter((item) => item !== attribute)
+        : [...prev.attributes, attribute];
+      return { ...prev, attributes };
+    });
   }, []);
 
   return (
@@ -269,6 +293,7 @@ export const RecipeProvider: React.FC<RecipeProviderProps> = ({
         setCurrentStep,
         nextStep,
         previousStep,
+        toggleAttribute,
       }}
     >
       {children}
