@@ -13,6 +13,9 @@ export const images = pgTable("images", {
   key: varchar("key", {
     length: 255,
   }),
+  mimeType: varchar("mimeType", {
+    length: 255,
+  }),
   size: integer("size"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")

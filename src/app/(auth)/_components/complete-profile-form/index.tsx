@@ -17,10 +17,10 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { User } from "@/db/schema";
 import { Textarea } from "@/components/ui/textarea";
-import AvatarUploader from "@/components/global/avatar-uploader";
 import { authClient, getErrorMessage } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import AvatarUploader from "@/features/user-profile/components/avatar-uploader";
 
 const CompleteProfileForm = ({ user }: { user: User }) => {
   const router = useRouter();
