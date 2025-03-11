@@ -26,7 +26,7 @@ const SignInPage = () => {
         <p className="text-center text-sm text-muted-foreground">
           Nie masz jeszcze konta?{" "}
           <Link
-            href="/sign-up"
+            href="/rejestracja"
             className="text-primary hover:underline font-medium"
           >
             Utwórz konto

@@ -22,10 +22,27 @@ const SignUpPage = () => {
       </header>
       <SignUpForm />
       <div>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-sm text-muted-foreground text-center">
+          Kontynuując akceptujesz nasze{" "}
+          <Link
+            href="/polityka-prywatnosci"
+            className="text-primary hover:underline font-medium"
+          >
+            Warunki korzystania
+          </Link>{" "}
+          oraz{" "}
+          <Link
+            href="/polityka-prywatnosci"
+            className="text-primary hover:underline font-medium"
+          >
+            Politykę prywatności
+          </Link>
+          .
+        </p>
+        <p className="text-center text-sm text-muted-foreground mt-10">
           Masz już konto?{" "}
           <Link
-            href="/sign-in"
+            href="/logowanie"
             className="text-primary hover:underline font-medium"
           >
             Zaloguj się
