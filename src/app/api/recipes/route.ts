@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
     const attributesSlugs = [...cuisineSlugs, ...occassionSlugs, ...dietSlugs];
 
     const query = db
-      .select({
+      .selectDistinct({
         ...getTableColumns(recipes),
         category: {
           name: categories.name,
