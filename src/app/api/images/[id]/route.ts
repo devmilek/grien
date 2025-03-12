@@ -34,6 +34,10 @@ export async function DELETE(
       return new Response("Unauthorized", { status: 401 });
     }
 
+    if (!image.key) {
+      return new Response("Bad request", { status: 400 });
+    }
+
     // Delete from R2
     await S3.send(
       new DeleteObjectCommand({

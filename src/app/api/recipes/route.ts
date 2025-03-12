@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
 
     const searchQuery = searchParams.get("query");
     const categorySlug = searchParams.get("categorySlug");
+    const username = searchParams.get("username");
     const cuisineSlugs = parseStringArrayParam(
       searchParams.get("cuisineSlugs")
     );
@@ -78,7 +79,8 @@ export async function GET(request: NextRequest) {
           categorySlug ? eq(categories.slug, categorySlug) : undefined,
           attributesSlugs.length > 0
             ? inArray(attributes.slug, attributesSlugs)
-            : undefined
+            : undefined,
+          username ? eq(users.username, username) : undefined
         )
       )
       .limit(limit)

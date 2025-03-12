@@ -8,6 +8,8 @@ export interface UseFilteredRecipesProps {
   cuisineSlugs?: string[];
   dietsSlugs?: string[];
   occassionsSlug?: string[];
+  username?: string;
+  query?: string;
 }
 
 export const useFilteredRecipes = ({
@@ -15,13 +17,15 @@ export const useFilteredRecipes = ({
   cuisineSlugs,
   dietsSlugs,
   occassionsSlug,
+  username,
+  query,
 }: UseFilteredRecipesProps) => {
   const {
     categorySlug: categorySlugParam,
     cuisineSlugs: cuisineSlugsParam,
     dietSlugs: dietsSlugsParam,
     occassionSlugs: occassionSlugParam,
-    query,
+    query: queryParam,
   } = useRecipesFilters();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } =
@@ -33,7 +37,8 @@ export const useFilteredRecipes = ({
           cuisineSlugs: cuisineSlugs || cuisineSlugsParam,
           dietSlugs: dietsSlugs || dietsSlugsParam,
           occassionSlugs: occassionsSlug || occassionSlugParam,
-          query,
+          query: query || queryParam,
+          username,
         },
       ],
       queryFn: async ({ pageParam }) => {
@@ -47,6 +52,7 @@ export const useFilteredRecipes = ({
               occassionsSlug?.join(",") || occassionSlugParam?.join(","),
             query,
             page: pageParam,
+            username,
           },
         });
 

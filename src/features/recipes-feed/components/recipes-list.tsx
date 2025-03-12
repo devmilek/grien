@@ -14,6 +14,7 @@ const RecipesList = ({
   cuisineSlugs,
   dietsSlugs,
   occassionsSlug,
+  username,
 }: UseFilteredRecipesProps) => {
   const { ref, inView } = useInView({
     threshold: 0.8,
@@ -24,6 +25,7 @@ const RecipesList = ({
       cuisineSlugs,
       dietsSlugs,
       occassionsSlug,
+      username,
     });
 
   useEffect(() => {

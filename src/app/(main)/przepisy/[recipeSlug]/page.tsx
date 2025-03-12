@@ -102,6 +102,7 @@ const RecipePage = async ({ params }: RecipePageProps) => {
                 createdAt={recipe.createdAt}
                 author={{
                   name: recipe.user.name,
+                  username: recipe.user.username,
                 }}
               />
               {/* ATTRIBUTES */}

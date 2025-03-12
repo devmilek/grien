@@ -7,10 +7,10 @@ import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
 import React from "react";
-import RecipesFeed from "./recipes-feed";
 import { Metadata } from "next";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { getInitials } from "@/utils";
+import RecipesFeed from "@/features/recipes-feed/components/recipes-feed";
 
 interface ProfilePageProps {
   params: Promise<{
@@ -104,7 +104,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
           </div>
         </div>
       </header>
-      <RecipesFeed userId={user.id} />
+      {user.username && <RecipesFeed username={user.username} />}
     </div>
   );
 };
