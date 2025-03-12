@@ -42,6 +42,14 @@ export const auth = betterAuth({
     },
   },
   user: {
+    additionalFields: {
+      bio: {
+        type: "string",
+        required: false,
+        fieldName: "bio",
+        input: true,
+      },
+    },
     deleteUser: {
       enabled: true,
       sendDeleteAccountVerification: async ({ user, url }) => {
@@ -76,3 +84,6 @@ export const auth = betterAuth({
     generateId: false,
   },
 });
+
+export type User = (typeof auth.$Infer.Session)["user"];
+export type Session = (typeof auth.$Infer.Session)["session"];

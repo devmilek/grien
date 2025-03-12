@@ -1,18 +1,23 @@
 import { headers } from "next/headers";
-import { auth } from ".";
+import { auth, Session, User } from ".";
 import { cache } from "react";
 
-export const getCurrentSession = cache(async () => {
-  const session = await auth.api.getSession({
-    headers: await headers(), // you need to pass the headers object.
-  });
+interface Data {
+  user: User | null;
+  session: Session | null;
+}
 
-  if (!session) {
+export const getCurrentSession = cache(async () => {
+  const data = (await auth.api.getSession({
+    headers: await headers(), // you need to pass the headers object.
+  })) as Data;
+
+  if (!data) {
     return {
       user: null,
       session: null,
     };
   }
 
-  return session;
+  return data;
 });

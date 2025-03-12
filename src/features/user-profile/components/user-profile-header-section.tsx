@@ -7,8 +7,8 @@ import { getInitials } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { redirect } from "next/navigation";
-import EditProfileModal from "./edit-profile-modal";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const UserProfileHeaderSection = async () => {
   const { session } = await getCurrentSession();
@@ -66,9 +66,10 @@ const UserProfileHeaderSection = async () => {
                 Obserwujących
               </span>
             </p>
-            <EditProfileModal user={user}>
-              <Button variant="outline">Edytuj profil</Button>
-            </EditProfileModal>
+
+            <Button variant="outline" asChild>
+              <Link href="/konto/ustawienia">Edytuj profil</Link>
+            </Button>
           </div>
         </div>
       </div>
