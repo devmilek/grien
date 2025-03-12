@@ -75,6 +75,7 @@ const RecipeDetails = async ({ slug }: { slug: string }) => {
                 difficulty={recipe.difficulty}
                 portions={recipe.portions}
                 preparationTime={recipe.preparationTime}
+                views={recipe.views}
               />
               {/* DESC */}
               <p className="text-muted-foreground text-sm mt-4">

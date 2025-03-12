@@ -3,12 +3,13 @@ import React from "react";
 import db from "@/db";
 import { recipes as dbRecipes, follows, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getInitials, getRecipesText } from "@/utils";
+import { getInitials } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { pluralizeFollowers, pluralizeRecipes } from "@/utils/pluralize-words";
 
 const UserProfileHeaderSection = async () => {
   const { session } = await getCurrentSession();
@@ -60,13 +61,13 @@ const UserProfileHeaderSection = async () => {
             <p className="font-bold">
               {recipesCount}
               <span className="text-muted-foreground text-sm font-normal ml-2">
-                {getRecipesText(recipesCount)}
+                {pluralizeRecipes(recipesCount)}
               </span>
             </p>
             <p className="font-bold">
               {followersCount}
               <span className="text-muted-foreground text-sm font-normal ml-2">
-                Obserwujących
+                {pluralizeFollowers(followersCount)}
               </span>
             </p>
 

@@ -55,17 +55,6 @@ export const getDomainFromUrl = (url: string) => {
   }
 };
 
-export const getRecipesText = (count: number) => {
-  if (count === 1) return "przepis";
-  if (
-    count % 10 >= 2 &&
-    count % 10 <= 4 &&
-    (count % 100 < 10 || count % 100 >= 20)
-  )
-    return "przepisy";
-  return "przepisów";
-};
-
 export function getInitials(value: string) {
   const words = value
     .trim()

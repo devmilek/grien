@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import { getRecipesText } from "@/utils";
+import { pluralizeRecipes } from "@/utils/pluralize-words";
 import React from "react";
 
 export const CollectionTile = ({
@@ -26,7 +26,7 @@ export const CollectionTile = ({
       <div className="flex-1">
         <p className="font-medium text-sm">{name}</p>
         <p className="text-sm text-muted-foreground">
-          {count} {getRecipesText(count)}
+          {count} {pluralizeRecipes(count)}
         </p>
       </div>
       <Checkbox checked={checked} />

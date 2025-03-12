@@ -5,6 +5,7 @@ import React from "react";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { Metadata } from "next";
 import RecipeDetails from "@/features/recipe-details/components/recipe-details";
+import { after } from "next/server";
 
 interface RecipePageProps {
   params: Promise<{ recipeSlug: string }>;
@@ -42,6 +43,24 @@ export async function generateMetadata({
 
 const RecipePage = async ({ params }: RecipePageProps) => {
   const slug = (await params).recipeSlug;
+
+  after(async () => {
+    const views = await db.query.recipes.findFirst({
+      where: eq(recipes.slug, slug),
+      columns: {
+        views: true,
+      },
+    });
+
+    if (views) {
+      await db
+        .update(recipes)
+        .set({
+          views: views.views + 1,
+        })
+        .where(eq(recipes.slug, slug));
+    }
+  });
   return <RecipeDetails slug={slug} />;
 };
 

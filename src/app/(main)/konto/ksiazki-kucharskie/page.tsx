@@ -2,8 +2,9 @@ import db from "@/db";
 import { collections, collectionsRecipes, favouriteRecipes } from "@/db/schema";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { cn } from "@/lib/utils";
-import { getInitials, getRecipesText } from "@/utils";
+import { getInitials } from "@/utils";
 import { constructMetadata } from "@/utils/construct-metadata";
+import { pluralizeRecipes } from "@/utils/pluralize-words";
 import { countDistinct, eq, getTableColumns, sql } from "drizzle-orm";
 import { HeartIcon } from "lucide-react";
 import { Metadata } from "next";
@@ -63,7 +64,7 @@ const CollectionsPage = async () => {
           </div>
           <p className="font-medium mt-2">Polubione przepisy</p>
           <p className="text-sm text-muted-foreground">
-            {favouriteRecipesCount} {getRecipesText(favouriteRecipesCount)}
+            {favouriteRecipesCount} {pluralizeRecipes(favouriteRecipesCount)}
           </p>
         </Link>
         {data.map((collection) => {
@@ -115,7 +116,7 @@ const CollectionsPage = async () => {
                 {collection.name}
               </p>
               <p className="text-sm text-muted-foreground">
-                {collection.count} {getRecipesText(favouriteRecipesCount)}
+                {collection.count} {pluralizeRecipes(favouriteRecipesCount)}
               </p>
             </Link>
           );

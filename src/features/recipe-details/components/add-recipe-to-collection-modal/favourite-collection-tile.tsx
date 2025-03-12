@@ -1,5 +1,5 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { getRecipesText } from "@/utils";
+import { pluralizeRecipes } from "@/utils/pluralize-words";
 import { HeartIcon } from "lucide-react";
 import React from "react";
 
@@ -23,7 +23,7 @@ const FavourtieCollectionTile = ({
       <div className="flex-1">
         <p className="font-medium text-sm">Polubione przepisy</p>
         <p className="text-sm text-muted-foreground">
-          {count} {getRecipesText(count)}
+          {count} {pluralizeRecipes(count)}
         </p>
       </div>
       <Checkbox checked={checked} />
