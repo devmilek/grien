@@ -3,7 +3,6 @@ import HeroSection from "./_sections/hero";
 import CategoriesSection from "./_sections/categories";
 import PopularFeed from "./_sections/popular-feed";
 import MainDishesFeed from "./_sections/main-dishes-feed";
-import OtherRecipesFeed from "./_sections/other-recipes-feed";
 import QuoteCard from "./_sections/quote-card";
 import DrinksFeed from "./_sections/drinks-feed";
 import { constructMetadata } from "@/utils/construct-metadata";
@@ -27,7 +26,6 @@ export default async function Home() {
           <DrinksFeed />
         </div>
       </div>
-      <OtherRecipesFeed />
     </div>
   );
 }
