@@ -1,7 +1,6 @@
-import FacatedSearch from "@/components/global/facated-search";
 import React from "react";
-import RecipesFeed from "./_components/recipes-feed";
 import Hero from "./_components/hero";
+import RecipesFeed from "@/features/recipes-feed/components/recipes-feed";
 
 const SearchResultsPage = async ({
   params,
@@ -14,14 +13,7 @@ const SearchResultsPage = async ({
   return (
     <div className="container">
       <Hero query={query} />
-      <div className="flex mt-5 gap-6">
-        <div className="w-[300px] shrink-0">
-          <FacatedSearch />
-        </div>
-        <div className="flex-1">
-          <RecipesFeed query={query} />
-        </div>
-      </div>
+      <RecipesFeed query={query} />
     </div>
   );
 };

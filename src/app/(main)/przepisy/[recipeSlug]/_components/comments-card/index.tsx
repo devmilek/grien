@@ -7,12 +7,16 @@ import CommentForm from "./comment-form";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { formatDistance } from "date-fns";
 import { pl } from "date-fns/locale";
+import { authClient } from "@/lib/auth/auth-client";
 
 const CommentsCard = ({ recipeId }: { recipeId: string }) => {
   const { data, isLoading } = useQuery({
     queryKey: ["comments", recipeId],
     queryFn: async () => await getRecipeComments(recipeId),
   });
+
+  const { data: sessionData } = authClient.useSession();
+
   return (
     <div className="p-6 rounded-xl bg-white">
       <h2 className="text-2xl font-display">Komentarze</h2>
@@ -55,7 +59,7 @@ const CommentsCard = ({ recipeId }: { recipeId: string }) => {
           ))}
         </div>
       </div>
-      <CommentForm recipeId={recipeId} />
+      {sessionData?.user && <CommentForm recipeId={recipeId} />}
     </div>
   );
 };

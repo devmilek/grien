@@ -11,14 +11,16 @@ const RecipesFeed = ({
   username,
 }: UseFilteredRecipesProps) => {
   return (
-    <div className="container flex gap-8">
+    <div className="flex gap-8">
       <div className="w-2xs">
-        <FacatedSearch
-          showCategories={!categorySlug}
-          showCuisines={!cuisineSlugs}
-          showDiets={!dietsSlugs}
-          showOccasions={!occassionsSlug}
-        />
+        <div className="sticky top-20">
+          <FacatedSearch
+            showCategories={!categorySlug}
+            showCuisines={!cuisineSlugs}
+            showDiets={!dietsSlugs}
+            showOccasions={!occassionsSlug}
+          />
+        </div>
       </div>
       <div className="flex-1">
         <RecipesList
