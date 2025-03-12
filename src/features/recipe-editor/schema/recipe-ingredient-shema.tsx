@@ -13,7 +13,7 @@ export const recipeIngredientSchema = z.object({
     .positive({
       message: "Ilość musi być większa niż 0",
     }),
-  unit: z.string().optional(),
+  unit: z.string().optional().nullable(),
 });
 
 export type RecipeIngredientSchema = z.infer<typeof recipeIngredientSchema>;

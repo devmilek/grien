@@ -50,7 +50,7 @@ const RecipeActions = ({
         <CookingModeModal steps={steps} />
         {isOwner ? (
           <Button variant="outline" asChild>
-            <Link href={`/utworz-przepis/${recipe.slug}`}>Edytuj</Link>
+            <Link href={`/przepisy/utworz/${recipe.slug}`}>Edytuj</Link>
           </Button>
         ) : (
           <Tooltip>

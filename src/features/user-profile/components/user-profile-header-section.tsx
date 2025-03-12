@@ -3,7 +3,7 @@ import React from "react";
 import db from "@/db";
 import { recipes as dbRecipes, follows, users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { getInitials } from "@/utils";
+import { getInitials, getRecipesText } from "@/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { redirect } from "next/navigation";
@@ -43,21 +43,24 @@ const UserProfileHeaderSection = async () => {
           <Image src="/food2.jpg" fill alt="" objectFit="cover" className="" />
         </div>
       </div>
-      <div className="px-8 -mt-8 flex items-end gap-6">
-        <Avatar className="size-32 border-[6px] border-background bg-background z-20">
+      <div className="px-8 flex gap-6">
+        <Avatar className="size-32 border-[6px] border-background bg-background z-20 -mt-8">
           {user?.image && <AvatarImage src={user.image} />}
           <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
         </Avatar>
-        <div className="pb-4 flex justify-between flex-1">
+        <div className="flex justify-between gap-8 flex-1 pt-4">
           <div className="">
             <h1 className="font-display text-3xl">{user.name}</h1>
             <p className="text-muted-foreground">@{user.username}</p>
+            {user.bio && (
+              <p className="text-sm text-muted-foreground mt-2">{user.bio}</p>
+            )}
           </div>
           <div className="flex gap-8 items-center">
             <p className="font-bold">
               {recipesCount}
               <span className="text-muted-foreground text-sm font-normal ml-2">
-                Przepisów
+                {getRecipesText(recipesCount)}
               </span>
             </p>
             <p className="font-bold">
