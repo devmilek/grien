@@ -20,7 +20,7 @@ const FacatedDifficultyItem = () => {
   );
   return (
     <AccordionItem value="difficulty">
-      <AccordionTrigger>
+      <AccordionTrigger className="font-semibold">
         Poziom trudności
         {difficulty !== "none" && ` (${formatDifficulty(difficulty)})`}
       </AccordionTrigger>

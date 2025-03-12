@@ -4,7 +4,7 @@ import React from "react";
 const RecipesPage = () => {
   return (
     <div>
-      <RecipesFeed />
+      <RecipesFeed categorySlug="dania-glowne" />
     </div>
   );
 };

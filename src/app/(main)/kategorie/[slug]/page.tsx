@@ -5,7 +5,7 @@ import { eq } from "drizzle-orm";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
-import InfiniteRecipes from "@/components/global/infinite-recipes-feed";
+import RecipesFeed from "@/features/recipes-feed/components/recipes-feed";
 
 interface CategoriesPageProps {
   params: Promise<{ slug: string }>;
@@ -45,7 +45,7 @@ const CategoriesPage = async ({ params }: CategoriesPageProps) => {
         </div>
         <Image src={`/${category.slug}.jpg`} alt="" fill objectFit="cover" />
       </div>
-      <InfiniteRecipes categorySlug={category.slug} />
+      <RecipesFeed categorySlug={category.slug} />
     </div>
   );
 };

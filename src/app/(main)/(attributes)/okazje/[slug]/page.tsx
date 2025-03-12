@@ -1,6 +1,6 @@
-import InfiniteRecipes from "@/components/global/infinite-recipes-feed";
 import db from "@/db";
 import { attributes } from "@/db/schema";
+import RecipesFeed from "@/features/recipes-feed/components/recipes-feed";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { and, eq } from "drizzle-orm";
 import Image from "next/image";
@@ -45,7 +45,7 @@ const CategoriesPage = async ({ params }: CategoriesPageProps) => {
         </div>
         <Image src={`/food.jpg`} alt="" fill className="object-cover" />
       </div>
-      <InfiniteRecipes occassionSlugs={[occassion.slug]} />
+      <RecipesFeed occassionsSlug={[occassion.slug]} />
     </div>
   );
 };

@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
 
     const attributesSlugs = [...cuisineSlugs, ...occassionSlugs, ...dietSlugs];
 
+    console.log("attributesSlugs", attributesSlugs);
+
     const query = db
       .selectDistinct({
         ...getTableColumns(recipes),

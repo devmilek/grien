@@ -6,7 +6,7 @@ import {
   UseFilteredRecipesProps,
 } from "../hooks/use-filtered-recipes";
 import { useInView } from "react-intersection-observer";
-import { Loader2 } from "lucide-react";
+import { CookingPot, Loader2 } from "lucide-react";
 import HorizontalCard from "@/components/cards/horizontal-card";
 
 const RecipesList = ({
@@ -34,12 +34,21 @@ const RecipesList = ({
 
   return (
     <section className="p-8 rounded-2xl bg-white">
-      <header>
+      <header className="">
         <h1 className="text-3xl font-display">Wyniki</h1>
       </header>
       {isLoading && (
         <div className="p-4 pt-12 flex justify-center">
           <Loader2 className="size-4 animate-spin" />
+        </div>
+      )}
+      {data?.pages[0].length === 0 && !isLoading && (
+        <div className="text-center pt-8">
+          <CookingPot className="size-6 mx-auto mb-4" />
+          <p className="font-medium">Nie znaleziono przepisów</p>
+          <p className="text-sm text-muted-foreground">
+            Spróbuj zmienić kryteria wyszukiwania
+          </p>
         </div>
       )}
       <div className="space-y-4 mt-6">

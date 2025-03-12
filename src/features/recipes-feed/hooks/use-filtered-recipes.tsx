@@ -40,15 +40,15 @@ export const useFilteredRecipes = ({
         const res = await axios.get(`/api/recipes`, {
           params: {
             categorySlug: categorySlug || categorySlugParam,
-            cuisineSlugs: cuisineSlugs || cuisineSlugsParam,
-            dietSlugs: dietsSlugs || dietsSlugsParam,
-            occassionSlugs: occassionsSlug || occassionSlugParam,
+            cuisineSlugs:
+              cuisineSlugs?.join(",") || cuisineSlugsParam?.join(","),
+            dietSlugs: dietsSlugs?.join(",") || dietsSlugsParam?.join(","),
+            occassionSlugs:
+              occassionsSlug?.join(",") || occassionSlugParam?.join(","),
             query,
             page: pageParam,
           },
         });
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
 
         return res.data as RecipeForCard[];
       },
