@@ -1,7 +1,6 @@
-import { RecipeForCard } from "@/types";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useRecipesFilters } from "./use-recipes-filters";
+import { honoClient } from "@/lib/hono-client";
 
 export interface UseFilteredRecipesProps {
   categorySlug?: string;
@@ -42,21 +41,25 @@ export const useFilteredRecipes = ({
         },
       ],
       queryFn: async ({ pageParam }) => {
-        const res = await axios.get(`/api/recipes`, {
-          params: {
+        const res = await honoClient.api.recipes.$post({
+          json: {
             categorySlug: categorySlug || categorySlugParam,
-            cuisineSlugs:
-              cuisineSlugs?.join(",") || cuisineSlugsParam?.join(","),
-            dietSlugs: dietsSlugs?.join(",") || dietsSlugsParam?.join(","),
-            occassionSlugs:
-              occassionsSlug?.join(",") || occassionSlugParam?.join(","),
-            query,
-            page: pageParam,
+            cuisineSlugs: cuisineSlugs || cuisineSlugsParam,
+            dietSlugs: dietsSlugs || dietsSlugsParam,
+            occassionSlugs: occassionsSlug || occassionSlugParam,
+            searchQuery: query || queryParam || "",
             username,
+            page: pageParam,
           },
         });
 
-        return res.data as RecipeForCard[];
+        if (!res.ok) {
+          throw new Error("Failed to fetch recipes");
+        }
+
+        const data = await res.json();
+
+        return data;
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage, allPages, lastPageParam) => {

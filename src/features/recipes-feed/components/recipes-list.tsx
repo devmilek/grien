@@ -8,6 +8,7 @@ import {
 import { useInView } from "react-intersection-observer";
 import { CookingPot, Loader2 } from "lucide-react";
 import HorizontalCard from "@/components/cards/horizontal-card";
+import SearchInput from "./search-input";
 
 const RecipesList = ({
   categorySlug,
@@ -15,6 +16,7 @@ const RecipesList = ({
   dietsSlugs,
   occassionsSlug,
   username,
+  query,
 }: UseFilteredRecipesProps) => {
   const { ref, inView } = useInView({
     threshold: 0.8,
@@ -26,6 +28,7 @@ const RecipesList = ({
       dietsSlugs,
       occassionsSlug,
       username,
+      query,
     });
 
   useEffect(() => {
@@ -36,8 +39,9 @@ const RecipesList = ({
 
   return (
     <section className="p-8 rounded-2xl bg-white">
-      <header className="">
+      <header className="flex justify-between items-center">
         <h1 className="text-3xl font-display">Wyniki</h1>
+        {!query && <SearchInput />}
       </header>
       {isLoading && (
         <div className="p-4 pt-12 flex justify-center">
@@ -57,7 +61,12 @@ const RecipesList = ({
         {data?.pages.map((page, index) => (
           <Fragment key={index}>
             {page.map((item, itemIndex) => (
-              <HorizontalCard key={itemIndex} {...item} />
+              <HorizontalCard
+                key={itemIndex}
+                {...item}
+                createdAt={new Date(item.createdAt)}
+                updatedAt={new Date(item.updatedAt)}
+              />
             ))}
           </Fragment>
         ))}

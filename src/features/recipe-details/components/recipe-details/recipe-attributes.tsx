@@ -52,14 +52,14 @@ const RecipeAttributes = ({
 
   return (
     <div className="flex flex-wrap gap-2 mt-4">
-      <Badge variant="outline">
+      <Badge variant="outline" asChild>
         <Link href={`/kategorie/${category.slug}`}>
-          <TagIcon />
+          <TagIcon className="mr-1" />
           {category.name}
         </Link>
       </Badge>
       <Badge variant="outline">
-        <ClockIcon className="size-3 mr-1" />
+        <ClockIcon className="mr-1" />
         {formatTime(preparationTime)}
       </Badge>
       <Badge variant="outline">

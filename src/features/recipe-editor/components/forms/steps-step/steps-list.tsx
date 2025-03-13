@@ -112,7 +112,7 @@ export function SortableItem({
   return (
     <article
       key={step.id}
-      className={cn("gap-4 rounded-xl bg-white p-6 z-10 relative", {
+      className={cn("gap-6 rounded-xl bg-white p-6 z-10 relative", {
         "bg-white/40 z-50 border shadow-md backdrop-blur-sm": isDragging,
       })}
       ref={setNodeRef}
@@ -161,7 +161,7 @@ export function SortableItem({
             unoptimized
             width={400}
             height={400}
-            className="max-w-52 rounded-lg border"
+            className="max-w-52 rounded-lg border aspect-[4/3] object-cover"
           />
         )}
       </div>

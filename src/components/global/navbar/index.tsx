@@ -1,4 +1,4 @@
-import { BookmarkIcon, ChefHat } from "lucide-react";
+import { BookmarkIcon, ChefHat, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import NavItems from "./nav-items";
@@ -28,7 +28,12 @@ const Navbar = async () => {
         <MobileNav />
         <div className="gap-2 hidden lg:flex">
           <NavbarSearch>
-            <Input placeholder="Wyszukaj przepisu..." />
+            <div className="relative">
+              <Input className="peer ps-9" placeholder="Wyszukaj..." />
+              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                <SearchIcon size={16} aria-hidden="true" />
+              </div>
+            </div>
           </NavbarSearch>
           {user ? (
             <>

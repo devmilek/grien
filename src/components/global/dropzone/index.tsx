@@ -4,10 +4,10 @@ import { cn } from "@/lib/utils";
 import { ImageIcon, Loader2 } from "lucide-react";
 import React, { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import Image from "next/image";
 import { getR2ImageSrc } from "@/utils";
+import { honoClient } from "@/lib/hono-client";
 
 const Dropzone = ({
   value,
@@ -22,28 +22,40 @@ const Dropzone = ({
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       setIsLoading(true);
-      const formdata = new FormData();
-      formdata.append("file", acceptedFiles[0]);
+      const file = acceptedFiles[0];
 
+      // first of all, delete the previous image
       if (value) {
         try {
-          await axios.delete(`/api/images/${value}`);
+          await honoClient.api.image[":id"].$delete({
+            param: {
+              id: value,
+            },
+          });
         } catch (e) {
-          if (e instanceof AxiosError) {
-            console.error(e.response?.data ? e.response.data : e.message);
-            toast.error("Nie udało się usunąć poprzedniego obrazka");
-          }
+          console.error(e);
+          toast.error("Nie udało się usunąć poprzedniego obrazka");
         }
       }
 
       try {
-        const res = await axios.post("/api/images", formdata);
-        onChange(res.data.id);
-      } catch (e) {
-        if (e instanceof AxiosError) {
-          console.error(e.response?.data ? e.response.data : e.message);
-          toast.error("Nie udało się przesłać obrazka");
+        const res = await honoClient.api.image.$post({
+          form: {
+            image: file,
+          },
+        });
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.message);
         }
+
+        const data = await res.json();
+
+        onChange(data.id);
+      } catch (e) {
+        console.error(e);
+        toast.error("Nie udało się przesłać obrazka");
       } finally {
         setIsLoading(false);
       }
