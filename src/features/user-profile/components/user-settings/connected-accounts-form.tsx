@@ -2,7 +2,7 @@
 
 import { Icons } from "@/components/global/icons";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth/auth-client";
+import { authClient, getErrorMessage } from "@/lib/auth/auth-client";
 import { cn } from "@/lib/utils";
 import React from "react";
 import { toast } from "sonner";
@@ -44,7 +44,8 @@ const ConnectedAccountsForm = ({
             });
 
             if (error) {
-              toast.error(error.message);
+              console.log(error.code);
+              toast.error(getErrorMessage(error.code));
             }
           } else {
             const { error } = await authClient.linkSocial({
@@ -53,7 +54,7 @@ const ConnectedAccountsForm = ({
             });
 
             if (error) {
-              toast.error(error.message);
+              toast.error(getErrorMessage(error.code));
             }
           }
         };

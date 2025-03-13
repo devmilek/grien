@@ -24,6 +24,8 @@ import { authClient, getErrorMessage } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import AvatarUploader from "../avatar-uploader";
+import { AtSignIcon } from "lucide-react";
+import { useCharacterLimit } from "@/hooks/use-character-limit";
 
 const EditProfileForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -59,17 +61,24 @@ const EditProfileForm = ({ user }: { user: User }) => {
   const isLoading = form.formState.isSubmitting;
   const isDirty = form.formState.isDirty;
 
+  const maxLength = 500;
+  const {
+    characterCount,
+    handleChange,
+    maxLength: limit,
+  } = useCharacterLimit({ maxLength });
+
   return (
-    <div className="p-8">
+    <div className="overflow-hidden p-6">
       <AvatarUploader src={user.image} />
       <Form {...form}>
-        <form className="space-y-4 mt-5" onSubmit={form.handleSubmit(onSubmit)}>
+        <form className="space-y-4 mt-4" onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
             name="name"
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nazwa profilu</FormLabel>
+                <FormLabel>Nazwa profilu *</FormLabel>
                 <FormControl>
                   <Input {...field} disabled={isLoading} />
                 </FormControl>
@@ -82,10 +91,19 @@ const EditProfileForm = ({ user }: { user: User }) => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nazwa użytkownika</FormLabel>
-                <FormControl>
-                  <Input {...field} disabled={isLoading} />
-                </FormControl>
+                <FormLabel>Nazwa użytkownika *</FormLabel>
+                <div className="relative">
+                  <FormControl>
+                    <Input
+                      {...field}
+                      disabled={isLoading}
+                      className="peer ps-9"
+                    />
+                  </FormControl>
+                  <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                    <AtSignIcon size={16} aria-hidden="true" />
+                  </div>
+                </div>
                 <FormDescription>
                   Nazwa użytkownika jest unikalna i może być zmieniona raz na 30
                   dni.
@@ -99,9 +117,22 @@ const EditProfileForm = ({ user }: { user: User }) => {
             control={form.control}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Bio</FormLabel>
+                <div className="flex items-center justify-between">
+                  <FormLabel>Bio</FormLabel>
+                  <span className="text-xs text-muted-foreground">
+                    {characterCount}/{limit}
+                  </span>
+                </div>
                 <FormControl>
-                  <Textarea {...field} disabled={isLoading} />
+                  <Textarea
+                    {...field}
+                    disabled={isLoading}
+                    maxLength={maxLength}
+                    onChange={(e) => {
+                      handleChange(e);
+                      field.onChange(e);
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

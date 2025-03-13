@@ -20,6 +20,7 @@ import { z } from "zod";
 import { authClient, getErrorMessage } from "@/lib/auth/auth-client";
 import { setPassword } from "@/lib/auth/actions";
 import { Label } from "@/components/ui/label";
+import PasswordInput from "@/components/ui/password-input";
 
 export const changePasswordFormSchema = z
   .object({
@@ -99,9 +100,8 @@ const ChangePasswordForm = ({ isPasswordSet }: { isPasswordSet: boolean }) => {
               <FormItem>
                 <FormLabel>Obecne hasło</FormLabel>
                 <FormControl>
-                  <Input
+                  <PasswordInput
                     {...field}
-                    type="password"
                     autoComplete="current-password"
                     disabled={isLoading}
                   />
@@ -128,9 +128,8 @@ const ChangePasswordForm = ({ isPasswordSet }: { isPasswordSet: boolean }) => {
             <FormItem>
               <FormLabel>Nowe hasło</FormLabel>
               <FormControl>
-                <Input
+                <PasswordInput
                   {...field}
-                  type="password"
                   autoComplete="new-password"
                   disabled={isLoading}
                 />
@@ -146,9 +145,8 @@ const ChangePasswordForm = ({ isPasswordSet }: { isPasswordSet: boolean }) => {
             <FormItem>
               <FormLabel>Potwierdź hasło</FormLabel>
               <FormControl>
-                <Input
+                <PasswordInput
                   {...field}
-                  type="password"
                   autoComplete="new-password"
                   disabled={isLoading}
                 />
