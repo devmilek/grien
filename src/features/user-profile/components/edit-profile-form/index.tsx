@@ -23,6 +23,7 @@ import { User } from "@/lib/auth";
 import { authClient, getErrorMessage } from "@/lib/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import AvatarUploader from "../avatar-uploader";
 
 const EditProfileForm = ({ user }: { user: User }) => {
   const router = useRouter();
@@ -59,58 +60,61 @@ const EditProfileForm = ({ user }: { user: User }) => {
   const isDirty = form.formState.isDirty;
 
   return (
-    <Form {...form}>
-      <form className="p-8 space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nazwa profilu</FormLabel>
-              <FormControl>
-                <Input {...field} disabled={isLoading} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="username"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nazwa użytkownika</FormLabel>
-              <FormControl>
-                <Input {...field} disabled={isLoading} />
-              </FormControl>
-              <FormDescription>
-                Nazwa użytkownika jest unikalna i może być zmieniona raz na 30
-                dni.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="bio"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bio</FormLabel>
-              <FormControl>
-                <Textarea {...field} disabled={isLoading} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="flex justify-end">
-          <Button type="submit" disabled={isLoading || !isDirty}>
-            Zapisz
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <div className="p-8">
+      <AvatarUploader src={user.image} />
+      <Form {...form}>
+        <form className="space-y-4 mt-5" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name="name"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nazwa profilu</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="username"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nazwa użytkownika</FormLabel>
+                <FormControl>
+                  <Input {...field} disabled={isLoading} />
+                </FormControl>
+                <FormDescription>
+                  Nazwa użytkownika jest unikalna i może być zmieniona raz na 30
+                  dni.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="bio"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bio</FormLabel>
+                <FormControl>
+                  <Textarea {...field} disabled={isLoading} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex justify-end">
+            <Button type="submit" disabled={isLoading || !isDirty}>
+              Zapisz
+            </Button>
+          </div>
+        </form>
+      </Form>
+    </div>
   );
 };
 

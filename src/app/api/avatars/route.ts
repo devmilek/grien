@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/db";
-import { images } from "@/db/schema";
+import { ImageInsert, images } from "@/db/schema";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuid } from "uuid";
@@ -81,7 +81,7 @@ export async function POST(request: Request) {
     await S3.send(
       new PutObjectCommand({
         Bucket: process.env.R2_BUCKET,
-        Key: fileName,
+        Key: fileId,
         Body: optimizedBuffer,
         ContentType: "image/webp",
       })
@@ -89,19 +89,18 @@ export async function POST(request: Request) {
 
     const imageUrl = `${process.env.NEXT_PUBLIC_R2_PUBLIC_URL}/${fileName}`;
 
-    await db.insert(images).values({
+    const imageBatch: ImageInsert = {
       id: fileId,
-      key: fileName,
+      key: fileId,
       mimeType: "image/webp",
       size: optimizedBuffer.length,
       url: imageUrl,
       uploadedBy: user.id,
-    });
+    };
 
-    return Response.json({
-      url: imageUrl,
-      id: fileId,
-    });
+    await db.insert(images).values(imageBatch);
+
+    return Response.json(imageBatch);
   } catch (error) {
     console.error("Upload error:", error);
     return new Response("Error uploading file", { status: 500 });
