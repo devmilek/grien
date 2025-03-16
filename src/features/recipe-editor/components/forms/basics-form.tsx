@@ -54,7 +54,7 @@ const BasicsForm = () => {
   return (
     <div className="max-w-5xl mx-auto">
       <h2 className="font-display text-3xl">Podstawy</h2>
-      <div className="bg-white rounded-xl p-12 mt-6">
+      <div className="bg-white rounded-xl p-8 md:p-12 mt-6">
         <Form {...form}>
           <form className="space-y-8" onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -119,7 +119,7 @@ const BasicsForm = () => {
                 </FormItem>
               )}
             />
-            <div className="grid grid-cols-4 gap-8 items-start">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
               <FormField
                 name="categoryId"
                 control={form.control}

@@ -30,28 +30,15 @@ import { ContextRecipe } from "../types";
 const defaultRecipe: ContextRecipe = {
   basics: {
     imageId: "",
-    name: "Naleśniki z kurczakiem w sosie bolognese",
-    description: "Pyszne nalesniki",
-    difficulty: "easy",
-    preparationTime: 90,
-    portions: 4,
-    categoryId: "83b7fdd7-e846-49f3-9cc9-7879ff028338",
+    name: "",
+    description: "",
+    difficulty: "" as never,
+    preparationTime: undefined as never,
+    portions: undefined as never,
+    categoryId: "",
   },
-  ingredients: [
-    {
-      id: "f5d8bc39-350f-4246-a9e7-e071c8f767f3",
-      name: "Mąka",
-      amount: 1,
-      unit: "szklanka",
-    },
-  ],
-  steps: [
-    {
-      id: "f5d8bc39-350f-4246-a9e7-e071c8f767f3",
-      description:
-        "Filet z piersi kurczaka obierz z błonek i podziel na niewielkie, ale równej wielkości sześciany. Marchewkę umyj, obierz i pokrój w kostkę. Włącz piekarnik i ustaw temperaturę na 200°C. Zanim się nagrzeje, zetrzyj ser żółty na grubej tarce.",
-    },
-  ],
+  ingredients: [],
+  steps: [],
   attributes: [],
   status: "draft",
 };
@@ -115,7 +102,7 @@ const STEP_ORDER: RecipeCreationStep[] = [
 export const RecipeProvider: React.FC<RecipeProviderProps> = ({
   children,
   initialRecipe,
-  initialStep = "basics",
+  initialStep = "additional",
 }) => {
   const [recipe, setRecipe] = useState<ContextRecipe>(
     initialRecipe || defaultRecipe

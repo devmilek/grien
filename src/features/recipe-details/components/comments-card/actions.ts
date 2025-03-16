@@ -7,7 +7,6 @@ import { eq } from "drizzle-orm";
 import { commentSchema } from "./schema";
 
 export const getRecipeComments = async (recipeId: string) => {
-  console.log("recipeId", recipeId);
   const data = await db
     .select({
       id: comments.id,

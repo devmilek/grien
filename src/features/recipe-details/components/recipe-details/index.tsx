@@ -1,8 +1,8 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import db from "@/db";
-import { favouriteRecipes, recipeLikes, recipes } from "@/db/schema";
+import { recipes } from "@/db/schema";
 import { getCurrentSession } from "@/lib/auth/utils";
-import { and, eq } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import React from "react";
 import RecipeImage from "./recipe-image";
@@ -45,20 +45,6 @@ const RecipeDetails = async ({ slug }: { slug: string }) => {
     notFound();
   }
 
-  const likes = await db.$count(
-    favouriteRecipes,
-    eq(favouriteRecipes.recipeId, recipe.id)
-  );
-
-  const isUserLiked = user
-    ? (await db.query.recipeLikes.findFirst({
-        where: and(
-          eq(recipeLikes.recipeId, recipe.id),
-          eq(recipeLikes.userId, user.id)
-        ),
-      })) !== null
-    : false;
-
   return (
     <div className="mx-auto container">
       {/* hero */}
@@ -94,9 +80,7 @@ const RecipeDetails = async ({ slug }: { slug: string }) => {
             <RecipeActions
               recipe={recipe}
               steps={recipe.steps}
-              likes={likes}
               userId={user?.id}
-              isLiked={isUserLiked}
             />
           </div>
         </section>

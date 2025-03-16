@@ -85,7 +85,10 @@ const StepForm = ({
   return (
     <div className="rounded-xl p-6 bg-white" ref={formRef}>
       <Form {...form}>
-        <form className="flex gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+        <form
+          className="flex gap-4 flex-col md:flex-row"
+          onSubmit={form.handleSubmit(handleSubmit)}
+        >
           <FormField
             name="imageId"
             control={form.control}
@@ -96,7 +99,7 @@ const StepForm = ({
                   <Dropzone
                     onChange={field.onChange}
                     value={field.value}
-                    className="aspect-square max-w-52"
+                    className="md:aspect-square md:max-w-52"
                   />
                 </FormControl>
               </FormItem>

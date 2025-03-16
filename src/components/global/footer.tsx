@@ -26,11 +26,11 @@ const Footer = () => {
       name: "Diety",
       items: data?.diets,
     },
-  ];
+  ] as const;
 
   return (
     <footer className="container">
-      <div className="bg-white rounded-2xl p-12 flex gap-5">
+      <div className="bg-white rounded-2xl p-12 flex gap-5 flex-col">
         <div className="max-w-sm">
           <Link
             href="/"
@@ -44,15 +44,20 @@ const Footer = () => {
             jednym miejscu
           </p>
         </div>
-        <div className="flex justify-between flex-1">
-          {items.map((item) => (
-            <div key={item.name}>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 auto-cols-auto">
+          {items.map((item, index) => (
+            <div
+              key={item.name}
+              className={cn({
+                "lg:col-span-2": index === 2,
+              })}
+            >
               <h4 className="text-2xl font-display text-emerald-700">
                 {item.name}
               </h4>
               <ul
                 className={cn("mt-4 space-y-2 gap-x-4", {
-                  "grid grid-cols-2": item.name === "Kuchnie świata",
+                  "grid lg:grid-cols-2": item.name === "Kuchnie świata",
                 })}
               >
                 {item.items?.map((item) => (
@@ -68,9 +73,9 @@ const Footer = () => {
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-between py-8 text-sm text-muted-foreground">
+      <div className="flex items-start justify-between py-8 text-sm text-muted-foreground flex-col lg:flex-row">
         <p>© {new Date().getFullYear()} Grien. Wszelkie prawa zastrzeżone.</p>
-        <div className="flex gap-4">
+        <div className="flex gap-4 flex-wrap">
           <Link href="/regulamin">Regulamin</Link>
           {"|"}
           <Link href="/polityka-prywatnosci">Polityka prywatności</Link>

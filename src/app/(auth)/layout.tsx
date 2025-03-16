@@ -5,8 +5,8 @@ import React from "react";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <main className="grid grid-cols-2 h-screen p-6 gap-8">
-      <div className="h-full relative rounded-xl overflow-hidden">
+    <main className="grid lg:grid-cols-2 h-screen p-6 gap-8">
+      <div className="h-full relative rounded-xl overflow-hidden hidden lg:block">
         <div className="absolute size-full bg-gradient-to-t from-black/80 to-black/0 flex flex-col justify-between p-8">
           <Link
             href="/"

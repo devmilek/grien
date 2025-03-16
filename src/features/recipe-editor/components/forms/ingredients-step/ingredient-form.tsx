@@ -124,7 +124,7 @@ const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
     >
       <Form {...form}>
         <form
-          className="flex w-full gap-4 items-start"
+          className="flex w-full gap-4 items-start flex-col md:flex-row"
           onSubmit={form.handleSubmit(handleSubmit)}
         >
           {/* ...existing code... */}
@@ -132,7 +132,7 @@ const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
             name="name"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="flex-1">
+              <FormItem className="flex-1 w-full">
                 <FormLabel>Nazwa</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="np. Mąka" />
@@ -145,7 +145,7 @@ const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
             name="amount"
             control={form.control}
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full md:max-w-[150px]">
                 <FormLabel>Ilość</FormLabel>
                 <FormControl>
                   <NumberField
@@ -178,7 +178,7 @@ const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
             name="unit"
             control={form.control}
             render={({ field }) => (
-              <FormItem className="w-[200px]">
+              <FormItem className="w-full md:w-[200px]">
                 <FormLabel>Jednostka</FormLabel>
                 <FormControl>
                   <Input

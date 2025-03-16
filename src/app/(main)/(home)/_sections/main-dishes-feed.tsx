@@ -10,7 +10,7 @@ const MainDishesFeed = async () => {
   return (
     <div className="p-6 rounded-xl bg-white">
       <h2 className="text-3xl mb-6 font-display">Dania głowne</h2>
-      <div className="grid gap-4">
+      <div className="grid gap-8 md:gap-4">
         {data.map((recipe) => (
           <HorizontalCard key={recipe.id} {...recipe} />
         ))}

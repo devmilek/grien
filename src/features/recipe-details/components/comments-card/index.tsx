@@ -50,6 +50,7 @@ const CommentsCard = ({ recipeId }: { recipeId: string }) => {
                     {formatDistance(new Date(), comment.createdAt, {
                       addSuffix: true,
                       locale: pl,
+                      includeSeconds: true,
                     })}
                     )
                   </p>

@@ -150,7 +150,7 @@ export function SortableItem({
           </Button>
         </div>
       </header>
-      <div className="flex gap-4 items-center">
+      <div className="flex gap-4 sm:items-center flex-col-reverse sm:flex-row">
         <p className="text-muted-foreground text-sm flex-1">
           {step.description}
         </p>

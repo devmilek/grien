@@ -11,6 +11,7 @@ import { Metadata } from "next";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { getInitials } from "@/utils";
 import RecipesFeed from "@/features/recipes-feed/components/recipes-feed";
+import { pluralizeFollowers, pluralizeRecipes } from "@/utils/pluralize-words";
 
 interface ProfilePageProps {
   params: Promise<{
@@ -76,30 +77,34 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
             />
           </div>
         </div>
-        <div className="px-8 -mt-8 flex items-end gap-6">
-          <Avatar className="size-32 border-[6px] border-background bg-background z-20">
-            {user.image && <AvatarImage src={user.image} />}
+        <div className="px-8 flex gap-6">
+          <Avatar className="size-32 border-[6px] border-background bg-background z-20 -mt-8">
+            {user?.image && <AvatarImage src={user.image} />}
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
-          <div className="pb-4 flex justify-between flex-1">
+          <div className="flex justify-between gap-8 flex-1 pt-4">
             <div className="">
               <h1 className="font-display text-3xl">{user.name}</h1>
               <p className="text-muted-foreground">@{user.username}</p>
+              {user.bio && (
+                <p className="text-sm text-muted-foreground mt-2">{user.bio}</p>
+              )}
             </div>
             <div className="flex gap-8 items-center">
               <p className="font-bold">
                 {recipesCount}
                 <span className="text-muted-foreground text-sm font-normal ml-2">
-                  Przepisów
+                  {pluralizeRecipes(recipesCount)}
                 </span>
               </p>
               <p className="font-bold">
                 {followersCount}
                 <span className="text-muted-foreground text-sm font-normal ml-2">
-                  Obserwujących
+                  {pluralizeFollowers(followersCount)}
                 </span>
               </p>
-              <Button>Obserwuj</Button>
+
+              <Button variant="outline">Obserwuj</Button>
             </div>
           </div>
         </div>

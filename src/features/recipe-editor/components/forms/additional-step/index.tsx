@@ -32,7 +32,7 @@ const AdditionalStep = () => {
       className="max-w-5xl mx-auto"
     >
       <h2 className="font-display text-3xl mb-4">Dodatkowe informacje</h2>
-      <div className="gap-10 grid p-12 rounded-xl bg-white">
+      <div className="gap-10 grid p-8 md:p-12 rounded-xl bg-white">
         {pending && (
           <div
             className="w-full p-8 flex justify-center"
@@ -46,7 +46,7 @@ const AdditionalStep = () => {
             <h3 id={`group-${index}`} className="text-xl font-semibold mb-6">
               {group.name}
             </h3>
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {group?.items?.map((item) => (
                 <div key={item.id} className="flex items-center gap-2">
                   <Checkbox

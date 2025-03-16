@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { SendIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { commentSchema, CommentSchema } from "./schema";
+import { queryClient } from "@/components/providers/query-provider";
 
 const CommentForm = ({ recipeId }: { recipeId: string }) => {
   const form = useForm<CommentSchema>({
@@ -27,6 +28,9 @@ const CommentForm = ({ recipeId }: { recipeId: string }) => {
     if (status === 201) {
       form.reset();
       toast.success("Komentarz został dodany");
+      queryClient.invalidateQueries({
+        queryKey: ["comments"],
+      });
     } else {
       toast.error(message);
     }
