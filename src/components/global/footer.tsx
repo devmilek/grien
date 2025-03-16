@@ -30,7 +30,7 @@ const Footer = () => {
 
   return (
     <footer className="container">
-      <div className="bg-white rounded-2xl p-12 flex gap-5 flex-col">
+      <div className="bg-white rounded-2xl p-6 sm:p-12 flex gap-5 flex-col">
         <div className="max-w-sm">
           <Link
             href="/"

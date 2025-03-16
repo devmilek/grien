@@ -1,10 +1,9 @@
-import { BookmarkIcon, ChefHat, SearchIcon } from "lucide-react";
+import { BookmarkIcon, ChefHat, SearchIcon, UserIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import NavItems from "./nav-items";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import db from "@/db";
 import UserButton from "./user-button";
 import { getCurrentSession } from "@/lib/auth/utils";
 import NavbarSearch from "./navbar-search";
@@ -12,7 +11,6 @@ import MobileNav from "./mobile-nav";
 
 const Navbar = async () => {
   const { user } = await getCurrentSession();
-  const categories = await db.query.categories.findMany();
 
   return (
     <header className="h-16 border-b fixed left-0 w-full top-0 bg-white z-50">
@@ -24,11 +22,25 @@ const Navbar = async () => {
           <ChefHat />
           <span className="text-2xl text-foreground">grien</span>
         </Link>
-        <NavItems className="mr-auto hidden lg:flex" categories={categories} />
-        <MobileNav />
+        <NavItems className="mr-auto hidden lg:flex" />
+        <div className="flex gap-4 flex-row-reverse w-full items-center ml-auto">
+          <div className="lg:hidden">
+            {user ? (
+              <UserButton user={user} />
+            ) : (
+              <Button variant="outline" size="icon">
+                <Link href="/logowanie">
+                  <span className="sr-only">Zaloguj się</span>
+                  <UserIcon />
+                </Link>
+              </Button>
+            )}
+          </div>
+          <MobileNav />
+        </div>
         <div className="gap-2 hidden lg:flex">
           <NavbarSearch>
-            <div className="relative">
+            <div className="relative w-[140px]">
               <Input className="peer ps-9" placeholder="Wyszukaj..." />
               <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                 <SearchIcon size={16} aria-hidden="true" />

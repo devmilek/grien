@@ -23,7 +23,10 @@ const ImageLicenceBadge = ({
     <HoverCard>
       <HoverCardTrigger asChild>
         <Badge
-          className={cn("bg-background cursor-pointer", className)}
+          className={cn(
+            "bg-background cursor-pointer pointer-events-auto",
+            className
+          )}
           variant="outline"
         >
           <CreativeCommons />

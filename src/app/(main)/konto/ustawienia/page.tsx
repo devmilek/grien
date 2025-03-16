@@ -19,7 +19,7 @@ const SettingsPage = async () => {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-5xl container">
       <h1 className="text-3xl font-display mb-8">Ustawienia</h1>
       <UserSettings />
     </div>

@@ -20,7 +20,7 @@ const ProfilePage = async () => {
 
   return (
     <div className="container">
-      <UserProfileHeaderSection />
+      <UserProfileHeaderSection userId={user.id} />
       {user.username && <RecipesFeed username={user.username} />}
     </div>
   );

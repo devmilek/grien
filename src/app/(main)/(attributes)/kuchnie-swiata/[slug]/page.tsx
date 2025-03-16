@@ -3,9 +3,9 @@ import { attributes } from "@/db/schema";
 import RecipesFeed from "@/features/recipes-feed/components/recipes-feed";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { and, eq } from "drizzle-orm";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import React from "react";
+import AttributeHero from "../../_components/attribute-hero";
 
 interface CategoriesPageProps {
   params: Promise<{ slug: string }>;
@@ -38,13 +38,7 @@ const CategoriesPage = async ({ params }: CategoriesPageProps) => {
 
   return (
     <div className="container space-y-8">
-      <div className="h-96 w-full relative overflow-hidden rounded-xl">
-        <div className="z-40 bg-black/60 size-full absolute flex items-center justify-center flex-col text-white">
-          <h1 className="font-display text-5xl mt-1">{cuisine.name}</h1>
-          <p className="text-sm mt-4">{cuisine.description}</p>
-        </div>
-        <Image src={`/food.jpg`} alt="" fill objectFit="cover" />
-      </div>
+      <AttributeHero name={cuisine.name} description={cuisine.description} />
       <RecipesFeed dietsSlugs={[cuisine.slug]} />
     </div>
   );

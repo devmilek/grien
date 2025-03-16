@@ -25,8 +25,8 @@ const UserSettings = async () => {
   );
 
   return (
-    <div className="p-8 rounded-xl bg-white space-y-8">
-      <div className="grid gap-8 grid-cols-2">
+    <div className="p-4 md:p-8 rounded-xl bg-white space-y-8">
+      <div className="grid gap-8 md:grid-cols-2">
         <div>
           <h2 className="font-semibold">Edytuj profil</h2>
           <p className="text-sm text-muted-foreground">
@@ -38,7 +38,7 @@ const UserSettings = async () => {
         </div>
       </div>
       <Separator />
-      <div className="grid gap-8 grid-cols-2">
+      <div className="grid gap-8 md:grid-cols-2">
         <div>
           <h2 className="font-semibold">Zmień hasło</h2>
           <p className="text-sm text-muted-foreground">
@@ -50,7 +50,7 @@ const UserSettings = async () => {
         <ChangePasswordForm isPasswordSet={isPasswordSet} />
       </div>
       <Separator />
-      <div className="grid gap-8 grid-cols-2">
+      <div className="grid gap-8 md:grid-cols-2">
         <div>
           <h2 className="font-semibold">Połączone konta</h2>
           <p className="text-sm text-muted-foreground">
@@ -61,7 +61,7 @@ const UserSettings = async () => {
         <ConnectedAccountsForm accounts={accounts} />
       </div>
       <Separator />
-      <div className="grid gap-8 grid-cols-2">
+      <div className="grid gap-8 md:grid-cols-2">
         <div>
           <h2 className="font-semibold">Usuń konto</h2>
           <p className="text-sm text-muted-foreground">

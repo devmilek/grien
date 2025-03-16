@@ -13,7 +13,7 @@ const RecipesFeed = ({
 }: UseFilteredRecipesProps) => {
   return (
     <div className="flex gap-8">
-      <div className="w-2xs">
+      <div className="w-2xs hidden lg:block">
         <div className="sticky top-20">
           <FacatedSearch
             showCategories={!categorySlug}

@@ -24,7 +24,7 @@ const MobileNav = () => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline" size="icon" className="lg:hidden ml-auto">
+        <Button variant="outline" size="icon" className="lg:hidden">
           <MenuIcon />
         </Button>
       </SheetTrigger>

@@ -1,10 +1,11 @@
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { SearchIcon } from "lucide-react";
 import { parseAsString, useQueryState } from "nuqs";
 import React from "react";
 import { useDebounceCallback } from "usehooks-ts";
 
-const SearchInput = () => {
+const SearchInput = ({ className }: { className?: string }) => {
   const [query, setQuery] = useQueryState(
     "szukaj",
     parseAsString.withDefault("").withOptions({
@@ -17,7 +18,7 @@ const SearchInput = () => {
   }, 500);
 
   return (
-    <div className="relative">
+    <div className={cn("relative", className)}>
       <Input
         className="peer ps-9"
         placeholder="Wyszukaj..."

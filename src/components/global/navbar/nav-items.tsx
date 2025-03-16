@@ -1,7 +1,5 @@
 "use client";
 
-import { Category } from "@/db/schema";
-
 import React from "react";
 import {
   NavigationMenu,
@@ -10,13 +8,7 @@ import {
 import { useAttributes } from "@/hooks/use-attributes";
 import NavItemsItem from "./nav-items-item";
 
-const NavItems = ({
-  className,
-  categories,
-}: {
-  className?: string;
-  categories: Category[];
-}) => {
+const NavItems = ({ className }: { className?: string }) => {
   const { data } = useAttributes();
 
   return (
@@ -25,7 +17,7 @@ const NavItems = ({
         <NavigationMenuList>
           <NavItemsItem
             title="Kategorie"
-            items={categories}
+            items={data?.categories}
             type="categories"
           />
           <NavItemsItem

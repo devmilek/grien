@@ -9,6 +9,7 @@ import { useInView } from "react-intersection-observer";
 import { CookingPot, Loader2 } from "lucide-react";
 import HorizontalCard from "@/components/cards/horizontal-card";
 import SearchInput from "./search-input";
+import MobileFacatedSearch from "./facated-search/mobile-facated-search";
 
 const RecipesList = ({
   categorySlug,
@@ -39,9 +40,12 @@ const RecipesList = ({
 
   return (
     <section className="p-8 rounded-2xl bg-white">
-      <header className="flex justify-between items-center">
-        <h1 className="text-3xl font-display">Wyniki</h1>
-        {!query && <SearchInput />}
+      <header className="flex justify-between flex-col w-full items-start gap-4 sm:flex-row">
+        <div className="flex items-center gap-3 flex-row-reverse justify-between w-full lg:flex-row lg:justify-start">
+          <MobileFacatedSearch className="lg:hidden" />
+          <h1 className="text-3xl font-display">Wyniki</h1>
+        </div>
+        {!query && <SearchInput className="w-full sm:w-max" />}
       </header>
       {isLoading && (
         <div className="p-4 pt-12 flex justify-center">
