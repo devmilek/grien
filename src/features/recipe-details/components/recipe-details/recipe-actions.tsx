@@ -9,16 +9,18 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { HeartIcon, ShareIcon } from "lucide-react";
+import { ShareIcon } from "lucide-react";
 import AddRecipeToCollectionModal from "../add-recipe-to-collection-modal";
 import { Image, Recipe, RecipeStep } from "@/db/schema";
 import { toast } from "sonner";
+import LikeRecipeButton from "./like-recipe-button";
 
 const RecipeActions = ({
   recipe,
   likes,
   steps,
   userId,
+  isLiked,
 }: {
   recipe: Recipe;
   steps: (RecipeStep & {
@@ -26,6 +28,7 @@ const RecipeActions = ({
   })[];
   likes: number;
   userId?: string | null;
+  isLiked: boolean;
 }) => {
   const isOwner = userId && userId === recipe.userId;
 
@@ -55,10 +58,11 @@ const RecipeActions = ({
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="ghost">
-                <HeartIcon />
-                {likes}
-              </Button>
+              <LikeRecipeButton
+                likesCount={likes}
+                recipeId={recipe.id}
+                isLiked={isLiked}
+              />
             </TooltipTrigger>
             <TooltipContent>Polub przepis</TooltipContent>
           </Tooltip>

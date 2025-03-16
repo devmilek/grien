@@ -99,7 +99,7 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
                   Obserwujących
                 </span>
               </p>
-              <Button variant="outline">Edytuj profil</Button>
+              <Button>Obserwuj</Button>
             </div>
           </div>
         </div>

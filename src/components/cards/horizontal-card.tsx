@@ -30,12 +30,14 @@ const HorizontalCard = ({
       )}
     >
       <div className="aspect-[4/3] w-full sm:w-auto sm:h-40 md:h-52 shrink-0 relative rounded-lg overflow-hidden">
-        <Image
-          src={imageSrc}
-          alt={"Zdjęcie przepisu " + name}
-          fill
-          className="group-hover:scale-105 transition-transform transform object-cover"
-        />
+        <Link href={"/przepisy/" + slug}>
+          <Image
+            src={imageSrc}
+            alt={"Zdjęcie przepisu " + name}
+            fill
+            className="hover:scale-105 transition-transform transform object-cover"
+          />
+        </Link>
         {licence && (
           <ImageLicenceBadge
             licence={licence}
@@ -61,13 +63,16 @@ const HorizontalCard = ({
         <p className="line-clamp-2 text-muted-foreground text-sm mt-1">
           {description}
         </p>
-        <div className="flex items-center gap-2 mt-4">
+        <Link
+          href={"/kucharze/" + user.username}
+          className="flex items-center gap-2 mt-4"
+        >
           <Avatar className="size-7">
             {user.image && <AvatarImage src={user.image} alt={user.name} />}
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
           <p className="text-sm font-medium">{user.name}</p>
-        </div>
+        </Link>
       </div>
     </div>
   );
