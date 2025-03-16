@@ -12,10 +12,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { Attribute, AttributesType, Category } from "@/db/schema";
 import { useAttributes } from "@/hooks/use-attributes";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -35,6 +40,14 @@ const MobileNav = () => {
             Znajdziesz tutaj wszystkie kategorie i funkcje serwisu
           </DialogDescription>
         </DialogHeader>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-display text-xl ">Menu</h2>
+          <SheetClose asChild>
+            <Button variant="ghost" size="icon">
+              <X className="h-5 w-5" />
+            </Button>
+          </SheetClose>
+        </div>
         <div>
           <Accordion type="single" collapsible>
             <MobileNavItem
