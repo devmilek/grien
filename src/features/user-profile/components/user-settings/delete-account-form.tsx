@@ -32,7 +32,9 @@ const DeleteAccountForm = () => {
 
     setIsLoading(false);
     setIsOpen(false);
-    toast.success("Na twoje konto zostało wysłane potwierdzenie usunięcia.");
+    toast.success(
+      "Na twój adres e-mail zostało wysłane potwierdzenie usunięcia konta."
+    );
   };
   return (
     <div className="p-6 rounded-lg border flex flex-col items-end gap-4">

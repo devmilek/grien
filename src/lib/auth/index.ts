@@ -4,6 +4,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { username } from "better-auth/plugins";
 import { sendEmail } from "../nodemailer";
 import { openAPI } from "better-auth/plugins";
+import { cleanupAfterUserDelete } from "./cleanup-after-user-delete";
 
 const DISABLED_USERNAMES = [
   "admin",
@@ -59,9 +60,8 @@ export const auth = betterAuth({
           text: `Kliknij w link, aby usunąć konto: ${url}`,
         });
       },
-      // TODO: implement after delete account
-      afterDeleteAccount: async () => {
-        console.log("User deleted");
+      beforeDelete: async (user) => {
+        await cleanupAfterUserDelete(user);
       },
     },
   },

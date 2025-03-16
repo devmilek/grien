@@ -5,6 +5,7 @@ import {
   pgTable,
   primaryKey,
   smallint,
+  text,
   timestamp,
   uuid,
   varchar,
@@ -136,9 +137,7 @@ export const recipeSteps = pgTable("recipe_steps", {
     .references(() => recipes.id, {
       onDelete: "cascade",
     }),
-  content: varchar("content", {
-    length: 500,
-  }).notNull(),
+  content: text("content").notNull(),
   order: smallint("order").notNull(),
   imageId: uuid("image").references(() => images.id, {
     onDelete: "set null",

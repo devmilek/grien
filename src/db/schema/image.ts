@@ -12,7 +12,9 @@ export const images = pgTable("images", {
   url: varchar("url").notNull().unique(),
   key: varchar("key", {
     length: 255,
-  }),
+  })
+    .notNull()
+    .unique(),
   mimeType: varchar("mimeType", {
     length: 255,
   }),
