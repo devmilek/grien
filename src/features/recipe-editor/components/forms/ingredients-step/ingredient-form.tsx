@@ -181,7 +181,11 @@ const IngredientForm = ({ id, onSubmit, onCancel }: IngredientFormProps) => {
               <FormItem className="w-[200px]">
                 <FormLabel>Jednostka</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="np. gram" />
+                  <Input
+                    {...field}
+                    value={field.value ?? ""}
+                    placeholder="np. gram"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const completeProfileSchema = z.object({
-  imageUrl: z.string().nullable(),
   name: z.string().min(3, "Imię jest za krótkie").max(30, {
     message: "Imię jest za długie",
   }),

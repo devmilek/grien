@@ -27,7 +27,6 @@ const CompleteProfileForm = ({ user }: { user: User }) => {
   const form = useForm<CompleteProfileSchema>({
     resolver: zodResolver(completeProfileSchema),
     defaultValues: {
-      imageUrl: user.image,
       name: user.name,
       username: user.username || "",
       bio: user.bio || "",
@@ -36,7 +35,6 @@ const CompleteProfileForm = ({ user }: { user: User }) => {
 
   const onSubmit = async (values: CompleteProfileSchema) => {
     const { error } = await authClient.updateUser({
-      image: values.imageUrl,
       name: values.name,
       username: user.username === values.username ? undefined : values.username,
     });
@@ -53,65 +51,56 @@ const CompleteProfileForm = ({ user }: { user: User }) => {
   };
 
   return (
-    <Form {...form}>
-      <form className="gap-4 grid" onSubmit={form.handleSubmit(onSubmit)}>
-        <FormField
-          name="imageUrl"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem className="mx-auto">
-              <FormControl>
-                <AvatarUploader value={field.value} onChange={field.onChange} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="name"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nazwa profilu *</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="username"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nazwa użytkownika *</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormDescription>
-                Pozwala na łatwiejsze znalezienie twojego profilu.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          name="bio"
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bio</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button>Kontynuuj</Button>
-      </form>
-    </Form>
+    <div className="space-y-4">
+      <AvatarUploader src={user.image} />
+      <Form {...form}>
+        <form className="gap-4 grid" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name="name"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nazwa profilu *</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="username"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nazwa użytkownika *</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormDescription>
+                  Pozwala na łatwiejsze znalezienie twojego profilu.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            name="bio"
+            control={form.control}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Bio</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button>Kontynuuj</Button>
+        </form>
+      </Form>
+    </div>
   );
 };
 

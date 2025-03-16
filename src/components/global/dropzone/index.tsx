@@ -14,7 +14,7 @@ const Dropzone = ({
   onChange,
   className,
 }: {
-  value?: string;
+  value?: string | null;
   onChange: (src?: string) => void;
   className?: string;
 }) => {

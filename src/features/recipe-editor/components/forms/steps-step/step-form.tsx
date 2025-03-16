@@ -93,7 +93,11 @@ const StepForm = ({
               <FormItem>
                 <FormLabel>Zdjęcie</FormLabel>
                 <FormControl>
-                  <Dropzone className="aspect-square max-w-52" {...field} />
+                  <Dropzone
+                    onChange={field.onChange}
+                    value={field.value}
+                    className="aspect-square max-w-52"
+                  />
                 </FormControl>
               </FormItem>
             )}
