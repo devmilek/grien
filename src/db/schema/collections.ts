@@ -51,10 +51,10 @@ export type FavouriteRecipeInsert = typeof favouriteRecipes.$inferInsert;
 export const collections = pgTable("collections", {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({
-    length: 100,
+    length: 50,
   }).notNull(),
   slug: varchar({
-    length: 100,
+    length: 50,
   })
     .notNull()
     .unique(),

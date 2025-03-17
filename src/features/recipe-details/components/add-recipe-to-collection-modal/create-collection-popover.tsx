@@ -23,7 +23,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { queryClient } from "@/components/providers/query-provider";
 import { createCollectionSchema, CreateCollectionSchema } from "./schema";
-import { createCollection } from "./actions";
+import { honoClient } from "@/lib/hono-client";
 
 const CreateCollectionPopover = () => {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -36,18 +36,26 @@ const CreateCollectionPopover = () => {
   });
 
   const onSubmit = async (values: CreateCollectionSchema) => {
-    const { status, message } = await createCollection(values);
+    const res = await honoClient.api.collections.$post({
+      json: {
+        name: values.name,
+        isPublic: values.public,
+      },
+    });
 
-    if (status === 200) {
-      toast.success("Kolekcja została utworzona");
-      await queryClient.invalidateQueries({
-        queryKey: ["collections"],
-      });
-      form.reset();
-      setIsOpen(false);
-    } else {
-      toast.error(message);
+    if (!res.ok) {
+      const data = await res.json();
+      return toast.error(data.message);
     }
+
+    const data = await res.json();
+
+    toast.success(data.message);
+    await queryClient.invalidateQueries({
+      queryKey: ["collections"],
+    });
+    form.reset();
+    setIsOpen(false);
   };
 
   const isLoading = form.formState.isSubmitting;
@@ -76,12 +84,16 @@ const CreateCollectionPopover = () => {
               )}
             />
             <FormField
-              name="name"
+              name="public"
               control={form.control}
               render={({ field }) => (
                 <FormItem className="flex items-center">
                   <FormControl>
-                    <Switch {...field} disabled={isLoading} />
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isLoading}
+                    />
                   </FormControl>
                   <div>
                     <FormLabel>Publiczna</FormLabel>
