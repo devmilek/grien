@@ -10,44 +10,6 @@ import { users } from "./users";
 import { relations } from "drizzle-orm";
 import { recipes } from "./recipes";
 
-export const favouriteRecipes = pgTable(
-  "favourite_recipes",
-  {
-    userId: uuid()
-      .notNull()
-      .references(() => users.id, {
-        onDelete: "cascade",
-      }),
-    recipeId: uuid()
-      .notNull()
-      .references(() => recipes.id, {
-        onDelete: "cascade",
-      }),
-  },
-  (t) => [
-    primaryKey({
-      columns: [t.userId, t.recipeId],
-    }),
-  ]
-);
-
-export const favouriteRecipesRelations = relations(
-  favouriteRecipes,
-  ({ one }) => ({
-    user: one(users, {
-      fields: [favouriteRecipes.userId],
-      references: [users.id],
-    }),
-    recipe: one(recipes, {
-      fields: [favouriteRecipes.recipeId],
-      references: [recipes.id],
-    }),
-  })
-);
-
-export type FavouriteRecipe = typeof favouriteRecipes.$inferSelect;
-export type FavouriteRecipeInsert = typeof favouriteRecipes.$inferInsert;
-
 export const collections = pgTable("collections", {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar({

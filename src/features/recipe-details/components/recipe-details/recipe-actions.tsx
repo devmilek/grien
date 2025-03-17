@@ -5,7 +5,7 @@ import CookingModeModal from "../cooking-mode-modal";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ShareIcon } from "lucide-react";
-import AddRecipeToCollectionModal from "../add-recipe-to-collection-modal";
+import AddRecipeToCollectionModal from "../../../collections/components/add-recipe-to-collection-modal";
 import { Image, Recipe, RecipeStep } from "@/db/schema";
 import { toast } from "sonner";
 

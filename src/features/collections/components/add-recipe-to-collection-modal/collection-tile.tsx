@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { honoClient } from "@/lib/hono-client";
 import { getInitials } from "@/utils";
 import { pluralizeRecipes } from "@/utils/pluralize-words";
-import { Loader2 } from "lucide-react";
+import { Loader2, LockIcon } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -15,12 +15,14 @@ export const CollectionTile = ({
   count,
   checked,
   recipeId,
+  isPublic,
 }: {
   id: string;
   name: string;
   count: number;
   checked?: boolean;
   recipeId: string;
+  isPublic: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -83,7 +85,12 @@ export const CollectionTile = ({
         {getInitials(name)}
       </div>
       <div className="flex-1">
-        <p className="font-medium text-sm">{name}</p>
+        <p className="font-medium text-sm">
+          {name}{" "}
+          {!isPublic && (
+            <LockIcon className="size-3 inline ml-1 text-muted-foreground" />
+          )}{" "}
+        </p>
         <p className="text-sm text-muted-foreground">
           {count} {pluralizeRecipes(count)}
         </p>

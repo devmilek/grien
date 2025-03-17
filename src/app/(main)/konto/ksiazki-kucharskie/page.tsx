@@ -1,12 +1,13 @@
 import db from "@/db";
-import { collections, collectionsRecipes, favouriteRecipes } from "@/db/schema";
+import { collections, collectionsRecipes, recipeLikes } from "@/db/schema";
+import CreateCollectionModal from "@/features/collections/components/create-collection-modal";
 import { getCurrentSession } from "@/lib/auth/utils";
 import { cn } from "@/lib/utils";
 import { getInitials } from "@/utils";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { pluralizeRecipes } from "@/utils/pluralize-words";
 import { countDistinct, eq, getTableColumns, sql } from "drizzle-orm";
-import { HeartIcon } from "lucide-react";
+import { HeartIcon, PlusIcon } from "lucide-react";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -50,8 +51,8 @@ const CollectionsPage = async () => {
     .groupBy(collections.id);
 
   const favouriteRecipesCount = await db.$count(
-    favouriteRecipes,
-    eq(favouriteRecipes.userId, user.id)
+    recipeLikes,
+    eq(recipeLikes.userId, user.id)
   );
 
   return (
@@ -121,6 +122,11 @@ const CollectionsPage = async () => {
             </Link>
           );
         })}
+        <CreateCollectionModal>
+          <div className="border aspect-square border-dashed rounded-lg p-5 h-max flex items-center justify-center hover:bg-muted transition">
+            <PlusIcon className="size-4" />
+          </div>
+        </CreateCollectionModal>
       </div>
     </div>
   );

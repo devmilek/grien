@@ -70,6 +70,7 @@ const AddRecipeToCollectionModal = ({ recipeId }: { recipeId: string }) => {
               checked={collection.containsRecipe}
               id={collection.id}
               recipeId={recipeId}
+              isPublic={collection.public}
             />
           ))}
         </ScrollArea>

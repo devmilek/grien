@@ -304,3 +304,28 @@ const app = new Hono()
   );
 
 export default app;
+
+// POST /collections
+// Tworzy nową kolekcję (wymaga tokenu).
+// Body: name, description?
+
+// GET /users/me/collections
+// Pobiera kolekcje zalogowanego użytkownika (wymaga tokenu).
+
+// GET /collections/{id}
+// Pobiera szczegóły kolekcji (publiczne lub prywatne w zależności od uprawnień).
+
+// PUT/PATCH /collections/{id}
+// Aktualizuje kolekcję (tylko autor; wymaga tokenu).
+
+// DELETE /collections/{id}
+// Usuwa kolekcję (tylko autor; wymaga tokenu).
+
+// POST /collections/{collectionId}/recipes/{recipeId}
+// Dodaje przepis do kolekcji (wymaga tokenu).
+
+// DELETE /collections/{collectionId}/recipes/{recipeId}
+// Usuwa przepis z kolekcji (wymaga tokenu).
+
+// GET /collections/{collectionId}/recipes
+// Pobiera przepisy z kolekcji (publiczne lub prywatne).
