@@ -9,6 +9,7 @@ export interface UseFilteredRecipesProps {
   occassionsSlug?: string[];
   username?: string;
   query?: string;
+  collectionSlug?: string;
 }
 
 export const useFilteredRecipes = ({
@@ -18,6 +19,7 @@ export const useFilteredRecipes = ({
   occassionsSlug,
   username,
   query,
+  collectionSlug,
 }: UseFilteredRecipesProps) => {
   const {
     categorySlug: categorySlugParam,
@@ -38,6 +40,7 @@ export const useFilteredRecipes = ({
           occassionSlugs: occassionsSlug || occassionSlugParam,
           query: query || queryParam,
           username,
+          collectionSlug,
         },
       ],
       queryFn: async ({ pageParam }) => {

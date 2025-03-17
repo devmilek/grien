@@ -10,6 +10,7 @@ const RecipesFeed = ({
   occassionsSlug,
   username,
   query,
+  collectionSlug,
 }: UseFilteredRecipesProps) => {
   return (
     <div className="flex gap-8">
@@ -31,6 +32,7 @@ const RecipesFeed = ({
           occassionsSlug={occassionsSlug}
           username={username}
           query={query}
+          collectionSlug={collectionSlug}
         />
       </div>
     </div>

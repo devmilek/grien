@@ -5,6 +5,7 @@ import { z } from "zod";
 import {
   attributes,
   categories,
+  collectionsRecipes,
   images,
   licences,
   recipeAttributes,
@@ -21,6 +22,7 @@ const paramsSchema = z.object({
   occassionSlugs: z.array(z.string()).default([]),
   dietSlugs: z.array(z.string()).default([]),
   page: z.number().int().positive().default(1),
+  collectionSlug: z.string().optional(),
 });
 
 const LIMIT = 10;
@@ -37,6 +39,7 @@ const app = new Hono().post(
       occassionSlugs,
       searchQuery,
       username,
+      collectionSlug,
     } = c.req.valid("json");
 
     console.log({
@@ -52,7 +55,7 @@ const app = new Hono().post(
     const attributesSlugs = [...cuisineSlugs, ...occassionSlugs, ...dietSlugs];
 
     try {
-      const data = await db
+      const dbQuery = db
         .selectDistinct({
           ...getTableColumns(recipes),
           category: {
@@ -93,6 +96,8 @@ const app = new Hono().post(
         )
         .limit(LIMIT)
         .offset((page - 1) * LIMIT);
+
+      const data = await dbQuery;
 
       return c.json(data);
     } catch {
