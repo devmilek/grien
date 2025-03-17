@@ -51,6 +51,10 @@ const ProfilePage = async ({ params }: ProfilePageProps) => {
   return (
     <div className="container">
       <UserProfileHeaderSection userId={user.id} />
+      <div className="p-8 mb-6 bg-white rounded-2xl">
+        <h2 className="font-display text-xl mb-3">Bio</h2>
+        <p className="text-sm text-muted-foreground">{user.bio}</p>
+      </div>
       {user.username && <RecipesFeed username={user.username} />}
     </div>
   );
