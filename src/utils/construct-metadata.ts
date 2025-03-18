@@ -5,8 +5,8 @@ const HOME_DOMAIN = process.env.NEXT_PUBLIC_BASE_URL!;
 export function constructMetadata({
   title,
   fullTitle,
-  description = "Dub.co is the open-source link management platform for modern marketing teams to create marketing campaigns, link sharing features, and referral programs.",
-  image = "https://assets.dub.co/thumbnail.jpg",
+  description = "Grien to platforma dla kucharzy, na której możesz tworzyć, udostępniać i przeszukiwać przepisy kulinarne. Dołącz do naszej społeczności już dziś!",
+  image = "/opengraph.png",
   url,
   canonicalUrl,
   noIndex = false,
