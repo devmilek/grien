@@ -7,6 +7,7 @@ import QuoteCard from "./_sections/quote-card";
 import DrinksFeed from "./_sections/drinks-feed";
 import { constructMetadata } from "@/utils/construct-metadata";
 import { Metadata } from "next";
+import UsersFeed from "./_sections/users-feed";
 
 export const metadata: Metadata = constructMetadata();
 
@@ -22,6 +23,7 @@ export default async function Home() {
           <MainDishesFeed />
         </div>
         <div className="lg:w-[350px] space-y-4">
+          <UsersFeed />
           <QuoteCard />
           <DrinksFeed />
         </div>

@@ -71,6 +71,7 @@ export async function getRecipesForCards({
     .leftJoin(licences, eq(recipes.licenceId, licences.id))
     .where(
       and(
+        eq(recipes.status, "published"),
         categorySlug ? eq(categories.slug, categorySlug) : undefined,
         userId ? eq(users.id, userId) : undefined
       )

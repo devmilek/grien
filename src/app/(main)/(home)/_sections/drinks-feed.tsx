@@ -5,6 +5,7 @@ import { getRecipesForCards } from "@/actions/get-recipes-for-cards";
 const DrinksFeed = async () => {
   const data = await getRecipesForCards({
     limit: 5,
+    categorySlug: "napoje",
   });
   return (
     <div className="p-6 bg-white rounded-xl">
