@@ -1,5 +1,5 @@
+import db from "@/db";
 import type { MetadataRoute } from "next";
-import db from "./db";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
