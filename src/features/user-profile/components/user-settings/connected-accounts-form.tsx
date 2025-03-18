@@ -39,8 +39,17 @@ const ConnectedAccountsForm = ({
 
         const onClick = async () => {
           if (isConnected) {
+            const accountId = accounts.find(
+              (account) => account.provider === provider.name
+            )?.accountId;
+
+            if (!accountId) {
+              toast.error("Nie znaleziono konta");
+              return;
+            }
             const { error } = await authClient.unlinkAccount({
               providerId: provider.name,
+              accountId,
             });
 
             if (error) {
