@@ -7,7 +7,7 @@ import { auth } from ".";
 
 export const authClient = createAuthClient({
   plugins: [usernameClient(), inferAdditionalFields<typeof auth>()],
-  baseURL: "http://localhost:3000", // the base url of your auth server
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });
 
 type ErrorTypes = Partial<
