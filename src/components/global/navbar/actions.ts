@@ -2,7 +2,7 @@
 
 import db from "@/db";
 import { recipes } from "@/db/schema";
-import { and, ilike, isNotNull, or } from "drizzle-orm";
+import { and, eq, ilike, isNotNull, or } from "drizzle-orm";
 
 export const navbarSearchRecipes = async (query?: string) => {
   if (!query) return [];
@@ -21,6 +21,7 @@ export const navbarSearchRecipes = async (query?: string) => {
     },
     where: and(
       isNotNull(recipes.imageId),
+      eq(recipes.status, "published"),
       or(
         ilike(recipes.name, `%${query}%`),
         ilike(recipes.description, `%${query}%`)

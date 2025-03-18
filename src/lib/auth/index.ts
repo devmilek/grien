@@ -15,6 +15,7 @@ const DISABLED_USERNAMES = [
 ];
 
 export const auth = betterAuth({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   plugins: [
     openAPI(),
     username({

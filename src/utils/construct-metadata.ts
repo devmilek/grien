@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-const HOME_DOMAIN = process.env.BETTER_AUTH_URL!;
+const HOME_DOMAIN = process.env.NEXT_PUBLIC_BASE_URL!;
 
 export function constructMetadata({
   title,

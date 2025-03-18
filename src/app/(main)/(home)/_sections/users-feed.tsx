@@ -12,7 +12,7 @@ const UsersFeed = async () => {
       ...getTableColumns(users),
     })
     .from(users)
-    .limit(5);
+    .limit(3);
 
   return (
     <div className="p-6 bg-white rounded-xl">

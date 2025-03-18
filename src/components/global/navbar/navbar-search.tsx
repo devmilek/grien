@@ -63,9 +63,9 @@ const NavbarSearch = ({ children }: { children: React.ReactNode }) => {
     setIsOpen(false);
   };
 
-  const selectRecipe = (categorySlug: string, recipeSlug: string) => {
+  const selectRecipe = (recipeSlug: string) => {
     addSearch(query);
-    router.push(`/${categorySlug}/${recipeSlug}`);
+    router.push(`/przepisy/${recipeSlug}`);
     setQuery("");
     setIsOpen(false);
   };
@@ -123,9 +123,7 @@ const NavbarSearch = ({ children }: { children: React.ReactNode }) => {
               {data.map((recipe) => (
                 <CommandItem
                   key={recipe.id}
-                  onSelect={() =>
-                    selectRecipe(recipe.category.slug, recipe.slug)
-                  }
+                  onSelect={() => selectRecipe(recipe.slug)}
                 >
                   {recipe.image && (
                     <Image
