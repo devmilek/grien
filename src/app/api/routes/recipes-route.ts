@@ -22,7 +22,7 @@ const paramsSchema = z.object({
   occassionSlugs: z.array(z.string()).default([]),
   dietSlugs: z.array(z.string()).default([]),
   page: z.number().int().positive().default(1),
-  collectionSlug: z.string().optional(),
+  collectionId: z.string().uuid().optional(),
 });
 
 const LIMIT = 10;
@@ -39,7 +39,7 @@ const app = new Hono().post(
       occassionSlugs,
       searchQuery,
       username,
-      collectionSlug,
+      collectionId,
     } = c.req.valid("json");
 
     console.log({
@@ -81,6 +81,7 @@ const app = new Hono().post(
         .leftJoin(attributes, eq(recipeAttributes.attributeId, attributes.id))
         .where(
           and(
+            eq(recipes.status, "published"),
             searchQuery
               ? or(
                   ilike(recipes.name, `%${searchQuery}%`),
@@ -96,6 +97,15 @@ const app = new Hono().post(
         )
         .limit(LIMIT)
         .offset((page - 1) * LIMIT);
+
+      if (collectionId) {
+        dbQuery.rightJoin(
+          collectionsRecipes,
+          eq(recipes.id, collectionsRecipes.recipeId)
+        );
+      }
+
+      console.log({ collectionId });
 
       const data = await dbQuery;
 

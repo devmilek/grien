@@ -40,7 +40,12 @@ const ImageLicenceBadge = ({
           <p>
             Źródło: <span className="font-medium">{licence.originalTitle}</span>{" "}
             z{" "}
-            <Link href={licence.sourceUrl} className="underline font-medium">
+            <Link
+              href={licence.sourceUrl}
+              className="underline font-medium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {getDomainFromUrl(licence.sourceUrl)}
             </Link>
           </p>

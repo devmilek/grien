@@ -73,7 +73,7 @@ const CollectionDetailsPage = async ({
           </div>
         </div>
       </header>
-      <RecipesFeed collectionSlug={collection.slug} />
+      <RecipesFeed collectionId={collection.id} />
     </div>
   );
 };

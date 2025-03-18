@@ -9,7 +9,7 @@ export interface UseFilteredRecipesProps {
   occassionsSlug?: string[];
   username?: string;
   query?: string;
-  collectionSlug?: string;
+  collectionId?: string;
 }
 
 export const useFilteredRecipes = ({
@@ -19,7 +19,7 @@ export const useFilteredRecipes = ({
   occassionsSlug,
   username,
   query,
-  collectionSlug,
+  collectionId,
 }: UseFilteredRecipesProps) => {
   const {
     categorySlug: categorySlugParam,
@@ -40,7 +40,7 @@ export const useFilteredRecipes = ({
           occassionSlugs: occassionsSlug || occassionSlugParam,
           query: query || queryParam,
           username,
-          collectionSlug,
+          collectionId,
         },
       ],
       queryFn: async ({ pageParam }) => {
@@ -53,6 +53,7 @@ export const useFilteredRecipes = ({
             searchQuery: query || queryParam || "",
             username,
             page: pageParam,
+            collectionId,
           },
         });
 
